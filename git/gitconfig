@@ -30,3 +30,5 @@
 	autosetuprebase = never
 [diff]
     tool = tkdiff
+[merge]
+	conflictStyle = diff3
