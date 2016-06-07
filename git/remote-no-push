@@ -1,0 +1,19 @@
+# To avoid accidental push to a remote:
+
+# Case 1 - rc:
+$ rmt_byron=byron_rc
+$ git add                   $rmt_byron  https://github.com/rakitzis/rc 
+$ git remote set-url --push $rmt_byron  NO_PUSH
+$ git remote -v
+byron_rc	https://github.com/rakitzis/rc (fetch)
+byron_rc	NO_PUSH (push)
+
+
+# Case 2 - git:
+$ rmt_git=https://github.com/git/git
+$ git add  $rmt_git  ## defaults to origin
+$ git remote set-url --push origin  NO_PUSH
+$ git remote -v
+origin	https://github.com/git/git (fetch)
+origin	NO_PUSH (push)
+
