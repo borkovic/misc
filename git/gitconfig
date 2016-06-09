@@ -4,6 +4,8 @@
 [core]
 	editor = vim
 	excludesfile = ~/.gitignore_global
+	autocrlf = false
+	safecrlf = true
 [alias]
 	st = status -uno
 	submit = commit
@@ -19,16 +21,18 @@
 	sw = checkout
 	man = help
 [push]
-	default = simple
+	default = tracking
 	followTags = true
 [credential]
-	helper = cache
+	helper = cache --timeout=1800
 [credential "ssh://gitserver"]
 	helper = cache
 	username = git
 [branch]
 	autosetuprebase = never
 [diff]
-    tool = tkdiff
+	tool = tkdiff
+[gui]
+	encoding = utf-8
 [merge]
 	conflictStyle = diff3
