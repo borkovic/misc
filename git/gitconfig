@@ -34,5 +34,7 @@
 	tool = tkdiff
 [gui]
 	encoding = utf-8
+    diffopts = -b
+
 [merge]
 	conflictStyle = diff3
