@@ -1,0 +1,65 @@
+#! /soft_home/borkovic/bin/rc
+
+#               | Month       |  Year
+#  cal          | this month  | this year
+#  cal 8        | August      | this year
+#  cal aug 1492 | August      | 1492
+#  cal 1492     | all         | 1492
+#  cal N        | N           | this year   for N <= 12
+#  cal N        | all         | N           for N > 12
+#  cal yN       | all         | N
+
+##########################################################
+SinglePosDigit=(1 2 3 4 5 6 7 8 9)
+
+NumericalMonths=($SinglePosDigit 10 11 12)
+
+
+##########################################################
+fn Cal {
+    /usr/bin/cal $*
+}
+
+##########################################################
+switch ($#*) {
+case 0 2
+    Cal $*
+
+case 1
+    year=()
+    month=()
+    v=$1
+    monthYear=${date '+%m %Y'}
+    year=$monthYear(2)
+
+    switch ($v) {
+    case [Jj]an*;                month=1
+    case [Ff]eb*;                month=2
+    case [Mm]ar*;                month=3
+    case [Aa]pr*;                month=4
+    case [Mm]ay*;                month=5
+    case [Jj]un*;                month=6
+
+    case [Jj]ul*;                month=7
+    case [Aa]ug*;                month=8
+    case [Ss]ep*;                month=9
+    case [Oo]ct*;                month=10
+    case [Nn]ov*;                month=11
+    case [Dd]ec*;                month=12
+
+    case $NumericalMonths;       month=$v
+    case 1[3-9] [2-9][0-9]* ;    year=$v
+    case y*;                     year=${echo $v | sed -e 's/^y//g'}
+    }
+
+    if (~ $#year 0) {
+        year = $monthYear(2)
+    }
+
+    Cal $month $year
+
+case *
+    echo >[1=2] Usage: cal [month] [year]
+    exit 1
+}
+
