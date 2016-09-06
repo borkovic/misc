@@ -1,0 +1,57 @@
+typeset -r tab='    '
+typeset -r nl='
+'
+
+HOSTNAME=$(hostname -s)
+PS1='${HOSTNAME} : ${PWD} $ '
+DIRS3='${PWD#${PWD%/*/*/*}/}/ $ '
+
+PS1F='#'
+PS1F='$'
+green=32
+red=31
+
+# Eric:  PS1="\[\033[0;34m\][\$(date +%H%M)][\w]$\[\033[0m\] "
+export PS1_db='\[\033[0;'$color'm\]${PWD#${PWD%/*/*/*}/}/ '"$PS1F"'\[\033[0m\] '
+export PS1_old='${PWD#${PWD%/*/*/*}/}/ '"$PS1F"' '
+##PS1_db='\e[0;'"${green}"'m\h : ${PWD#${PWD%/*/*/*}/}/\[\e[0m $ '   # 
+PS1_db='\e[0;'"${green}"'m${PWD#${PWD%/*/*/*}/}/\[\e[0m $ '   # 
+PS1="$PS1_db"
+
+for s in $servers; do
+  LM_LICENSE_FILE="$s:$LM_LICENSE_FILE"
+done
+
+export PROMPT_COMMAND='echo -n "]0;$$ - ${USER}@${HOSTNAME} ${PWD}/  "'
+
+unset LS_COLORS
+
+for d in /usr/share/man  /usr/local/man  $HOME/usr/share/man
+do
+  if test -d "$d" && ! isDirInPath "$d" MANPATH; then
+    case "x${MANPATH}y" in
+    (xy) MANPATH="$d" ;;
+    (*)  MANPATH="$MANPATH:$d" ;;
+    esac
+  fi
+done
+export MANPATH
+
+HISTFILE=$HOME/files/bash/history/$$
+
+export EDITOR=vim
+export VISUAL=$EDITOR
+export LC_ALL=en_US
+
+#####################################################################
+## 10MB core file size
+#ulimit -S -c 10000
+
+export h H u U
+h=$HOME
+H=$HOME
+u=$USER
+U=$USER
+ER}@${HOSTNAME} ${PWD}/  ($HOSTNAME)'
+export PROMPT_COMMAND='echo -n "
+#export PROMPT_COMMAND='echo -n "

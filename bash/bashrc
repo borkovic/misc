@@ -1,0 +1,35 @@
+files="
+func
+path
+alias
+vars
+"
+
+for f in $files; do
+    ff=$HOME/files/bash/$f
+    if test -r $ff; then
+        . $ff
+        ##echo $f: 'PATH='$PATH
+    fi
+done
+
+########################################################
+set -o vi
+set -o pipefail
+########################################################
+##echo Path before cleaning $PATH
+for d in $HOME/bin /home/$USER/bin; do
+    if test -d $d; then
+        PATH=$d:$PATH
+    fi
+done
+cleanPath PATH
+########################################################
+##echo Path after cleaning $PATH
+umask 022
+
+export DISPLAY=$HOSTNAME:1.0
+
+unalias ct 2>/dev/null 
+
+

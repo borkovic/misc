@@ -1,0 +1,9 @@
+prependDirToPath -force /home/$USER/bin
+case x$CDPATH in
+(x) CDPATH='.:..'         ;;
+(*) CDPATH=".:..:$CDPATH" ;;
+esac
+
+#########################################################################
+cleanPath
+

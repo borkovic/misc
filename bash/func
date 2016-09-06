@@ -1,0 +1,206 @@
+path_sep=':'
+
+##################################################################
+function isDirInPath {
+  local d="$1" pathVarName="$2"
+  local pathVal
+  eval pathVal'=$'"$pathVarName"
+
+  local retVal=0
+  case x"${pathVal}"y in
+    (xy)                                 retVal=1 ;;
+    (x"${d}"y)                           retVal=0 ;;
+    (x"${d}${path_sep}"*y)               retVal=0 ;;
+    (x*"${path_sep}${d}"y)               retVal=0 ;;
+    (x*"${path_sep}${d}${path_sep}"*y)   retVal=0 ;;
+    (*)                                  retVal=1 ;;
+  esac 
+  return $retVal
+}
+
+##################################################################
+function appPreDirToPath {
+  local append=false force=false
+  while let "$# > 0"
+  do 
+    case "x$1" in
+    (x-pre*) append=false
+      shift 1;;
+    (x-app*) append=true
+      shift 1;;
+    (x-force) force=true
+      shift 1;;
+    (x-*) echo 1>&2 'Usage: $0 (-pre|-app) dirs ...'
+      return 1 ;;
+    (*) break ;;
+    esac 
+  done
+
+  local d
+  for d in "$@"
+  do
+    if test -d "$d"
+    then
+      case "x${PATH}y" in                        #  example d=/bin
+      (xy)            PATH="$d"            ;;    #  $PATH empty
+      (*) if $force || ! isDirInPath "$d" PATH
+          then
+        if $append
+        then
+              PATH="$PATH${path_sep}$d"
+        else
+              PATH="$d${path_sep}$PATH"
+        fi
+          fi ;;
+      esac
+    fi
+  done
+}
+
+##################################################################
+function appendDirToPath {
+  appPreDirToPath -app "$@"
+}
+function prependDirToPath {
+  appPreDirToPath -pre "$@"
+}
+
+##################################################################
+function cleanPath {
+  local pathVarName
+  case $# in
+  (0) pathVarName=PATH ;;
+  (*) pathVarName="$1" ;;
+  esac
+  local pathVal
+  eval pathVal'=$'"$pathVarName"
+
+  local oifs="$IFS"
+  IFS=':;'
+  local pathVal2="$(echo $pathVal)"
+  IFS="$oifs"
+
+  local newPath=""
+  local p
+
+  ######################################
+  for d in $pathVal2
+  do
+    ##echo $p $newPath
+    if test -d "$d" && ! isDirInPath "$d" newPath
+    then
+      case "x${newPath}y" in                       # say p=/bin
+      ("xy") newPath="${d}"            ;;  # $newPath empty
+      (*)    newPath="${newPath}${path_sep}${d}" ;;
+      esac
+    fi
+  done
+
+  ######################################
+  eval $pathVarName'='"$newPath"
+}
+
+
+##################################################################
+
+##################################################################
+function v {
+    local s="$nl$nl$nl$nl$nl$nl$nl$nl$nl$nl$nl$nl$nl$nl$nl$nl$nl$nl$nl$nl"
+    s="$s$s$s$s"
+    echo "$s"
+}
+
+##################################################################
+function rotd {
+    local n
+    case x$# in
+    (x0) n=1 ;;
+    (*) n=$1 ;;
+    esac
+    pushd +$n
+}
+
+function df {
+    local awkarg='{for (i=2; i <= 5; ++i) { printf(" %6s", $i)} };'
+    awkarg="$awkarg"'{for (i=6; i <= NF; ++i) { printf(" %24s", $i)}; printf("    %s\n", $1)}'
+    command df -Ph "$@" | awk "$awkarg"
+}
+
+
+##################################################################
+function whatis {
+  type "$@"
+}
+
+##################################################################
+rt_go() {
+  case $# in
+  (0) echo 'Need dir param'
+      return 1
+      ;;
+  (1) typeset d="$1"
+      shift
+      cd $d
+      ;;
+  (*) typeset d="$1"
+      shift
+      pushd $d
+      ;;
+  esac
+}
+##################################################################
+pardir () {
+  case "x${PWD}" in
+  (x/) echo / ;;
+  (*) echo "${PWD%/*}" ;;
+  esac
+}
+
+##################################################################
+cdup () {
+  typeset curDir="${PWD}"
+  if cd ..
+  then
+    :
+  elif cd "${curDir%/*}"
+  then
+    :
+  else
+    echo 1>&2 Failed to change to parent dir
+  fi
+  cd .
+}
+
+
+
+##################################################################
+nightly_loop() {
+  local S=nightly-build
+  local LOG=$S.log
+  local script=$HOME/bin/$S.rc 
+
+  if ! test -r $script
+  then
+    echo Script $script not readable 1>&2
+    return 1
+  fi
+  if cd $G
+  then
+    (nohup rc $script > $LOG 2>&1 < /dev/null &)
+  else
+    echo Cannot cd to $G 1>&2
+    return 1
+  fi
+}
+##################################################################
+
+##################################################################
+egrepsrc () { egrep "$@" inc/*.h src/*.cxx; }
+grepsrc  () { egrepsrc "$@"; }
+srcgrep  () { egrepsrc "$@"; }
+srcegrep () { egrepsrc "$@"; }
+
+##################################################################
+rs () { eval $(resize) ; }
+
+

@@ -1,0 +1,67 @@
+alias cp='cp -pi'
+
+alias d=date
+alias dirs='dirs -v'
+alias df='df -h'
+alias du='du -h'
+
+alias f=finger
+
+alias j='jobs -l'
+
+alias gorc='cd $HOME/repo/github/$USER/rc'
+alias l='ls -hFC'
+alias ll='l -l'
+alias la='l -a'
+alias lr='l -R'
+
+alias ln-s='ln -s'
+alias lns='ln-s'
+
+alias m=less
+
+alias c=clear
+
+alias md='mkdir -p'
+alias rd=rmdir
+
+alias rm='rm -i'
+alias mv='mv -i'
+
+alias pu=pushd
+alias po=popd
+
+alias mk=mymk
+
+alias cw='chmod +w'
+alias cx='chmod +x'
+
+alias cdp='cd $(pwd -P)'
+
+alias ppid='ps -l -p $PPID'
+
+alias myps='ps -l -u $USER'
+
+alias tl=tail
+alias tlf='tail -f'
+alias hd=head
+
+alias myps='ps -l -u $USER'
+alias psvi='myps | egrep vi'
+
+alias stop='kill -STOP'
+lias tl=tail
+alias tlf='tl -f'
+alias hd=head
+
+#####################################################
+#####################################################
+
+##alias ci='$HOME/bin/ci'
+##alias co='ct co -nc'
+##alias unco='ct unco -rm'
+
+alias mytop='top -u $USER'
+
+
+
