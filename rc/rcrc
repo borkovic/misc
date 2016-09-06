@@ -1,0 +1,11 @@
+. $HOME/files/rc/func
+
+cdpath=(. ..)
+
+fn cd {
+    builtin cd $*
+    prompt=($pwd' ; ' '')
+}
+
+prompt=($pwd' ; ' '')
+

@@ -1,0 +1,48 @@
+q=''''
+qq='"'
+tab='	'
+nl='
+'
+
+fn c  { clear }
+fn ls { builtin ls -hF $* }
+fn l  { builtin ls -hF $* }
+fn ll { builtin ls -lhF $* }
+fn la { builtin ls -ahF $* }
+
+fn true  { return 0 }
+fn false { return 1 }
+fn Error { echo >[1=2] $* }
+fn Fatal { Error $*; exit 1 }
+
+##################################################
+## ; A = (w1 x2 y3 z4)
+## ; Shift A 2  # shift var A by two positions
+## ; whatis A
+## ; A=(y3 z4)
+##================================================
+fn Shift { varName=() nShift=() {
+    switch ($#*) {
+    case 1
+        varName=$1 nShift=1
+    case 2
+        varName=$1 nShift=$2
+    case *
+        Error Usage: Shift '<var-name>'  '[<shift-number>]'
+        return 1
+    }
+
+    * = $($varName)
+    shift $nShift
+    $varName = $*
+}}
+
+##################################################
+fn rs { s=() {
+    s=${resize | egrep -v export}
+    eval $s
+}}
+
+##################################################
+
+
