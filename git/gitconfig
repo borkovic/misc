@@ -1,40 +1,41 @@
 [user]
-	name = Drazen Borkovic
-	email = borkovic@nomail
+    name = Drazen Borkovic
+    email = borkovic@nomail
 [core]
-	editor = vim
-	excludesfile = ~/.gitignore_global
-	autocrlf = false
-	safecrlf = true
+    editor = vim
+    excludesfile = ~/.gitignore_global
+    autocrlf = false
+    safecrlf = true
+    fscache = true
 [alias]
-	st = status -uno
-	submit = commit
-	ci = commit
-	co = checkout
-	dif = difftool -y
-	unco = checkout --
-	tree = log --oneline --graph --decorate --all
-	dag = log --oneline --graph --decorate --all --date-order
-	br = branch -vv
-	mrg = merge --no-commit
-	switch = checkout
-	sw = checkout
-	man = help
+    st = status -uno
+    submit = commit
+    ci = commit
+    co = checkout
+    dif = difftool -y
+    unco = checkout --
+    tree = log --oneline --graph --decorate --all
+    dag = log --oneline --graph --decorate --all --date-order
+    br = branch -vv
+    mrg = merge --no-commit
+    switch = checkout
+    sw = checkout
+    man = help
 [push]
-	default = tracking
-	followTags = true
+    default = tracking
+    followTags = true
 [credential]
-	helper = cache --timeout=1800
+    helper = cache --timeout=1800
 [credential "ssh://gitserver"]
-	helper = cache
-	username = git
+    helper = cache
+    username = git
 [branch]
-	autosetuprebase = never
+    autosetuprebase = never
 [diff]
-	tool = tkdiff
+    tool = tkdiff
 [gui]
-	encoding = utf-8
+    encoding = utf-8
     diffopts = -b
 
 [merge]
-	conflictStyle = diff3
+    conflictStyle = diff3
