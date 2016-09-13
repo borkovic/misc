@@ -54,4 +54,48 @@ fn cont {
 }
 
 ##################################################
+DIRSTACK=()
+##################################################
+fn pu { curDir=() newDir=() {
+    if (~ $#* 0) {
+        if (! ~ $#DIRSTACK 0) {
+            curDir=$pwd
+            newDir=$DIRSTACK(1)
+            if (cd $newDir) {
+                Shift DIRSTACK 1
+                DIRSTACK=($curDir $DIRSTACK)
+            }
+        }
+    } else if (~ $#* 1) {
+        curDir=$pwd
+        newDir=$1
+        if (cd $newDir) {
+            DIRSTACK=($curDir $DIRSTACK)
+        }
+    }
+}}
+
+##################################################
+fn po { curDir=() newDir=() {
+    if (~ $#DIRSTACK 0) {
+        return
+    }
+    curDir=$pwd
+    newDir=$DIRSTACK(1)
+    if (cd $newDir) {
+        Shift DIRSTACK 1
+    }
+}}
+
+##################################################
+fn dirs { curDir=() newDir=() n=0 d=() {
+    echo $n $pwd
+    for (d in $DIRSTACK) {
+        let 'n=1+'$n
+        echo $n $DIRSTACK($n)
+    }
+}}
+
+##################################################
+## rotd
 
