@@ -21,6 +21,7 @@
     switch = checkout
     sw = checkout
     man = help
+    lstree=ls-tree -rtl
 [push]
     default = tracking
     followTags = true
