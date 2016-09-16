@@ -1,6 +1,6 @@
 #! /usr/bin/env rc
 
-while (! test -e .git -o -L .git) {
+while (! test -d .git) { ## "-d" derefernces soft links
     if (~ $pwd /) {
         Error >[1=2] Cannot find .git subdir
         exit 1
