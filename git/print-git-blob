@@ -1,0 +1,7 @@
+#! /bin/bash
+
+for f
+do
+    { echo -ne "blob $(cat $f | wc -c)\0"; cat $f; } | sha1sum
+done
+

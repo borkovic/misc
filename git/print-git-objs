@@ -1,0 +1,34 @@
+#! /usr/bin/env rc
+
+while (! test -d .git) { ## "-d" derefernces soft links
+    if (~ $pwd /) {
+        Error >[1=2] Cannot find .git subdir
+        exit 1
+    }
+    cd ..
+}
+TOP=$pwd
+
+objDir=$TOP/.git/objects
+
+objs=()
+
+cd $objDir
+pfxs=??
+
+for (pfx in $pfxs) {
+    cd $objDir/$pfx
+    sfxs=*
+    for (sfx in $sfxs) {
+        objs = ($objs $pfx$sfx)
+    }
+}
+
+
+for (o in $objs) {
+    x=(${git cat-file -t $o}  $o)
+    echo $x
+    git cat-file -p $o
+    echo;echo
+}
+
