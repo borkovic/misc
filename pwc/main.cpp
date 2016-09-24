@@ -4,6 +4,8 @@ extern int printf(const char* fmt, ...);
 
 #include "printwithcommas.h"
 
+using namespace Util;
+
 void
 f()
 {
@@ -13,7 +15,7 @@ f()
         signed char cs[] = {
             1 << (8*sizeof(cs[0])-1),
             -2, -1, 0, 1, 2,
-            ~( 1 << (8*sizeof(cs[0])-1) ),
+            0x7f,
         };
 
         for (unsigned k = 0; k < sizeof(cs)/sizeof(cs[0]); ++k) {
@@ -27,7 +29,7 @@ f()
             1 << (8*sizeof(ss[0])-1),
             -2, -1, 0, 1, 2,
             -20003, 20003,
-            ~( 1 << (8*sizeof(ss[0])-1) ),
+            0x7fff,
         };
         for (unsigned k = 0; k < sizeof(ss)/sizeof(ss[0]); ++k) {
             PrintWithCommas(buf, ss[k]);
@@ -67,7 +69,7 @@ f()
         unsigned char ucs[] = {
             0,
             1, 2, 3,
-            20003,
+            23,
             0xff,
         };
         for (unsigned k = 0; k < sizeof(ucs)/sizeof(ucs[0]); ++k) {

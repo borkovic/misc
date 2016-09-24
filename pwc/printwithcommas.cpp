@@ -4,6 +4,8 @@ extern "C" {
 }
 #include "printwithcommas.h"
 
+namespace Util {
+
 int
 PrintWithCommas(char* buf, const unsigned long ul)
 {
@@ -90,4 +92,7 @@ PrintWithCommas2(char* buf, const unsigned long unsLong)
     }
     return n;
 }
+
+}
+
 

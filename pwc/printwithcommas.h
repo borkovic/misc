@@ -1,6 +1,8 @@
 #ifndef PRINT_WITH_COMMAS_H
 #define PRINT_WITH_COMMAS_H
 
+namespace Util {
+
 //=================================================================
 int PrintWithCommas(char* buf, const unsigned long unsLong);
 int PrintWithCommas2(char* buf, const unsigned long unsLong);
@@ -75,6 +77,8 @@ PrintWithCommas(char* buf, const unsigned char unsChar)
 {
     const unsigned long unsLong = unsChar;
     return PrintWithCommas(buf, unsLong);
+}
+
 }
 
 #endif
