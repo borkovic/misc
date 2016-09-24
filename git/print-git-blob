@@ -2,6 +2,10 @@
 
 for f
 do
-    { echo -ne "blob $(cat $f | wc -c)\0"; cat $f; } | sha1sum
+    if true; then
+        { printf 'blob %s\0' "$(cat $f | wc -c)"; cat $f; } | sha1sum
+    else
+        #{ echo -ne "blob $(cat $f | wc -c)\0"; cat $f; } | sha1sum
+    fi
 done
 
