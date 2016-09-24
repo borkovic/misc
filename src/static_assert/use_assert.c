@@ -9,14 +9,16 @@ enum { X = 3, Y = 4};
 #define Yval 5
 #define Ycond Y_must_be_5
 
+/* shortest message in gcc */
+STATIC_ASSERT_T(X==Xval, Xcond);
+STATIC_ASSERT_T(Y==Yval, Ycond);
+
 /*
-*/
-STATIC_ASSERT(X==Xval, Xcond);
-STATIC_ASSERT(Y==Yval, Ycond);
+STATIC_ASSERT_S(X==Xval, Xcond);
+STATIC_ASSERT_S(Y==Yval, Ycond);
 
 STATIC_ASSERT_A(X==Xval, Xcond);
 STATIC_ASSERT_A(Y==Yval, Ycond);
+*/
 
-STATIC_ASSERT_B(X==Xval, Xcond);
-STATIC_ASSERT_B(Y==Yval, Ycond);
 

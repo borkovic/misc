@@ -7,9 +7,10 @@
     CATSTR(CATSTR(static_assert_line_,__LINE__),CATSTR(__,MSG))[2*(! !(COND))-1]
 
 /*****************************************************************************/
-#define STATIC_ASSERT(cond,msg) \
+#define STATIC_ASSERT_T(cond,msg) \
     typedef struct { int CATSTR(CATSTR(static_assert_line_,__LINE__), CATSTR(__,msg)) : ! !(cond); } CATSTR(static_assert_failed_line_,__LINE__)
 
-#define STATIC_ASSERT_B(cond,msg) \
-    struct CATSTR(static_assert_failed_line_,__LINE__) { int CATSTR(CATSTR(static_assert_line_,__LINE__), CATSTR(__,msg)) : ! !(cond); } 
+/*****************************************************************************/
+#define STATIC_ASSERT_S(cond,msg) \
+    struct CATSTR(CATSTR(static_assert_failed_line_,__LINE__),CATSTR(__,msg)) { int CATSTR(CATSTR(static_assert_line_,__LINE__), CATSTR(__,msg)) : ! !(cond); } 
 
