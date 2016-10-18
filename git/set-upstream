@@ -1,0 +1,4 @@
+If current branch is branch2
+    $ git branch -u origin/branch2
+If current branch is NOT branch2
+    $ git branch -u origin/branch2 branch2
