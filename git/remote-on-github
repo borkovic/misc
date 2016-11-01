@@ -1,0 +1,7 @@
+
+My remote (when pushing asks password)
+git clone  https://borkovic@github.com/borkovic/rc.git
+
+Other people's
+git clone  https://github.com/user/rc.git
+
