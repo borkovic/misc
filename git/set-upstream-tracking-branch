@@ -1,0 +1,10 @@
+If current branch is branch2
+    $ git branch -u origin/branch2
+
+Or this to make it track and push at the same time
+    $ git push -u origin branch2
+
+=========================================================
+This works regardless whether the current branch is branch2
+    $ git branch -u origin/branch2 branch2
+
