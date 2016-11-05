@@ -1,0 +1,144 @@
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom -- don't edit or cut/paste it!
+ ;; Your init file should contain only one such instance.
+ '(case-fold-search t)
+ '(setq compilation-search-path '("../include" "../src" "../../*/src" "../../*/include"))
+ '(current-language-environment "UTF-8")
+ '(default-input-method "rfc1345")
+ '(global-font-lock-mode t nil (font-lock))
+ '(load-home-init-file t t))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom -- don't edit or cut/paste it!
+ ;; Your init file should contain only one such instance.
+ )
+
+;; get rid of annoying graphical bars
+;;(menu-bar-mode 0)
+(tool-bar-mode 0)
+(set-scroll-bar-mode nil)
+(set-background-color "DarkSlateGray")
+(set-foreground-color "white")
+(set-cursor-color "red")
+;; (set-default-font "8x13")
+
+(setq load-path (append load-path (list "/u/amit/emacs/cc-mode-5.31.3/")))
+(autoload 'c++-mode "cc-mode" "C++ Editing Mode" t)
+(autoload 'c-mode   "cc-mode" "C Editing Mode" t)
+
+(setq auto-mode-alist
+                       (append '(("\\.C$"  . c++-mode)
+                                                               ("\\.cc$" . c++-mode)
+                                                               ("\\.hh$" . c++-mode)
+                                                               ("\\.c$"  . c-mode)
+                                                               ("\\.h$"  . c++-mode)
+                                                               ) auto-mode-alist)
+                       )
+
+(setq-default fill-column 80)
+(setq auto-fill-mode 1)
+
+(global-set-key '[f1] 'other-window)
+(global-set-key '[f2] 'undo)
+(global-set-key '[f3] 'compile)
+(global-set-key '[f4] 'c-comment)
+(global-set-key '[f6] 'kill-buffer)
+(global-set-key '[f7] 'revert-buffer)
+(global-set-key '[f8] 'goto-line)
+(global-set-key '[f9] 'shell)
+(global-set-key '[M-left] 'backward-sexp)
+(global-set-key '[M-right] 'forward-sexp)
+;; as in VC++
+
+(global-set-key '[f2] 'gud-up)
+(global-set-key '[f3] 'gud-down)
+(global-set-key '[f4] 'gud-finish)
+(global-set-key '[f5] 'gud-cont)
+(global-set-key '[f10] 'gud-next)
+(global-set-key '[f11] 'gud-step)
+(global-set-key '[f12] 'gud-cont)
+
+(setq gdb-many-windows 1)
+
+(setq c-mode-hook
+(function (lambda ()
+(setq indent-tabs-mode nil)
+(setq c-indent-level 2))))
+(setq objc-mode-hook
+(function (lambda ()
+(setq indent-tabs-mode nil)
+(setq c-indent-level 2))))
+(setq c++-mode-hook
+(function (lambda ()
+(setq indent-tabs-mode nil)
+(setq c-indent-level 2))))
+
+
+(setq inhibit-startup-message t)
+(setq require-final-newline t)
+(setq display-time-day-and-date t)
+(setq search-highlight t)
+(setq next-line-add-newlines nil); down key wont add newline
+(setq indent-tabs-mode nil)
+(setq default-tab-width 2)
+(setq bell-volume 0)
+
+;; Herman c++ indent function. Primarily for namespaces
+(defun my-c++-setup ()
+ (setq c-basic-offset 2)
+ (setq indent-tabs-mode nil)
+ (c-set-offset 'innamespace 0)
+ (c-set-offset 'arglist-intro '++)
+ (c-set-offset 'arglist-cont 0)
+ (c-set-offset 'arglist-close 0)
+       (c-set-offset 'substatement-open 0)
+)
+
+(add-hook 'c++-mode-hook 'my-c++-setup)
+
+;; define macro for inserting comment
+(fset 'c-comment
+  "/**\C-m\C-i*\C-m*/\C-[OA ")
+;; define macro for inserting header
+(fset 'c-header
+  "//------------------------------------------------------------------------------\C-m")
+
+;; c++ setting to auto-indent after newline
+(defun my-c++-indent-hook ()
+       (define-key c-mode-base-map "\C-m" 'newline-and-indent)
+       (message "newline-indent function executed"))
+
+(add-hook 'c++-mode-hook 'my-c++-indent-hook)
+
+(setq debug-on-error 't)
+
+;; (setq pdb-path '/usr/lib/python2.4/pdb.py
+;;   gud-pdb-command-name (symbol-name pdb-path))
+
+;; (defadvice pdb (before gud-query-cmdline activate)
+;;    "Provide a better default command line when called interactively."
+;;    (interactive
+;;      (list (gud-query-cmdline pdb-path
+;;        (file-name-nondirectory buffer-file-name)))))
+
+;;pdb setup, note the python version
+;; (setq pdb-path '/usr/lib/python2.5/pdb.py
+;;       gud-pdb-command-name (symbol-name pdb-path))
+;; (defadvice pdb (before gud-query-cmdline activate)
+;;   "Provide a better default command line when called interactively."
+;;   (interactive
+;;     (list (gud-query-cmdline pdb-path
+;;  	 		    (file-name-nondirectory buffer-file-name)))))
+
+;;pdb setup, note the python version
+(setq pdb-path '/usr/lib64/python2.7/pdb.py
+       gud-pdb-command-name (symbol-name pdb-path))
+;; (defadvice pdb (before gud-query-cmdline activate)
+;;   "Provide a better default command line when called interactively."
+;;   (interactive
+;;     (list (gud-query-cmdline pdb-path
+;;  	 		    (file-name-nondirectory buffer-file-name)))))
+
+ (global-auto-revert-mode t)
+
+

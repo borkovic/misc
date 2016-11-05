@@ -1,4 +1,25 @@
 catch throw
 break main
 
-key mappings
+set print pretty on
+set print static-members off
+
+set print static-members on
+set print pretty on
+set print demangle on
+set print object on
+set print vtbl on
+set print null-stop on
+set print elements 0
+set breakpoint pending on
+
+
+# ## to avoid printing thread-created every time, works only in newer gdb's
+# #set print thread-events off
+# ## "next" in 7.0.1 gdb can be slow
+# # to set shell environment variable
+# #set env LD_BIND_NOW 1
+
+
+## key mappings are in .emacs
+
