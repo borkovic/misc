@@ -12,13 +12,18 @@ enum { X = 3, Y = 4};
 /* shortest message in gcc */
 STATIC_ASSERT_T(X==Xval, Xcond);
 STATIC_ASSERT_T(Y==Yval, Ycond);
-
 /*
+*/
+
 STATIC_ASSERT_S(X==Xval, Xcond);
 STATIC_ASSERT_S(Y==Yval, Ycond);
+/*
+*/
 
+/* shortest message in clang */
 STATIC_ASSERT_A(X==Xval, Xcond);
 STATIC_ASSERT_A(Y==Yval, Ycond);
+/*
 */
 
 
