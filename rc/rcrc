@@ -11,7 +11,7 @@ fn cd { d=() ns='[^/]*' sedstr = 's@.*/\('^$ns/$ns/$ns^'\)@\1@' {
     case *;
         d=$pwd
     }
-    prompt=($d' ; ' '')
+    prompt=($d'; ' '')
 }}
 
 cd .
