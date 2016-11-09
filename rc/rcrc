@@ -2,10 +2,17 @@
 
 cdpath=(. ..)
 
-fn cd {
+fn cd { d=() ns='[^/]*' sedstr = 's@.*/\('^$ns/$ns/$ns^'\)@\1@' {
     builtin cd $*
-    prompt=($pwd' ; ' '')
-}
 
-prompt=($pwd' ; ' '')
+    switch ($pwd) {
+    case */*/*/*;
+        d=${ echo $pwd | sed -e $sedstr }
+    case *;
+        d=$pwd
+    }
+    prompt=($d' ; ' '')
+}}
+
+cd .
 
