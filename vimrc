@@ -47,7 +47,7 @@ au BufEnter *.py set ai sw=4 ts=4 sta et fo=croql
 au BufEnter,BufNewFile *.cc,*.cpp,*.cxx,*.c,*.h set nu ai sw=4 ts=4 expandtab sta et fo=croql
 
 " Makefiles should keep tabs
-au BufRead,BufNewFile,BufEnter make* Make*  set noexpandtab
+au BufRead,BufNewFile,BufEnter make*,Make*  set noexpandtab
 
 command Bash ConqueTerm bash
 command Rc ConqueTerm rc
