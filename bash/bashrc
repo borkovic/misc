@@ -18,9 +18,9 @@ set -o vi
 set -o pipefail
 ########################################################
 ##echo Path before cleaning $PATH
-for d in $HOME/bin /home/$USER/bin; do
+for d in $HOME/bin $HOME/usr/bin; do
     if test -d $d; then
-        PATH=$d:$PATH
+        prependDirToPath  $d
     fi
 done
 cleanPath PATH
@@ -28,8 +28,5 @@ cleanPath PATH
 ##echo Path after cleaning $PATH
 umask 022
 
-export DISPLAY=$HOSTNAME:1.0
-
 unalias ct 2>/dev/null 
-
 

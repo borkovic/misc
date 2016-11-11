@@ -1,3 +1,6 @@
+Error () { echo 1>&2 "$@"; }
+Fatal () { Error "$@"; exit 1; }
+
 path_sep=':'
 
 ##################################################################
@@ -200,7 +203,59 @@ grepsrc  () { egrepsrc "$@"; }
 srcgrep  () { egrepsrc "$@"; }
 srcegrep () { egrepsrc "$@"; }
 
+client_set() {
+    local Dir="$PWD"
+    local found=false
+    while true
+    do
+        if test -d ./hierdesign -a -d ./rdi -a -r ./.rdi.cfg -a -r ./src/rdicfg.mk
+        then
+            found=true
+            break
+        fi
+        case x$PWD in
+            (x/) break;;
+        esac
+        cd ..
+    done
+    if $found
+    then
+        export ENVROOT=$PWD/hierdesign
+        . $ENVROOT/g_profile
+    else
+        Error Cannot find perforce client root
+    fi
+    cd "$Dir"
+}
+
 ##################################################################
 rs () { eval $(resize) ; }
 
+cd () {
+    builtin cd "$@"
+
+    local p expanded MAX
+    let "MAX=$COLUMNS-40"
+
+    local p3='${PWD#${PWD%/*/*/*}/}'
+    eval 'expanded='"$p3"
+    local nc=$(echo "$expanded" | wc -c)
+
+    if let "$nc < $MAX"; then
+        p="$p3"
+    else
+        local p2='${PWD#${PWD%/*/*}/}'
+        eval 'expanded='"$p2"
+        nc=$(echo "$expanded" | wc -c)
+        if let "$nc < $MAX"; then
+            p="$p2"
+        else
+            local p1='${PWD##*/}'
+            p="$p1"
+        fi
+    fi
+
+    PS1='\e[0;'"${green}m""$p"'/\[\e[0m $ '   # 
+}
+cd .
 
