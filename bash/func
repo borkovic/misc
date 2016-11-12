@@ -232,35 +232,36 @@ client_set() {
 rs () { eval $(resize) ; }
 
 ##################################################################
-shopt -s checkwinsize
-export LINES COLUMNS
+shopt -s checkwinsize  ## So that bash captures window resizes.
+export LINES COLUMNS   ## Do we really need this? cd function uses it.
 
 cd () {
     builtin cd "$@"
 
     local p expanded MAX
-    let "MAX=$COLUMNS-40"
+    let "MAX=$COLUMNS-40"   ## Need 40 characters beyond the prompt
 
-    local p3='${PWD#${PWD%/*/*/*}/}'
+    local p3='${PWD#${PWD%/*/*/*}/}'  ## Last 3 dirs in path.
     eval 'expanded='"$p3"
     local nc=$(echo "$expanded" | wc -c)
 
     if let "$nc < $MAX"; then
         p="$p3"
     else
-        local p2='${PWD#${PWD%/*/*}/}'
+        local p2='${PWD#${PWD%/*/*}/}'  ## Last 2 dirs in path.
         eval 'expanded='"$p2"
         nc=$(echo "$expanded" | wc -c)
         if let "$nc < $MAX"; then
             p="$p2"
         else
-            local p1='${PWD##*/}'
+            local p1='${PWD##*/}'  ## Last dir in path.
             p="$p1"
         fi
     fi
 
+    ## Color path part of prompt, prompt, reset color.
     PS1='\e[0;'"${green}m""$p"'/\[\e[0m $ '   # 
 }
-cd .
+cd .   # initially set PS1
 ##################################################################
 
