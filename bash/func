@@ -239,7 +239,9 @@ cd () {
     builtin cd "$@"
 
     local p expanded MAX
-    let "MAX=$COLUMNS-40"   ## Need 40 characters beyond the prompt
+    ## Need 40 characters beyond the prompt
+    ## Can use 'tput cols' instead of $COLUMNS (in rc for example)
+    let "MAX=$COLUMNS-40"
 
     local p3='${PWD#${PWD%/*/*/*}/}'  ## Last 3 dirs in path.
     eval 'expanded='"$p3"
