@@ -265,6 +265,30 @@ cd () {
     PS1='\e[0;'"${green}m""$p"'/\[\e[0m $ '   # 
 }
 cd .   # initially set PS1
-##################################################################
 
+##################################################################
+find_p4client_top() {
+    local DIR=$PWD
+    while true
+    do
+        if test "$PWD" '=' '/'; then
+            cd $DIR
+            return 1
+        elif test -r ./.p4config; then ## found client top
+            break
+        fi
+        cd ..
+    done
+    return 0
+}
+#------------------
+gosrc () {
+    if find_p4client_top; then
+        cd ./path/to/particular/src/dir
+    else
+        return 1
+    fi
+}
+
+##################################################################
 
