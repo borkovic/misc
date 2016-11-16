@@ -1,0 +1,12 @@
+Run regedit
+
+HKLM / System / CurrentControlSet / Control / Keyboard Layout
+
+Right click - New binary value:
+Entry Name
+    "Scancode Map"
+Enter value:
+    00 00 00 00 00 00 00 00 
+    02 00 00 00 00 00 3A 00
+    00 00 00 00
+
