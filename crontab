@@ -1,0 +1,51 @@
+##########################################################
+## SHELL is set to /bin/sh, and LOGNAME and HOME are set from
+## the /etc/passwd line of the crontab´s owner.
+## HOME and SHELL may be overridden by settings in the crontab; LOGNAME may not.
+
+##########################################################
+## field          allowed values
+## -----          --------------
+## minute         0-59
+## hour           0-23
+## day of month   1-31
+## month          1-12 (or names, see below)
+## day of week    0-7 (0 or 7 is Sun, or use names)
+
+## Use the first three letters of the particular 
+## day or month (case doesn't matter). Ranges or
+## lists of names are not allowed.
+
+##########################################################
+## The "sixth" field (the rest of the line) specifies
+## the command to be run. The entire command portion
+## of the line, up to a newline or % character, will be
+## executed by /bin/sh or by the shell specified in
+## the SHELL variable of the cronfile.
+## Percent-signs (%) in the command, unless escaped with
+## backslash (\), will be changed into newline characters,
+## and all data after the first % will be sent to
+## the command as standard input.
+
+##########################################################
+## Note that this  means  that  non-existent  times,
+## such as "missing hours" during daylight savings
+## conversion, will never match, causing jobs scheduled
+## during the "missing times" not to be run.
+## Similarly, times that occur more than once
+## (again, during daylight savings conversion) will cause
+## matching jobs to be run twice.
+
+## AVOID daylight savings transition hours that are usually
+##  * repeat [1:00:00 AM, 1:59:59 AM] or
+##  * skip   [2:00:00 AM, 2:59:59 AM].
+## Easy rule: avoid [1:00 AM, 3:00 AM].
+
+#######################################################################
+## Crontab entries to execute
+#######################################################################
+## 4:17 AM
+17  04   *   *   *    sh  $HOME/bin/daily.sh
+
+#######################################################################
+
