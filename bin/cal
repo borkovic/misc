@@ -1,4 +1,4 @@
-#!  /usr/bin/env rc
+#! /usr/bin/env rc
 
 # usage:  cal | cal '<M>|<Y>' | cal 'y<Y>' | cal '<M>' '<Y>'
 
