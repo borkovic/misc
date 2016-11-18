@@ -54,6 +54,45 @@ fn cont {
 }
 
 ##################################################
+fn setPrompt { 
+Dirs=0 n=0 n1=0 n2=0 p=0 nc=0 max=0 {
+
+    p = $pwd
+
+    switch ($pwd) {
+    case */*/*/*
+        let max=$COLUMNS-39
+        Dirs = `` / { echo -n $pwd }
+        n = $#Dirs
+        let n1=$n-1
+        let n2=$n-2
+
+        p = $Dirs($n2) ^ / ^ $Dirs($n1) ^ / ^ $Dirs($n)
+        nc = ${echo $p | wc -c}
+        if (let $nc' > '$max) {
+            p = $Dirs($n1) ^ / ^ $Dirs($n)
+            nc = ${echo $p | wc -c}
+            if (let $nc' > '$max) {
+                p = $Dirs($n)
+            }
+        }
+    }
+
+    prompt = ($p^' ; ' $prompt(2))
+}}
+
+##################################################
+fn cd {
+    if (builtin cd $*) {
+        ##pwd
+        setPrompt
+        return 0
+    } else {
+        return 1
+    }
+}
+
+##################################################
 DIRSTACK=()
 ##################################################
 fn pu { curDir=() newDir=() {
@@ -98,4 +137,5 @@ fn dirs { curDir=() newDir=() n=0 d=() {
 
 ##################################################
 ## rotd
+
 

@@ -1,8 +1,16 @@
-. $HOME/files/rc/func
+files=(
+    func
+    path
+    vars
+)
+for (f in $files) {
+    ff = $HOME/files/rc/$f
+    test -r $ff && . $ff
+}
 
 cdpath=(. ..)
 
-fn cd { d=() ns='[^/]*' sedstr = 's@.*/\('^$ns/$ns/$ns^'\)@\1@' {
+fn cd2 { d=() ns='[^/]*' sedstr = 's@.*/\('^$ns/$ns/$ns^'\)@\1@' {
     builtin cd $*
 
     switch ($pwd) {
