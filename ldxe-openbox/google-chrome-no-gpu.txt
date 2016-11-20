@@ -1,0 +1,5 @@
+Option '--disable-gnu' helps with chrome freezing of new tabs?
+
+google-chrome -incognito --disable-gpu \
+        --disable-bundled-ppapi-flash
+
