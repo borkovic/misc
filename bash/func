@@ -235,9 +235,7 @@ rs () { eval $(resize) ; }
 shopt -s checkwinsize  ## So that bash captures window resizes.
 export LINES COLUMNS   ## Do we really need this? cd function uses it.
 
-cd () {
-    builtin cd "$@"
-
+setPs1 () {
     local p expanded MAX
     ## Need 40 characters beyond the prompt
     ## Can use 'tput cols' instead of $COLUMNS (in rc for example)
@@ -245,14 +243,14 @@ cd () {
 
     local p3='${PWD#${PWD%/*/*/*}/}'  ## Last 3 dirs in path.
     eval 'expanded='"$p3"
-    local nc=$(echo "$expanded" | wc -c)
+    local nc=${#expanded}  ## number of chars in expanded
 
     if let "$nc < $MAX"; then
         p="$p3"
     else
         local p2='${PWD#${PWD%/*/*}/}'  ## Last 2 dirs in path.
         eval 'expanded='"$p2"
-        nc=$(echo "$expanded" | wc -c)
+        nc=${#expanded}
         if let "$nc < $MAX"; then
             p="$p2"
         else
@@ -264,6 +262,17 @@ cd () {
     ## Color path part of prompt, prompt, reset color.
     PS1='\e[0;'"${green}m""$p"'/\[\e[0m $ '   # 
 }
+
+cd () {
+    builtin cd    "$@" && setPs1
+}
+pushd () {
+    builtin pushd "$@" && setPs1
+}
+popd () {
+    builtin popd  "$@" && setPs1
+}
+
 cd .   # initially set PS1
 
 ##################################################################

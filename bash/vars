@@ -1,5 +1,5 @@
-typeset -r tab='    '
-typeset -r nl='
+typeset tab='    '
+typeset nl='
 '
 
 HOSTNAME=$(hostname -s)
@@ -22,7 +22,7 @@ for s in $servers; do
   LM_LICENSE_FILE="$s:$LM_LICENSE_FILE"
 done
 
-export PROMPT_COMMAND='echo -n "]0;$$ - ${USER}@${HOSTNAME} ${PWD}/  "'
+#export PROMPT_COMMAND='echo -n "]0;$$ - ${USER}@${HOSTNAME} ${PWD}/  "'
 
 unset LS_COLORS
 
@@ -52,6 +52,8 @@ h=$HOME
 H=$HOME
 u=$USER
 U=$USER
-ER}@${HOSTNAME} ${PWD}/  ($HOSTNAME)'
-export PROMPT_COMMAND='echo -n "
-#export PROMPT_COMMAND='echo -n "
+
+#####################################################################
+export P4CONFIG=.p4config
+###export P4PORT=1666
+

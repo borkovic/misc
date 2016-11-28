@@ -1,3 +1,9 @@
+alias a=alias
+
+
+unalias ls 2>/dev/null
+unalias vi 2>/dev/null
+
 alias cp='cp -pi'
 
 alias d=date
@@ -7,9 +13,10 @@ alias du='du -h'
 
 alias f=finger
 
+alias gorc='cd $HOME/repos/github/borkovic/rc'
+
 alias j='jobs -l'
 
-alias gorc='cd $HOME/repo/github/$USER/rc'
 alias l='ls -hFC'
 alias ll='l -l'
 alias la='l -a'
@@ -50,7 +57,7 @@ alias myps='ps -l -u $USER'
 alias psvi='myps | egrep vi'
 
 alias stop='kill -STOP'
-lias tl=tail
+alias tl=tail
 alias tlf='tl -f'
 alias hd=head
 
