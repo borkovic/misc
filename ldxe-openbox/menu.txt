@@ -1,0 +1,5 @@
+LDXE:
+
+Dir: $HOME/.config/openbox 
+File: see file menu.xml
+
