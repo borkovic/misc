@@ -4,10 +4,11 @@ set keep
 set dot
 #########################################
 set EDITOR=/bin/vi
-set MBOX=mail/mbox
-set record=mail/outbox
-set DEAD=mail/dead.letter
-set folder=mail
+#########################################
+set folder=/home/drazen/mail
+set MBOX=+mbox
+set record=+outbox
+set DEAD=+dead.letter
 #########################################
 alias ming mchuang2k@yahoo.com
 alias me   drazen
