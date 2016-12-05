@@ -1,0 +1,11 @@
+u=borkovic
+if (false) {
+    ## For some reason this does not work for push
+    git remote set-url        origin https://github.com/$u/misc.git
+    git remote set-url --push origin https://u@github.com/$u/misc.git
+} else {
+    ## This works for both, but sometimes the password is asked for pull
+    ## although this is a public repo. Wrong password is accepted!
+    git remote set-url        origin https://$u@github.com/$u/misc.git
+}
+git remote -v
