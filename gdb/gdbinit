@@ -23,3 +23,10 @@ set breakpoint pending on
 
 ## key mappings are in .emacs
 
+handle SIGILL nostop
+handle SIGUSR2 nostop
+handle SIGSEGV nostop
+
+## height of terminal for 'more'-like behaviour, 0 means don't paginate
+##set height 0
+
