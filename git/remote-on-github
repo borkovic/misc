@@ -5,3 +5,9 @@ git clone  https://borkovic@github.com/borkovic/rc.git
 Other people's
 git clone  https://github.com/user/rc.git
 
+$ git remote -v
+byron_rc	https://github.com/rakitzis/rc.git (fetch)
+byron_rc	NO_PUSH (push)
+origin	https://borkovic@github.com/borkovic/rc (fetch)
+origin	https://borkovic@github.com/borkovic/rc (push)
+
