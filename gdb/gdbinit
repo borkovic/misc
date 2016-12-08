@@ -1,3 +1,9 @@
+handle SIGILL nostop
+handle SIGUSR2 nostop
+handle SIGSEGV nostop
+## height of terminal for 'more'-like behaviour, 0 means don't paginate
+##set height 0
+
 catch throw
 break main
 
@@ -13,7 +19,6 @@ set print null-stop on
 set print elements 0
 set breakpoint pending on
 
-
 # ## to avoid printing thread-created every time, works only in newer gdb's
 # #set print thread-events off
 # ## "next" in 7.0.1 gdb can be slow
@@ -23,10 +28,11 @@ set breakpoint pending on
 
 ## key mappings are in .emacs
 
-handle SIGILL nostop
-handle SIGUSR2 nostop
-handle SIGSEGV nostop
 
-## height of terminal for 'more'-like behaviour, 0 means don't paginate
-##set height 0
+### Useful for detaching and quickly attaching in another debugger
+
+define detach_quit
+detach
+quit
+end
 
