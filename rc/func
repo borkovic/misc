@@ -21,7 +21,7 @@ fn Fatal { Error $*; exit 1 }
 ## ; whatis A
 ## ; A=(y3 z4)
 ##================================================
-fn Shift { varName=() nShift=() {
+fn ShiftVar { varName=() nShift=() {
     switch ($#*) {
     case 1
         varName=$1 nShift=1
@@ -33,8 +33,9 @@ fn Shift { varName=() nShift=() {
     }
 
     * = $($varName)
-    shift $nShift
-    $varName = $*
+    if (shift $nShift) {
+        $varName = $*
+    }
 }}
 
 ##################################################
@@ -44,14 +45,10 @@ fn rs { s=() {
 }}
 
 ##################################################
-fn stop {
-    kill -STOP $*
-}
+fn stop { kill -STOP $* }
 
 ##################################################
-fn cont {
-    kill -CONT $*
-}
+fn cont { kill -CONT $* }
 
 ##################################################
 fn setPrompt { 
@@ -61,30 +58,29 @@ Dirs=0 n=0 n1=0 n2=0 p=0 nc=0 max=0 {
 
     switch ($pwd) {
     case */*/*/*
-        let max=$COLUMNS-39
+        calc max=$COLUMNS-39
         Dirs = `` / { echo -n $pwd }
         n = $#Dirs
-        let n1=$n-1
-        let n2=$n-2
+        calc n1=$n-1
+        calc n2=$n-2
 
-        p = $Dirs($n2) ^ / ^ $Dirs($n1) ^ / ^ $Dirs($n)
+        p = $Dirs($n2)^/^$Dirs($n1)^/^$Dirs($n)
         nc = ${echo $p | wc -c}
-        if (let $nc' > '$max) {
-            p = $Dirs($n1) ^ / ^ $Dirs($n)
+        if (calc $nc '>' $max) {
+            p = $Dirs($n1)^/^$Dirs($n)
             nc = ${echo $p | wc -c}
-            if (let $nc' > '$max) {
+            if (calc $nc '>' $max) {
                 p = $Dirs($n)
             }
         }
     }
 
-    prompt = ($p^' ; ' $prompt(2))
+    prompt = ($p^' ; '   $prompt(2))
 }}
 
 ##################################################
 fn cd {
     if (builtin cd $*) {
-        ##pwd
         setPrompt
         return 0
     } else {
@@ -130,7 +126,7 @@ fn po { curDir=() newDir=() {
 fn dirs { curDir=() newDir=() n=0 d=() {
     echo $n $pwd
     for (d in $DIRSTACK) {
-        let 'n=1+'$n
+        calc 'n=1+'$n
         echo $n $DIRSTACK($n)
     }
 }}
