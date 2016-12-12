@@ -5,14 +5,19 @@ git clone  https://borkovic@github.com/borkovic/rc.git
 Other people's
 git clone  https://github.com/user/rc.git
 
-$ git remote -v
-byron_rc  https://github.com/rakitzis/rc.git (fetch)
-byron_rc  NO_PUSH (push)
-origin    https://github.com/borkovic/rc (fetch)
-origin    https://borkovic@github.com/borkovic/rc (push)
-
-$ git remote set-url         origin  https://github.com/borkovic/rc.git        # pull and push 
-$ git remote set-url  --push origin origin  https://borkovic@github.com/borkovic/rc   # push includes username
 $ git remote set-url         byron_rc  https://github.com/rakitzis/rc.git
 $ git remote set-url  --push byron_rc  NO_PUSH
 
+$ git remote -v
+byron_rc  https://github.com/rakitzis/rc.git (fetch)
+byron_rc  NO_PUSH (push)
+origin    https://borkovic@github.com/borkovic/rc (fetch)
+origin    https://borkovic@github.com/borkovic/rc (push)
+
+
+###################################################################################################
+The following setting fetch URL without username and push with username does NOT work.
+$ git remote set-url         origin  https://github.com/borkovic/rc.git        # pull and push 
+$ git remote set-url  --push origin origin  https://borkovic@github.com/borkovic/rc   # push includes username
+
+Access error is reported.
