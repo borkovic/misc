@@ -1,6 +1,6 @@
-handle SIGILL nostop
-handle SIGUSR2 nostop
-handle SIGSEGV nostop
+handle SIGILL  stop
+handle SIGUSR2 stop
+handle SIGSEGV stop
 ## height of terminal for 'more'-like behaviour, 0 means don't paginate
 ##set height 0
 
