@@ -261,6 +261,9 @@ setPs1 () {
 
     ## Color path part of prompt, prompt, reset color.
     PS1='\e[0;'"${green}m""$p"'/\[\e[0m $ '   # 
+
+    ## Terminal 
+    echo -n "]0;$$ - ${USER}@${HOSTNAME} ${PWD}/  "
 }
 
 cd () {
