@@ -8,7 +8,7 @@ typedef struct List {
 } List;
 
 
-List* sortList(List* head, int length, int dep)
+List* sortList(List* head, int length)
 {
     if (length > 1) {
         int i;
@@ -21,14 +21,11 @@ List* sortList(List* head, int length, int dep)
             f = f->m_Next;
         }
         secondHead = f->m_Next;
-        printf("%d: [%d,%d]  %d\n", dep, head->m_Val, f->m_Val, secondHead->m_Val);
         f->m_Next = nullptr;
 
         /* Sort both lists */
-        f = sortList(head, firstHalfLen, dep+1);
-        printf("%d: f %d\n", dep, f->m_Val);
-        s = sortList(secondHead, length - firstHalfLen, dep+1);
-        printf("%d: s %d\n", dep, s->m_Val);
+        f = sortList(head, firstHalfLen);
+        s = sortList(secondHead, length - firstHalfLen);
 
 
         /* Go through both lists and merge */
@@ -77,12 +74,13 @@ int main()
     }
     listArr[SIZE-1].m_Next = nullptr;
     listArr[SIZE-1].m_Val  = 2*SIZE - (SIZE-1);
+
     for (p = &listArr[0]; p; p = p->m_Next) {
         printf("%d  ", p->m_Val);
     }
     printf("\n");
 
-    newHead = sortList(&listArr[0], SIZE, 0);
+    newHead = sortList(&listArr[0], SIZE);
 
     for (p = newHead; p; p = p->m_Next) {
         printf("%d  ", p->m_Val);
