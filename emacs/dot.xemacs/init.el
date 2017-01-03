@@ -20,13 +20,16 @@
 (autoload 'c-mode "cc-mode" "C Editing Mode" t)
 
 (setq auto-mode-alist
-        (append '(("\\.C$" . c++-mode)
-                  ("\\.cc$ . c++-mode)
-                  ("\\.hh$ . c++-mode)
-                  ("\\.h$ . c++-mode)
-                  ("\\.c$ . c-mode)
-                  ) auto-mode-alist)
-     )
+    (append '(("\\.C$" . c++-mode)
+        ("\\.cc$" . c++-mode)
+        ("\\.cpp$" . c++-mode)
+        ("\\.cxx$" . c++-mode)
+        ("\\.hh$" . c++-mode)
+        ("\\.hpp$" . c++-mode)
+        ("\\.h$" . c++-mode)
+        ("\\.c$" . c-mode)
+        ) auto-mode-alist)
+)
 
 (setq-default fill-column 80)
 (setq auto-fill-mode 1)
@@ -49,19 +52,19 @@
 
 
 (setq c-mode-hook
-(function (lambda ()
-(setq indent-tabs-mode nil)
-(setq c-indent-level 2))))
+    (function (lambda ()
+    (setq indent-tabs-mode nil)
+    (setq c-indent-level 4))))
 
 (setq objc-mode-hook
 (function (lambda ()
             (setq indent-tabs-mode nil)
-            (setq c-indent-level 2))))
+            (setq c-indent-level 4))))
 
 (setq c++-mode-hook
       (function (lambda ()
                   (setq indent-tabs-mode nil)
-                  (setq c-indent-level 2))))
+                  (setq c-indent-level 4))))
 
 
 (setq inhibit-startup-message t)
@@ -75,13 +78,13 @@
 
 ;; Herman c++ indent function. Primarily for namespaces
 (defun my-c++-setup ()
-(setq c-basic-offset 2)
-(setq indent-tabs-mode nil)
-(c-set-offset 'innamespace 0)
-(c-set-offset 'arglist-intro '++)
-(c-set-offset 'arglist-cont 0)
-(c-set-offset 'arglist-close 0)
-(c-set-offset 'substatement-open 0)
+    (setq c-basic-offset 2)
+    (setq indent-tabs-mode nil)
+    (c-set-offset 'innamespace 0)
+    (c-set-offset 'arglist-intro '++)
+    (c-set-offset 'arglist-cont 0)
+    (c-set-offset 'arglist-close 0)
+    (c-set-offset 'substatement-open 0)
 )
 
 ;; (gud-tooltip-mode 1)
@@ -106,15 +109,6 @@
 (autoload 'c++-mode "cc-mode"  "C++ Editing Mode" t)
 (autoload 'c-mode "cc-mode" "C Editing Mode" t)
 
-(setq auto-mode-alist
-              (append '(("\\.C$" . c++-mode)
-                                          ("\\.cc$ . c++-mode)
-                                          ("\\.hh$ . c++-mode)
-                                          ("\\.h$ . c++-mode)
-                                          ("\\.c$ . c-mode)
-                                                  ) auto-mode-alist)
-          )
-
 (setq-default fill-column 80)
 (setq auto-fill-mode 1)
 
@@ -136,21 +130,6 @@
 
 
 
-(setq c-mode-hook
-(function (lambda ()
-(setq indent-tabs-mode nil)
-(setq c-indent-level 2))))
-
-(setq objc-mode-hook
-(function (lambda ()
-(setq indent-tabs-mode nil)
-(setq c-indent-level 2))))
-
-(setq c++-mode-hook
-(function (lambda ()
-(setq indent-tabs-mode nil)
-(setq c-indent-level 2))))
-
 
 (setq inhibit-startup-message t)
 (setq require-final-newline t)
@@ -161,28 +140,17 @@
 (setq default-tab-width 2)
 (setq bell-volume 0)
 
-;; Herman c++ indent function. Primarily for namespaces
-(defun my-c++-setup ()
-   (setq c-basic-offset 2)
-    (setq indent-tabs-mode nil)
-     (c-set-offset 'innamespace 0)
-      (c-set-offset 'arglist-intro '++)
-       (c-set-offset 'arglist-cont 0)
-        (c-set-offset 'arglist-close 0)
-         (c-set-offset 'substatement-open 0)
-         )
-
 ;; (gud-tooltip-mode 1)
 
 ;; Herman c++ indent function. Primarily for namespaces
 (defun my-c++-setup ()
-(setq c-basic-offset 2)
-(setq indent-tabs-mode nil)
-(c-set-offset 'innamespace 0)
-(c-set-offset 'arglist-intro '++)
-(c-set-offset 'arglist-cont 0)
-(c-set-offset 'arglist-close 0)
-(c-set-offset 'substatement-open 0)
+    (setq c-basic-offset 4)
+    (setq indent-tabs-mode nil)
+    (c-set-offset 'innamespace 0)
+    (c-set-offset 'arglist-intro '++)
+    (c-set-offset 'arglist-cont 0)
+    (c-set-offset 'arglist-close 0)
+    (c-set-offset 'substatement-open 0)
 )
 
 (add-hook 'c++-mode-hook 'my-c++-setup)
@@ -193,16 +161,16 @@
 
 ;;pdb setup, note the python version
 (setq pdb-path '/usr/lib64/python2.7/pdb.py
-gud-pdb-command-name (symbol-name pdb-path))
+    gud-pdb-command-name (symbol-name pdb-path))
 
-(setq debug-on-error 't)
+;; X (setq debug-on-error 't)
 
 ;; define macro for inserting comment
 (fset 'c-comment
-"/**\C-m\C-i*\C-m*/\C-[OA ")
+    "/**\C-m\C-i*\C-m*/\C-[OA ")
 ;; define macro for inserting header
 (fset 'c-header
-"//------------------------------------------------------------------------------\C-m")
+    "//------------------------------------------------------------------------------\C-m")
 
 
 ;; in my ~/.Xresources and ~/.emacs, respectively.
