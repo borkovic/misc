@@ -173,15 +173,23 @@
     "//------------------------------------------------------------------------------\C-m")
 
 
+
+(setq line-number-mode t)
+(line-number-mode t)
+;; (setq column-number-mode t)
+
+;;=======================================================================
 ;; in my ~/.Xresources and ~/.emacs, respectively.
 ;; or in ~/.xemacs/init.el or ~/.xemacs/custom.el
 ;; Emacs.font: Liberation Mono-11
 
 ;; (set-default-font "Liberation Mono-11")
-
 (set-face-background 'default  "DarkSlateGray")
 (set-face-foreground 'default  "white")
+
+;;=======================================================================
+;; This is for debugging (gdb in xemacs)
+;;=======================================================================
 (set-face-background 'gdb-arrow-face  "Blue")
 ;; (set-face-foreground 'gdb-arrow-face  "white")
-
 
