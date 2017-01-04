@@ -181,5 +181,7 @@
 
 (set-face-background 'default  "DarkSlateGray")
 (set-face-foreground 'default  "white")
+(set-face-background 'gdb-arrow-face  "Blue")
+;; (set-face-foreground 'gdb-arrow-face  "white")
 
 
