@@ -51,7 +51,7 @@ fn stop { kill -STOP $* }
 fn cont { kill -CONT $* }
 
 ##################################################
-fn setPrompt { 
+fn setPrompt {
 Dirs=0 n=0 n1=0 n2=0 p=0 nc=0 max=0 {
 
     p = $pwd
@@ -134,4 +134,18 @@ fn dirs { curDir=() newDir=() n=0 d=() {
 ##################################################
 ## rotd
 
+
+######################################################
+fn read { varname=$1 nl=() oneline=() {
+nl='
+'
+    ifs=$nl { oneline = ${line; echo $status} }
+    if (~ $#oneline 2) {
+        $varname = $oneline(1)
+        return 0
+    } else {
+        $varname=''
+        return $oneline(1)
+    }
+}}
 
