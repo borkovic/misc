@@ -151,3 +151,19 @@ nl='
     }
 }}
 
+######################################################
+fn read2 { varname=$1 nl=() oneline=() s=() {
+nl='
+'
+    ifs=$nl { oneline = ${line} }
+    s=$bqstatus
+    if (~ $s 0) {
+        $varname = $oneline
+        return 0
+    } else {
+        $varname=''
+        return $s
+    }
+}}
+
+

@@ -193,3 +193,5 @@
 (set-face-background 'gdb-arrow-face  "Blue")
 ;; (set-face-foreground 'gdb-arrow-face  "white")
 
+(set-default-font "Font -*-Liberation Mono-medium-r-*-*-*-120-*-*-*-*-iso8859-*")
+
