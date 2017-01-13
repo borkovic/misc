@@ -1,0 +1,4 @@
+#! /bin/sh
+
+exec ssh -o 'ProxyCommand=nc -x gateway:1080 %h %p' "$@"
+
