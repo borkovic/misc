@@ -16,6 +16,17 @@ fn Fatal { Error $*; exit 1 }
 #  cal N        | all         | N           for N > 12
 #  cal yN       | all         | N
 ##########################################################
+fn qLeapYear { y=$1 {
+    if (let '0 != ('$y' % 4)') {
+        return 1
+    } else if (let '0 == ('$y' % 400)') {
+        return 0
+    } else if (let '0 == ('$y' % 100)') {
+        return 1
+    } else {
+        return 0
+    }
+}}
 
 NumericalMonths=(1 2 3 4 5 6 7 8 9 10 11 12)
 
