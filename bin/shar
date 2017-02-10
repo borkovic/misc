@@ -7,16 +7,17 @@ q=''''
 sep='###########################'
 
 #####################################################################################
-fn ProcessFile { f=$1 n=$2 eof=() pfx=() sedcmd=() {
-    eof    = '_EOF_'^$n^'_'
-    qeof   =$q$eof$q
-    pfx    = 'XXX_^'$n^'_'
-    sedcmd = $q's/^'$pfx'//'$q
+fn ProcessFile { f=$1 n=$2 eof=() pfx=() sedcmd=() sed_file2shar = () sed_shar2file = () {
+    eof           = '_EOF_'^$n^'_'                   ## EOF marker
+    qeof          = $q$eof$q
+    pfx           = 'XXX_^'$n^'_'
+    sed_file2shar = $q's/^'$pfx'//'$q                ## Prefix file
+    sed_shar2file = 's/^/'$pfx'/'                    ## Remove prefix
 
     echo $sep '  ' $f  '  ' $sep
-    echo sed -e $sedcmd '>' $f '<<' $qeof     ## sed -e 's/XXX_<N>//'  > <FILE> << '_EOF_<N>_'
-    sed -e 's/^/'$pfx'/' < $f                 ## File prefixed with XXX_<N>
-    echo $eof                                 ## _EOF_<N>_
+    echo sed -e $sed_file2shar '>' $f '<<' $qeof     ## sed -e 's/XXX_<N>//'  > <FILE> << '_EOF_<N>_'
+         sed -e $sed_shar2file  <  $f                ## File prefixed with XXX_<N>
+    echo $eof                                        ## _EOF_<N>_
 
     echo
 }}
