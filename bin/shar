@@ -1,0 +1,33 @@
+#! /home/drazen/bin/rc
+
+#####################################################################################
+### End of 'here' document must be quoted since files might contain '$var'
+
+q=''''
+sep='###########################'
+
+#####################################################################################
+fn ProcessFile { f=$1 n=$2 eof=() pfx=() sedcmd=() {
+    eof    = '_EOF_'^$n^'_'
+    qeof   =$q$eof$q
+    pfx    = 'XXX_^'$n^'_'
+    sedcmd = $q's/^'$pfx'//'$q
+
+    echo $sep '  ' $f  '  ' $sep
+    echo sed -e $sedcmd '>' $f '<<' $qeof     ## sed -e 's/XXX_<N>//'  > <FILE> << '_EOF_<N>_'
+    sed -e 's/^/'$pfx'/' < $f                 ## File prefixed with XXX_<N>
+    echo $eof                                 ## _EOF_<N>_
+
+    echo
+}}
+
+#####################################################################################
+n=1
+
+for (f) {
+    ProcessFile $f $n
+    calc n=$n+1
+}
+
+#####################################################################################
+
