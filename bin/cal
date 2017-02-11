@@ -32,6 +32,30 @@ while (! ~ $#* 0) {
     shift
 }
 
+NumMonth=()
+##########################################################
+fn Month2Num { m=$1 {
+    NumMonth=()
+
+    switch ($m) {
+    case [Jj]an*;  NumMonth=1
+    case [Ff]eb*;  NumMonth=2
+    case [Mm]ar*;  NumMonth=3
+    case [Aa]pr*;  NumMonth=4
+    case [Mm]ay*;  NumMonth=5
+    case [Jj]un*;  NumMonth=6
+
+    case [Jj]ul*;  NumMonth=7
+    case [Aa]ug*;  NumMonth=8
+    case [Ss]ep*;  NumMonth=9
+    case [Oo]ct*;  NumMonth=10
+    case [Nn]ov*;  NumMonth=11
+    case [Dd]ec*;  NumMonth=12
+
+    case $NumericalMonths;   NumMonth=$m
+    }
+}}
+
 ##########################################################
 fn Cal {
     /usr/bin/cal $Opts $*
@@ -39,8 +63,12 @@ fn Cal {
 
 ##########################################################
 switch ($#*) {
-case 0 2
+case 0
     Cal $*
+
+case 2
+    Month2Num $1
+    Cal $NumMonth $2
 
 case 1
     year=()
@@ -49,27 +77,20 @@ case 1
     monthYear=${date '+%m %Y'}
     year=$monthYear(2)
 
-    switch ($v) {
-    case [Jj]an*;               month=1
-    case [Ff]eb*;               month=2
-    case [Mm]ar*;               month=3
-    case [Aa]pr*;               month=4
-    case [Mm]ay*;               month=5
-    case [Jj]un*;               month=6
-
-    case [Jj]ul*;               month=7
-    case [Aa]ug*;               month=8
-    case [Ss]ep*;               month=9
-    case [Oo]ct*;               month=10
-    case [Nn]ov*;               month=11
-    case [Dd]ec*;               month=12
-
-    case $NumericalMonths;      month=$v
-    case 1[3-9] 1[0-9][0-9]* [2-9][0-9]* ;
-                                year=$v
-    case y*;                    year=${echo $v | sed -e 's/^y//g'}
-
-    case *;                     Fatal Wrong arg $v
+    Month2Num $v
+    if (! ~ $NumMonth ()) {
+        month=$NumMonth
+    } else {
+        switch ($v) {
+        case $NumericalMonths;
+            month=$v
+        case 1[3-9] 1[0-9][0-9]* [2-9][0-9]* ;
+            year=$v
+        case y*;
+            year=${echo $v | sed -e 's/^y//g'}
+        case *;
+            Fatal Wrong arg $v
+        }
     }
 
     if (~ $#year 0) {
