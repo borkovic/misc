@@ -26,16 +26,17 @@ q=''''
 sep='###########################'
 
 #####################################################################################
-fn ProcessFile { f=$1 n=$2 eof=() pfx=() sedcmd=() sed_file2shar = () sed_shar2file = () {
-    eof           = '_EOF_'^$n^'_'                   ## EOF marker
+fn ProcessFile { file=$1 n=$2 eof=() pfx=() sedcmd=() sed_file2shar=() sed_shar2file=() {
+    eof           = '_EOF_'$n'_'                     ## EOF marker
     qeof          = $q$eof$q
-    pfx           = 'XXX_^'$n^'_'
-    sed_file2shar = $q's/^'$pfx'//'$q                ## Prefix file
-    sed_shar2file = 's/^/'$pfx'/'                    ## Remove prefix
+    pfx           = 'XXX_'$n'_'
 
-    echo $sep '  ' $f  '  ' $sep
-    echo sed -e $sed_file2shar '>' $f '<<' $qeof     ## sed -e 's/XXX_<N>//'  > <FILE> << '_EOF_<N>_'
-         sed -e $sed_shar2file  <  $f                ## File prefixed with XXX_<N>
+    sed_shar2file = 's/^/'$pfx'/'                    ## Add prefix for shar
+    sed_file2shar = $q's/'$pfx'//'$q                 ## Remove prefix for unshar
+
+    echo $sep '  ' '<'$file'>'  '  ' $sep
+    echo sed -e $sed_file2shar '>'  $q$file$q '<<' $qeof  ## unshar: remove prefix XXX_<N> to eof _EOF_<N>_
+         sed -e $sed_shar2file  <  $file             ## shar: add prefix to file: XXX_<N>
     echo $eof                                        ## _EOF_<N>_
 
     echo
