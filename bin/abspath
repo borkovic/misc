@@ -1,0 +1,23 @@
+#! /home/drazen/bin/rc
+
+verbose=0
+switch ($1) {
+case -v
+    verbose=1
+    shift
+}
+
+if (~ $verbose 1) {
+    for (f) {
+        echo -n $f:' '
+        readlink -f $f
+    }
+} else {
+    for (f) {
+        readlink -f $f
+    }
+}
+
+
+## python -c 'import os; print(os.path.realpath("'$1'cat.wav"))'
+
