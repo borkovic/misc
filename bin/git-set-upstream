@@ -1,0 +1,26 @@
+#! /home/drazen/bin/rc
+
+PROG=$0
+
+########################################################
+fn Fatal {
+    echo >[1=2] Usage: $PROG '<local-branch>' 'repository' '[<remote-branch]'
+    exit 1
+}
+
+########################################################
+
+switch ($#*) {
+case 2
+    local_branch=$1 repo=$2
+    remote_branch=$local_branch
+case 3
+    local_branch=$1 repo=$2 remote_branch=$3
+case *
+    Fatal
+}
+
+git branch --set-upstream-to=$repo/$remote_branch $local_branch
+
+########################################################
+
