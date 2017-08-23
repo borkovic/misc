@@ -1,4 +1,4 @@
-#! /home/drazen/bin/rc
+#! /usr/bin/env rc
 
 verbose=0
 switch ($1) {
