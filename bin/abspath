@@ -9,12 +9,20 @@ case -v
 
 if (~ $verbose 1) {
     for (f) {
-        echo -n $f:' '
-        readlink -f $f
+        if (test -L $f) {
+            echo -n $f:' '
+            readlink -f $f
+        } else {
+            echo -n $f: $f
+        }
     }
 } else {
     for (f) {
-        readlink -f $f
+        if (test -L $f) {
+            readlink -f $f
+        } else {
+            echo $f
+        }
     }
 }
 
