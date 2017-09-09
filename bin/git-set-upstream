@@ -11,7 +11,7 @@ fn Fatal {
 ########################################################
 NEW=false
 
-while (! $#* 0) {
+while (! ~ $#* 0) {
     switch (x$1) {
     case x--new
         NEW=true
