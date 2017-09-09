@@ -1,4 +1,4 @@
-#! /home/drazen/bin/rc
+#! /usr/bin/env rc
 
 PROG=$0
 
@@ -9,6 +9,17 @@ fn Fatal {
 }
 
 ########################################################
+NEW=false
+
+while (! $#* 0) {
+    switch (x$1) {
+    case x--new
+        NEW=true
+    case *
+        break
+    }
+    shift
+}
 
 switch ($#*) {
 case 2
@@ -20,7 +31,11 @@ case *
     Fatal
 }
 
-git branch --set-upstream-to=$repo/$remote_branch $local_branch
+if ($NEW) {
+    git checkout --track $repo/$local_branch
+} else {
+    git branch --set-upstream-to=$repo/$remote_branch $local_branch
+}
 
 ########################################################
 
