@@ -1,4 +1,4 @@
-#! /home/drazen/bin/rc
+#! /usr/bin/env rc
 
 PROG=$0
 
@@ -15,11 +15,11 @@ if (! ~ $#* 3) {
 
 ########################################################
 switch (x$1){
-case --track*
+case x--track*
     repo=$2; branch=$3
     git branch -d -r $repo/$branch
 
-case --remote*
+case x--remote*
     repo=$2; branch=$3
     git push $repo --delete $branch
 

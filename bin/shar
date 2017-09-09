@@ -1,4 +1,4 @@
-#! /home/drazen/bin/rc
+#! /usr/bin/env rc
 
 #####################################################################################
 # End of 'here' document must be quoted since files might contain '$var'

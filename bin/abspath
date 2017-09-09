@@ -1,4 +1,4 @@
-#! /home/drazen/bin/rc
+#! /usr/bin/env rc
 
 verbose=0
 switch ($1) {
@@ -9,12 +9,20 @@ case -v
 
 if (~ $verbose 1) {
     for (f) {
-        echo -n $f:' '
-        readlink -f $f
+        if (test -L $f) {
+            echo -n $f:' '
+            readlink -f $f
+        } else {
+            echo -n $f: $f
+        }
     }
 } else {
     for (f) {
-        readlink -f $f
+        if (test -L $f) {
+            readlink -f $f
+        } else {
+            echo $f
+        }
     }
 }
 

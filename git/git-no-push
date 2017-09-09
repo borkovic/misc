@@ -6,7 +6,7 @@
 switch ($#*) {
 case 0
     upstreams=(origin)
-case
+case *
     upstreams=$*
 }
 for (u in $upstreams) {
