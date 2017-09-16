@@ -11,16 +11,23 @@ for (f in $files) {
 cdpath=(. ..)
 
 ######################################################
-fn cd2 { d=() ns='[^/]*' sedstr = 's@.*/\('^$ns/$ns/$ns^'\)@\1@' {
+fn cd { esc='' p=() N=() i=() dirComps=() {
     builtin cd $*
 
     switch ($pwd) {
-    case */*/*/*;
-        d=${ echo $pwd | sed -e $sedstr }
-    case *;
-        d=$pwd
+    case /*/*/*/*
+        dirComps = ${ echo $pwd | sed -e 's@/@ @g' }
+        N = $#dirComps
+        p='...'
+        for (i in 2 1 0) {
+            calc x=$N-$i
+            p=$p/$dirComps($x)
+        }
+    case *
+        p=$pwd
     }
-    prompt=($d'; ' '')
+    p=$esc^'[0;32m'^$p^' ; '^$esc^'[0m'
+    prompt=($p  '')
 }}
 
 ######################################################
