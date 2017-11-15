@@ -16,6 +16,7 @@
     unco = checkout --
     tree = log --oneline --graph --decorate --all
     dag = log --oneline --graph --decorate --all --date-order
+    dagsimple = log --oneline --graph --decorate --all --date-order --simplify-by-decoration
     br = branch -vv
     mrg = merge --no-commit
     switch = checkout

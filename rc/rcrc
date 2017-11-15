@@ -1,3 +1,6 @@
+fn Error { echo >[1=2] $* }
+fn Fatal { Error $*; exit 1 }
+
 files=(
     func
     path
@@ -12,24 +15,92 @@ cdpath=(. ..)
 
 ######################################################
 fn cd { esc='' p=() N=() i=() dirComps=() {
-    builtin cd $*
+    if (builtin cd $*) {
+        switch ($pwd) {
+        case /*/*/*/*
+            dirComps = ${ echo $pwd | sed -e 's@/@ @g' }
+            N = $#dirComps
+            p='...'
+            for (i in 2 1 0) {
+                calc x=$N-$i
+                p=$p/$dirComps($x)
+            }
+        case *;
+            p=$pwd
+        }
+        p=$esc^'[0;32m'^$p^' ; '^$esc^'[0m'
+        prompt=($p  '')
+        return 0
+    } else {
+        return 1
+    }
+}}
+cd .
 
-    switch ($pwd) {
-    case /*/*/*/*
-        dirComps = ${ echo $pwd | sed -e 's@/@ @g' }
-        N = $#dirComps
-        p='...'
-        for (i in 2 1 0) {
-            calc x=$N-$i
-            p=$p/$dirComps($x)
+__DirStack=()
+######################################################
+fn pushd pu { newDir=() currDir=$pwd {
+    switch ($#*) {
+    case 0
+        if (! ~ $__DirStack ()) {
+            ## swap $pwd and $__DirStack(1)
+            newDir=$__DirStack(1)
+            if (cd $newDir) {
+                * = $__DirStack
+                shift
+                __DirStack = ($currDir $*)
+            } else {
+                Error pushd: Cannot cd to $newDir
+                return 1
+            }
+        } else {
+            Error pushd: Empty dir stack
+            return 1
+        }
+    case 1
+        newDir = $1
+        if (cd $newDir) {
+            __DirStack = ($currDir $__DirStack)
+        } else {
+            Error pushd: Cannot cd to $newDir
+            return 1
         }
     case *
-        p=$pwd
+        Error pushd: Too many arguments: $#*
+        return 1
     }
-    p=$esc^'[0;32m'^$p^' ; '^$esc^'[0m'
-    prompt=($p  '')
+    return 0
 }}
 
 ######################################################
-cd .
+fn popd po { currDir=$pwd newDir=() {
+    if ( ~ $__DirStack ()) {
+        Error popd: Empty dir stack
+        return 1
+    } else {
+        newDir = $__DirStack(1)
+        if (cd $newDir) {
+            * = $__DirStack
+            shift
+            __DirStack = $*
+        } else {
+            Error popd: Cannot cd to $newDir
+            return 1
+        }
+    }
+    return 0
+}}
 
+######################################################
+fn dirs { f=() i=() {
+    i = 0
+    for (f in $pwd $__DirStack) {
+        echo $i $f
+        calc i=$i+1
+    }
+}}
+
+######################################################
+fn c { clear }
+fn l { ls -FC }
+fn ll { l -l }
