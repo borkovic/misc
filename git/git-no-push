@@ -1,14 +1,17 @@
 #! /usr/bin/env rc
 
+fn Error { echo>[1=2] $* }
+fn Fatal { Error $*; exit 1 }
 
 # To avoid accidental push to a remote:
 
 switch ($#*) {
 case 0
-    upstreams=(origin)
+    Fatal Need at least one remote
 case *
     upstreams=$*
 }
+
 for (u in $upstreams) {
     git remote set-url --push $u  NO_PUSH
 }

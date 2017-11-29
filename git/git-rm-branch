@@ -1,0 +1,31 @@
+#! /usr/bin/env rc
+
+PROG=$0
+
+########################################################
+fn Fatal {
+    echo >[1=2] Usage: $PROG '[--track|--remote]' repository branch
+    exit 1
+}
+
+########################################################
+if (! ~ $#* 3) {
+    Fatal
+}
+
+########################################################
+switch (x$1){
+case x--track*
+    repo=$2; branch=$3
+    git branch -d -r $repo/$branch
+
+case x--remote*
+    repo=$2; branch=$3
+    git push $repo --delete $branch
+
+case *
+    Fatal
+}
+
+########################################################
+
