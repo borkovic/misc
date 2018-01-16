@@ -1,0 +1,26 @@
+#! /usr/bin/env rc
+#! /Users/dborkov/bin/rc -x
+
+opts = ()
+
+switch ($0) {
+case vi */vi
+    Exe=vim
+case vu */vu
+    #Exe = view
+    Exe = vim
+    opts = ($opts -R)
+case gvi */gvi
+    Exe = gvim
+case gvu */gvu
+    Exe = gvim
+    opts = ($opts -R)
+}
+
+if (calc $#* '<' 6) {
+    opts =($opts -o)
+}
+
+exec $Exe $opts $*
+
+

@@ -1,0 +1,11 @@
+#! /usr/bin/env rc
+
+if (! ~ $#* 2) {
+    echo >[1=2] Usage: $0 branch-to-move target-commit
+    exit 1
+}
+branch_to_move = $1
+target_commit = $2
+
+git branch -f $branch_to_move  $target_commit
+

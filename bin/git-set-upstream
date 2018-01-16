@@ -4,7 +4,7 @@ PROG=$0
 
 ########################################################
 fn Fatal {
-    echo >[1=2] Usage: $PROG '<local-branch>' 'repository' '[<remote-branch]'
+    echo >[1=2] Usage: $PROG '[--new] local-branch repository [remote-branch]'
     exit 1
 }
 

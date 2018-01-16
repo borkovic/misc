@@ -1,0 +1,4 @@
+#! /usr/bin/env rc
+
+exec c++filt $*
+
