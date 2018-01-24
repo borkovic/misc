@@ -51,3 +51,48 @@ fn ProtectDirs {
 ## PrintSalientVars
 ProtectDirs
 
+###########################################################
+fn LeapYear { YEAR=$1 {
+    if ( calc $YEAR'%4==0 && ('$YEAR'%100 != 0 || '$YEAR'%400 == 0)' ) {
+        return 0
+    } else {
+        return 1
+    }
+}}
+
+###########################################################
+fn CheckFridge {
+  DATE=0 WEEK_STR=0 MONTH_STR=0 NUM_DAYS=0 YEAR=0 MONTH=0 DAY=0 WDAY=0 NDAYS=0 msg=0 {
+    DATE = ( ${date '+%Y %m %d %u'} )   ## %u => Sun=7
+    WEEK_STR = (Mon Tue Wed Thu Fri Sat Sun)
+    MONTH_STR= (Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec)
+    NUM_DAYS = ( 31  28  31  30  31  30  31  31  30  31  30  31)
+
+    #######################################################
+    YEAR  = $DATE(1)
+    MONTH = $DATE(2); MONTH = ${calc -p $MONTH}  ## Convert 01 to 1
+    DAY   = $DATE(3)
+    WDAY  = $DATE(4); ~ $WDAY 0 && WDAY=7
+
+    ###########################################################
+    NDAYS = $NUM_DAYS($MONTH)
+    ~ $MONTH 2 && LeapYear && calc 'NDAYS=1+'$NDAYS
+
+    ###########################################################
+    # Last Friday of month: clean fridge
+    # Last Friday of Mar, Jun, Sep, Dec: clean freezer
+    msg = ()
+    if (~ $WDAY 5 && calc $DAY'+7 > '$NDAYS) {
+        msg = 'Monthly fridge cleaning'
+        if (calc $MONTH'%3 == 0) {
+            msg = 'Quarterly freezer cleaning'
+        }
+    }
+    if (! ~ $msg ()) {
+        echo $msg | mail -s 'Fridge cleaning' $address
+    }
+}}
+
+CheckFridge
+###########################################################
+
