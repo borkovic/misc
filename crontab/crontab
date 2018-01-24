@@ -1,6 +1,6 @@
 ##########################################################
 ## SHELL is set to /bin/sh, and LOGNAME and HOME are set from
-## the /etc/passwd line of the crontab´s owner.
+## the /etc/passwd line of the crontabs owner.
 ## HOME and SHELL may be overridden by settings in the crontab; LOGNAME may not.
 
 ##########################################################
