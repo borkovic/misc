@@ -309,6 +309,11 @@ gosrc () {
 
 
 ##################################################################
+function xtitle {
+    echo -ne "\033]0;$@\007"
+}
+export -f xtitle
+
 PromptCommand () {
     local p
     case $PWD in
@@ -317,6 +322,7 @@ PromptCommand () {
     esac
 
     PS1='\e[0;'"${green}"'m'"$HH"' : '"$p"'/ $ \[\e[0m'   # 
+    xtitle "$USER  ${PWD}"
 }
 PROMPT_COMMAND="PromptCommand"
 ##################################################################
