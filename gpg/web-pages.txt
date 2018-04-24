@@ -1,43 +1,44 @@
+Alphabetical by domain name (excluding .com, .ort, etc.)
 
-https://incenp.org/notes/2015/using-an-offline-gnupg-master-key.html
-
-https://gist.github.com/KenMacD/1269309
-
-https://davesteele.github.io/gpg/2014/09/20/anatomy-of-a-gpg-key/
-
-http://www.macfreek.nl/memory/Convert_GPG_keys_to_subkeys
+https://alexcabal.com/creating-the-perfect-gpg-keypair/
 
 http://spin.atomicobject.com/2013/11/24/secure-gpg-keys-guide/
 
 https://spin.atomicobject.com/2013/09/25/gpg-gnu-privacy-guard/
 
-http://atom.smasher.org/gpg/gpg-migrate.txt
-
 https://wiki.debian.org/Subkeys
 
 https://wiki.debian.org/Subkeys?action=show&redirect=subkeys
 
-https://security.stackexchange.com/questions/8559/digital-certificate-deployment-using-two-certs-for-each-user/8563#
-
-http://security.stackexchange.com/questions/31594/what-is-a-good-general-purpose-gnupg-key-setup
-
 http://wiki.fsfe.org/Card_howtos/Card_with_subkeys_using_backups
-
-https://alexcabal.com/creating-the-perfect-gpg-keypair/
 
 https://futureboy.us/pgp.html#PerfectKeypair
 
-https://rudd-o.com/linux-and-free-software/protecting-your-private-master-key-in-gnupg-2-1-and-later
+https://sanctum.geek.nz/arabesque/series/gnu-linux-crypto/
 
-https://riseup.net/en/security/message-security/openpgp/best-practices#only-use-your-primary-key-for-certificati
+https://davesteele.github.io/gpg/2014/09/20/anatomy-of-a-gpg-key/
 
-https://riseup.net/en/security/message-security/openpgp/best-practices#only-use-your-primary-key-for-certification-a
+https://gist.github.com/KenMacD/1269309
 
-https://www.void.gr/kargig/blog/2013/12/02/creating-a-new-gpg-key-with-subkeys/
+https://incenp.org/notes/2015/using-an-offline-gnupg-master-key.html
 
 https://www.linux.com/blog/learn/2018/2/protecting-code-integrity-pgp-part-1-basic-pgp-concepts-and-tools
 
 https://www.linux.com/blog/learn/pgp/2018/3/protecting-code-integrity-pgp-part-7-protecting-online-accounts
 
-https://sanctum.geek.nz/arabesque/series/gnu-linux-crypto/
+http://www.macfreek.nl/memory/Convert_GPG_keys_to_subkeys
+
+https://riseup.net/en/security/message-security/openpgp/best-practices#only-use-your-primary-key-for-certificati
+
+https://riseup.net/en/security/message-security/openpgp/best-practices#only-use-your-primary-key-for-certification-a
+
+https://rudd-o.com/linux-and-free-software/protecting-your-private-master-key-in-gnupg-2-1-and-later
+
+http://atom.smasher.org/gpg/gpg-migrate.txt
+
+https://security.stackexchange.com/questions/8559/digital-certificate-deployment-using-two-certs-for-each-user/8563#
+
+http://security.stackexchange.com/questions/31594/what-is-a-good-general-purpose-gnupg-key-setup
+
+https://www.void.gr/kargig/blog/2013/12/02/creating-a-new-gpg-key-with-subkeys/
 
