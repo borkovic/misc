@@ -10,31 +10,38 @@ fn Fatal {
 
 ########################################################
 NEW=false
+UNSET=false
 
 while (! ~ $#* 0) {
     switch (x$1) {
     case x--new
         NEW=true
+    case x--unset
+        UNSET=true
     case *
         break
     }
     shift
 }
 
-switch ($#*) {
-case 2
-    local_branch=$1 repo=$2
-    remote_branch=$local_branch
-case 3
-    local_branch=$1 repo=$2 remote_branch=$3
-case *
-    Fatal
-}
+if (! $UNSET) {
+    switch ($#*) {
+    case 2
+        local_branch=$1 repo=$2
+        remote_branch=$local_branch
+    case 3
+        local_branch=$1 repo=$2 remote_branch=$3
+    case *
+        Fatal
+    }
 
-if ($NEW) {
-    git checkout --track $repo/$local_branch
+    if ($NEW) {
+        git checkout --track $repo/$local_branch
+    } else {
+        git branch --set-upstream-to=$repo/$remote_branch $local_branch
+    }
 } else {
-    git branch --set-upstream-to=$repo/$remote_branch $local_branch
+        git branch --unset-upstream $*
 }
 
 ########################################################
