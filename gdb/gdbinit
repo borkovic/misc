@@ -36,3 +36,14 @@ detach
 quit
 end
 
+## Set the debugger response to a program call of fork or vfork. A call to fork or vfork creates a new process. The mode argument can be:
+##
+## parent
+## The original process is debugged after a fork. The child process runs unimpeded. This is the default.
+##
+## child
+## The new process is debugged after a fork. The parent process runs unimpeded.
+
+#set follow-fork-mode parent
+set follow-fork-mode child
+
