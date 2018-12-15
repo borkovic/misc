@@ -28,5 +28,9 @@ cleanPath PATH
 ##echo Path after cleaning $PATH
 umask 022
 
+# To prevent suspending processes with 'tty output' run
+# the following:
+# $ stty -tostop
+
 unalias ct 2>/dev/null 
 
