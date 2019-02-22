@@ -13,7 +13,9 @@ func checkSorted(v Vec, cmp CmpFunc) {
         }
     }
     if ok {
-        fmt.Println("OK")
+        fmt.Println("hs1: OK")
+    } else {
+        fmt.Println("hs1: BAD")
     }
     //fmt.Println("C"); prHeap(v[:], 0, "")
     //fmt.Println(v)
@@ -42,17 +44,18 @@ func cmpGT(l Value, r Value) int {
 func prHeap(v Vec, k Index, ident string) {
     fmt.Println(ident, v[k])
     last := Len(v) - 1
-    leftChild := lChild(k)
-    rightChild := rChild(k)
-    if leftChild <= last {
-        prHeap(v, leftChild, ident+"  ")
+    lCld := leftCld(k)
+    rCld := rightCld(k)
+    if lCld <= last {
+        prHeap(v, lCld, ident+"  ")
     }
-    if rightChild <= last {
-        prHeap(v, rightChild, ident+"  ")
+    if rCld <= last {
+        prHeap(v, rCld, ident+"  ")
     }
 }
 
 func main() {
+    //const N = 1 * 1000 * 1000
     const N = 10 * 1000 * 1000
     //const N = 100*1000*1000
     //const N = 10

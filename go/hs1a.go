@@ -10,17 +10,25 @@ func Len(v Vec) Index {
 
 type CmpFunc func(l Value, r Value) int
 
-/*
-            0
-         1     2
-        3 4   5 6
 
-    children -> parent
-       1,2   ->   0
-       3,4   ->   1
-       5,6   ->   2
-* Parent, Left and right child in array based heap
+
+/*
+Parent, Left and right child in array based heap (first index = 0)
+Heap of 6 elements: 
+    0
+ 1     2
+3 4   5
+
+left,right -> parent
+     1,2   ->   0
+     3,4   ->   1
+       5   ->   2
+
+left(n) = 2*n+1
+right(n) = left(n)+1
+parent(n) = floor((n-1)/2)
 */
+
 func parent(k Index) Index {
     if k <= 0 {
         panic("Negative index in parent")
@@ -28,15 +36,15 @@ func parent(k Index) Index {
     return (k - 1) / 2
 }
 
-func lChild(k Index) Index {
+func leftCld(k Index) Index {
     return 2*k + 1
 }
 
-func rChild(k Index) Index {
+func rightCld(k Index) Index {
     return 2*k + 2
 }
 
-/* Move element k towards root if it small
+/* Move element k towards root if smaller than descendants
  */
 func toRoot(v Vec, k Index, cmp CmpFunc) {
     val := v[k]
@@ -57,18 +65,18 @@ func toRoot(v Vec, k Index, cmp CmpFunc) {
  */
 func toLeaves(v Vec, k Index, last Index, cmp CmpFunc) {
     val := v[k]
-    for leftChild := lChild(k); leftChild <= last; leftChild = lChild(k) { // k has at least one child
-        smallChild := leftChild
-        rightChild := leftChild + 1
-        if rightChild <= last && cmp(v[rightChild], v[smallChild]) < 0 {
-            smallChild = rightChild
+    for lCld := leftCld(k); lCld <= last; lCld = leftCld(k) { // k has at least one child
+        smlCld := lCld
+        rCld := lCld + 1
+        if rCld <= last && cmp(v[rCld], v[smlCld]) < 0 {
+            smlCld = rCld
         }
-        //fmt.Println(v, k, v[k], smallChild, v[smallChild])
-        if cmp(v[smallChild], val) >= 0 {
+        //fmt.Println(v, k, v[k], smlCld, v[smlCld])
+        if cmp(v[smlCld], val) >= 0 {
             break
         }
-        v[k] = v[smallChild]
-        k = smallChild
+        v[k] = v[smlCld]
+        k = smlCld
     }
     v[k] = val
 }

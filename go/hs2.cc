@@ -20,11 +20,11 @@ Index parent(Index k) {
     return (k-1) / 2;
 }
 
-Index lChild(Index k) {
+Index leftCld(Index k) {
     return 2*k+1;
 }
 
-Index rChild(Index k) {
+Index rightCld(Index k) {
     return 2*k+2;
 }
 
@@ -35,45 +35,44 @@ using CmpFunc = int (*)(Value l, Value r);
 /* Move element k towards root if it small
  */
 void toRoot(Vec& v, Index k, CmpFunc cmp) {
+    const auto val = v[k];
     while (k > 0) {
-        auto p = parent(k);
+        const auto p = parent(k);
         //fmt.Println("TR: ", v)
         //fmt.Println("TR: k=",k, "v[k]=",v[k], "p=",p, "v[p]=",v[p])
-        if (cmp(v[p], v[k]) <= 0) {
+        if (cmp(v[p], val) <= 0) {
             break;
         }
-        auto t = v[p];
-        v[p] = v[k];
-        v[k] = t;
+        v[k] = v[p];
         k = p;
     }
+    v[k] = val;
 }
 
 /* Move element k toward leaves if it is large
  */
 void toLeaves(Vec& v, Index k, Index last, CmpFunc cmp) {
-    for (auto leftChild = lChild(k); leftChild <= last;  leftChild = lChild(k)) { // k has at least one child
-        auto smallChild = leftChild;
-        auto rightChild = leftChild + 1;
-        if (rightChild <= last && cmp(v[rightChild], v[smallChild]) < 0) {
-            smallChild = rightChild;
+    const auto val = v[k];
+    for (auto lCld = leftCld(k); lCld <= last;  lCld = leftCld(k)) { // k has at least one child
+        auto smlCld = lCld;
+        const auto rCld = lCld + 1;
+        if (rCld <= last && cmp(v[rCld], v[smlCld]) < 0) {
+            smlCld = rCld;
         }
-        //fmt.Println(v, k, v[k], smallChild, v[smallChild])
-        if (cmp(v[smallChild], v[k]) >= 0) {
+        //fmt.Println(v, k, v[k], smlCld, v[smlCld])
+        if (cmp(v[smlCld], val) >= 0) {
             break;
         }
-        auto t = v[smallChild];
-        v[smallChild] = v[k];
-        v[k] = t;
-
-        k = smallChild;
+        v[k] = v[smlCld];
+        k = smlCld;
     }
+    v[k] = val;
 }
 
 /* Make heap with elem[0] being root, smallest in heap
  */
 void heapify(Vec& v, CmpFunc cmp) {
-    auto last = Len(v)-1;
+    const auto last = Len(v)-1;
     for (auto k = parent(last); k >= 0; k--) {
         toLeaves(v, k, last, cmp);
     }
@@ -88,16 +87,15 @@ void heapsort(Vec& v, CmpFunc cmp) {
     //fmt.Println(v)
     heapify(v, cmp);
     //fmt.Println("B"); prHeap(v[:], 0, "")
-    auto last = Len(v)-1;
+    const auto last = Len(v)-1;
     for (auto k = last; k >= 1; k--) {
-        auto t = v[0];
-        v[0] = v[k];
-        v[k] = t;
+        std::swap(v[0], v[k]);
         toLeaves(v, 0, k-1, cmp);
     }
 }
 
 void checkSorted(const Vec& v, CmpFunc cmp) {
+    const Index last = v.size() - 1;
     bool ok = true;
     for (auto k = Index(0); k < last-1; k++) {
         if (cmp(v[k], v[k+1]) < 0) {
@@ -107,7 +105,9 @@ void checkSorted(const Vec& v, CmpFunc cmp) {
         }
     }
     if (ok) {
-        std::cout << "OK\n";
+        std::cout << "hs2: OK\n";
+    } else {
+        std::cout << "hs2: BAD\n";
     }
     //fmt.Println("C"); prHeap(v[:], 0, "")
     //fmt.Println(v)
@@ -138,25 +138,29 @@ int CmpGT(Value l, Value r) {
 
 void prHeap(const Vec& v, Index k, const std::string& ident) {
     std::cout << ident << " " << v[k] << "\n";
-    auto last = Len(v)-1;
-    auto leftChild = lChild(k);
-    auto rightChild = rChild(k);
-    if  (leftChild <= last) {
-        prHeap(v, leftChild, ident+"  ");
+    const auto last = Len(v)-1;
+    const auto lCld = leftCld(k);
+    const auto rCld = rightCld(k);
+    if  (lCld <= last) {
+        prHeap(v, lCld, ident+"  ");
     }
-    if  (rightChild <= last) {
-        prHeap(v, rightChild, ident+"  ");
+    if  (rCld <= last) {
+        prHeap(v, rCld, ident+"  ");
     }
 }
 
 int main() {
-    constexpr long N = 100*1000*1000;
+    constexpr long N = 10*1000*1000;
     Vec v;
     v.resize(N);
     for (long i = 0; i < Len(v); i++) {
-        v[i] = Value(rand.Int31n(N))
+        auto r = std::rand();
+        r = r < 0 ? -r : r;
+        v[i] = Value(r % N);
     }
-    heapsort(v, CmpGT);
+    const auto cmp = CmpGT;
+    heapsort(v, cmp);
+    checkSorted(v, cmp);
     return 0;
 }
 
