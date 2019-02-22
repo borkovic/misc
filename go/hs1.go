@@ -3,7 +3,6 @@ package main
 import "fmt"
 import "math/rand"
 
-
 func checkSorted(v Vec, cmp CmpFunc) {
     last := Len(v) - 1
     ok := true
@@ -66,5 +65,3 @@ func main() {
     Heapsort(v[:], cmp)
     checkSorted(v[:], cmp)
 }
-
-

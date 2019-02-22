@@ -1,6 +1,5 @@
 package main
 
-
 type Index int
 type Value int32
 type Vec []Value
@@ -36,7 +35,6 @@ func lChild(k Index) Index {
 func rChild(k Index) Index {
     return 2*k + 2
 }
-
 
 /* Move element k towards root if it small
  */
@@ -98,5 +96,3 @@ func Heapsort(v Vec, cmp CmpFunc) {
         toLeaves(v, 0, k-1, cmp)
     }
 }
-
-
