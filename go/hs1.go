@@ -13,12 +13,19 @@ func Len(v Vec) Index {
 
 
 /*
-    1,2->0
-    3,4->1
-    5,6->2
+            0
+         1     2
+        3 4   5 6
+    children->parent
+    1,2     ->0
+    3,4     ->1
+    5,6     ->2
 * Parent, Left and right child in array based heap
 */
 func parent(k Index) Index {
+    if (k <= 0) {
+        panic("Negative index in parent")
+    }
     return (k-1) / 2
 }
 
@@ -148,8 +155,10 @@ func prHeap(v Vec, k Index, ident string) {
 }
 
 func main() {
+    const N = 10*1000*1000
     //const N = 100*1000*1000
-    const N = 10
+    //const N = 10
+
     var v [N]Value
     for i := 0; i < len(v); i++ {
         v[i] = Value(rand.Int31n(N))
