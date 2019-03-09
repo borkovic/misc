@@ -15,13 +15,17 @@ if (! ~ $#* 3) {
 
 ########################################################
 switch (x$1){
-case x--track*
-    repo=$2; branch=$3
-    git branch -d -r $repo/$branch
+case x-t x--track*
+    repo=$2; shift 2
+    for (branch) {
+        git branch -d -r $repo/$branch
+    }
 
-case x--remote*
-    repo=$2; branch=$3
-    git push $repo --delete $branch
+case x-r x--remote*
+    repo=$2; shift 2
+    for (branch) {
+        git push $repo --delete $branch
+    }
 
 case *
     Fatal
