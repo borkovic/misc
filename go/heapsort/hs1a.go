@@ -1,17 +1,23 @@
-package main
+package heapsort
 
-type Index int
-type Value int32
-type Vec []Value
+/***********************************************************/
+type (
+    Index int
+    Value int32
+    Vec []Value
+    CmpFunc func(l Value, r Value) int
+)
 
+
+/***********************************************************/
 func Len(v Vec) Index {
     return Index(len(v))
 }
 
-type CmpFunc func(l Value, r Value) int
 
 
 
+/***********************************************************/
 /*
 Parent, Left and right child in array based heap (first index = 0)
 Heap of 6 elements: 
@@ -29,6 +35,7 @@ right(n) = left(n)+1
 parent(n) = floor((n-1)/2)
 */
 
+/***********************************************************/
 func parent(k Index) Index {
     if k <= 0 {
         panic("Negative index in parent")
@@ -36,14 +43,17 @@ func parent(k Index) Index {
     return (k - 1) / 2
 }
 
-func leftCld(k Index) Index {
+/***********************************************************/
+func LeftCld(k Index) Index {
     return 2*k + 1
 }
 
-func rightCld(k Index) Index {
+/***********************************************************/
+func RightCld(k Index) Index {
     return 2*k + 2
 }
 
+/***********************************************************/
 /* Move element k towards root if smaller than descendants
  */
 func toRoot(v Vec, k Index, cmp CmpFunc) {
@@ -61,11 +71,12 @@ func toRoot(v Vec, k Index, cmp CmpFunc) {
     v[k] = val
 }
 
+/***********************************************************/
 /* Move element k toward leaves if it is large
  */
 func toLeaves(v Vec, k Index, last Index, cmp CmpFunc) {
     val := v[k]
-    for lCld := leftCld(k); lCld <= last; lCld = leftCld(k) { // k has at least one child
+    for lCld := LeftCld(k); lCld <= last; lCld = LeftCld(k) { // k has at least one child
         smlCld := lCld
         rCld := lCld + 1
         if rCld <= last && cmp(v[rCld], v[smlCld]) < 0 {
@@ -81,6 +92,7 @@ func toLeaves(v Vec, k Index, last Index, cmp CmpFunc) {
     v[k] = val
 }
 
+/***********************************************************/
 /* Make heap with elem[0] being root, smallest in heap
  */
 func heapify(v Vec, cmp CmpFunc) {
@@ -90,6 +102,7 @@ func heapify(v Vec, cmp CmpFunc) {
     }
 }
 
+/***********************************************************/
 /* Heapsort in descending order
  */
 func Heapsort(v Vec, cmp CmpFunc) {

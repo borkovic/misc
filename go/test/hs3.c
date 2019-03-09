@@ -1,12 +1,14 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 
 typedef int Index; //using Index = int;
 typedef int Value;
 typedef enum bool { false = 0, true = 1 } bool;
 
 
+/***********************************************************/
 /*
     1,2->0
     3,4->1
@@ -26,9 +28,11 @@ Index rightCld(Index k) {
 }
 
 
+/***********************************************************/
 typedef int (*CmpFunc)(Value l, Value r);
 
 
+/***********************************************************/
 /* Move element k towards root if it small
  */
 void toRoot(Value* v, Index k, CmpFunc cmp) {
@@ -46,6 +50,7 @@ void toRoot(Value* v, Index k, CmpFunc cmp) {
     v[k] = val;
 }
 
+/***********************************************************/
 /* Move element k toward leaves if it is large
  */
 void toLeaves(Value* v, Index k, Index last, CmpFunc cmp) {
@@ -66,6 +71,7 @@ void toLeaves(Value* v, Index k, Index last, CmpFunc cmp) {
     v[k] = val;
 }
 
+/***********************************************************/
 /* Make heap with elem[0] being root, smallest in heap
  */
 void heapify(Value* v, Index sz, CmpFunc cmp) {
@@ -76,6 +82,7 @@ void heapify(Value* v, Index sz, CmpFunc cmp) {
 }
 
 
+/***********************************************************/
 /* Heapsort in descending order
  */
 void heapsort(Value* v, Index sz, CmpFunc cmp) {
@@ -93,6 +100,7 @@ void heapsort(Value* v, Index sz, CmpFunc cmp) {
     }
 }
 
+/***********************************************************/
 void checkSorted(const Value* v, Index sz, CmpFunc cmp) {
     const Index last = sz - 1;
     bool ok = true;
@@ -112,6 +120,7 @@ void checkSorted(const Value* v, Index sz, CmpFunc cmp) {
 }
 
 
+/***********************************************************/
 /*
  * Compare Less Than
  */
@@ -125,6 +134,7 @@ int CmpLT(Value l, Value r) {
     }
 }
 
+/***********************************************************/
 /*
  * Compare Greater Than
  */
@@ -132,8 +142,56 @@ int CmpGT(Value l, Value r) {
     return CmpLT(r, l);
 }
 
+/***********************************************************/
+void printLong(const long m, char (*buf2)[256]) {
+    const long base = 10;
+    static const char digits[] = "0123456789";
 
+    char buf[sizeof(*buf2)/sizeof((*buf2)[0])];
+    char* p = buf;
+    if (0 == m) {
+        buf[0] = digits[m];
+        buf[1] = '\0';
+        return;
+    }
 
+    long n = (m >= 0 ? m : -m);
+
+    while (n > 0) {
+        long d = n % base;
+        n = n / base;
+        *p = digits[d];
+        p++;
+    }
+    *p = '\0';
+
+    // suppose m == -1024
+    // digits are reverse buf = "4201\0"
+    // want buf2 = "-1'024\0"
+    int numDigits = p - buf;
+
+    char* p2 = &(*buf2)[0];
+    if (m < 0) {
+        *p2 = '-';
+        p2++;
+    }
+    --p;
+
+    while (numDigits > 0) {
+        *p2 = *p;
+
+        p2++;
+        p--;
+        numDigits--;
+        if (numDigits > 0 && (numDigits%3 == 0)) {
+            *p2 = '\'';
+            p2++;
+        }
+    }
+    *p2 = '\0';
+}
+
+/***********************************************************/
 void prHeap(const Value* v, Index sz, Index k, int ident) {
     char buf[512];
 
@@ -153,8 +211,10 @@ void prHeap(const Value* v, Index sz, Index k, int ident) {
     }
 }
 
+/***********************************************************/
 int main() {
-    const long N = 10*1000*1000;
+    const long N = 100*1000*1000;
+
     Value* const v = (Value*)(malloc(N*sizeof(v[0])));
     for (long i = 0; i < N; i++) {
         Value r = rand();
@@ -162,7 +222,17 @@ int main() {
         v[i] = (Value)(r % N);
     }
     const CmpFunc cmp = CmpGT;
+    clock_t start, end;
+     
+    start = clock();
     heapsort(v, N, cmp);
+    end = clock();
+
+    double cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+    char buf[256];
+    printLong(N, &buf);
+    printf("C: Sorting %s ints: %f\n", buf, cpu_time_used);
+
     checkSorted(v, N, cmp);
     return 0;
 }
