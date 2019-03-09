@@ -15,6 +15,7 @@ Index Len(const Vec& v) {
 }
 
 
+/***********************************************************/
 /*
     1,2->0
     3,4->1
@@ -34,9 +35,11 @@ Index rightCld(Index k) {
 }
 
 
+/***********************************************************/
 using CmpFunc = int (*)(Value l, Value r);
 
 
+/***********************************************************/
 /* Move element k towards root if it small
  */
 void toRoot(Vec& v, Index k, CmpFunc cmp) {
@@ -54,6 +57,7 @@ void toRoot(Vec& v, Index k, CmpFunc cmp) {
     v[k] = val;
 }
 
+/***********************************************************/
 /* Move element k toward leaves if it is large
  */
 void toLeaves(Vec& v, Index k, Index last, CmpFunc cmp) {
@@ -74,6 +78,7 @@ void toLeaves(Vec& v, Index k, Index last, CmpFunc cmp) {
     v[k] = val;
 }
 
+/***********************************************************/
 /* Make heap with elem[0] being root, smallest in heap
  */
 void heapify(Vec& v, CmpFunc cmp) {
@@ -84,6 +89,7 @@ void heapify(Vec& v, CmpFunc cmp) {
 }
 
 
+/***********************************************************/
 /* Heapsort in descending order
  */
 void heapsort(Vec& v, CmpFunc cmp) {
@@ -99,6 +105,7 @@ void heapsort(Vec& v, CmpFunc cmp) {
     }
 }
 
+/***********************************************************/
 void checkSorted(const Vec& v, CmpFunc cmp) {
     const Index last = v.size() - 1;
     bool ok = true;
@@ -119,6 +126,7 @@ void checkSorted(const Vec& v, CmpFunc cmp) {
 }
 
 
+/***********************************************************/
 /*
  * Compare Less Than
  */
@@ -132,6 +140,7 @@ int CmpLT(Value l, Value r) {
     }
 }
 
+/***********************************************************/
 /*
  * Compare Greater Than
  */
@@ -141,6 +150,7 @@ int CmpGT(Value l, Value r) {
 
 
 
+/***********************************************************/
 void prHeap(const Vec& v, Index k, const std::string& ident) {
     std::cout << ident << " " << v[k] << "\n";
     const auto last = Len(v)-1;
@@ -154,6 +164,7 @@ void prHeap(const Vec& v, Index k, const std::string& ident) {
     }
 }
 
+/***********************************************************/
 int main(int argc, char* argv[]) {
     //constexpr const long N = 10*1000*1000;
     const long N = atol(argv[1]);

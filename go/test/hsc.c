@@ -7,7 +7,12 @@
 
 typedef int Index; //using Index = int;
 typedef int Value;
-typedef enum bool { false = 0, true = 1 } bool;
+typedef enum Bool { False = 0, True = 1 } Bool;
+
+
+
+
+
 
 
 /***********************************************************/
@@ -95,9 +100,7 @@ void heapsort(Value* v, Index sz, CmpFunc cmp) {
     //fmt.Println("B"); prHeap(v[:], 0, 0)
     const Index last = sz-1;
     for (Index k = last; k >= 1; k--) {
-        Value t = v[0];
-        v[0] = v[k];
-        v[k] = t;
+        Value t = v[0]; v[0] = v[k]; v[k] = t;
         toLeaves(v, 0, k-1, cmp);
     }
 }
@@ -105,11 +108,11 @@ void heapsort(Value* v, Index sz, CmpFunc cmp) {
 /***********************************************************/
 void checkSorted(const Value* v, Index sz, CmpFunc cmp) {
     const Index last = sz - 1;
-    bool ok = true;
+    Bool ok = True;
     for (Index k = (Index)(0); k < last-1; k++) {
         if (cmp(v[k], v[k+1]) < 0) {
             printf("Error: v[%d]=%d, v[%d]=%d\n", k, v[k], k+1, v[k+1]);
-            ok = false;
+            ok = False;
         }
     }
     if (ok) {

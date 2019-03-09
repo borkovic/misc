@@ -1,0 +1,63 @@
+CFLAGS = (-std=c99 -O3 -Wall -Werror)
+CPPFLAGS = (-O3 -Wall -Werror -std=c++1y)
+
+calc 'N=50*1000*1000'
+echo N: $N
+sep = '====================================='
+
+fn RunC {msg=() exe=() {
+    msg=$1
+    exe=$2 
+    shift 2
+
+    echo $sep
+    echo $msg
+    time gcc $CFLAGS -o $exe $*
+    echo
+
+    cmd = (time ./$exe $N)
+    echo cmd: $cmd
+    $cmd
+    echo; echo
+}}
+
+fn RunCC { msg=() exe=() {
+    msg=$1
+    exe=$2 
+    shift 2
+
+    echo $sep
+    echo $msg
+    time g++ $CPPFLAGS -o $exe $*
+    echo
+
+    cmd = (time ./$exe $N)
+    echo cmd: $cmd
+    $cmd
+    echo; echo
+}}
+
+fn RunGo { msg=() exe=() {
+    msg=$1
+    exe=$2 
+    shift 2
+
+    echo $sep
+    echo $msg
+    time go build $*
+
+    cmd = (time ./$exe $N)
+    echo cmd: $cmd
+    $cmd
+    echo; echo
+}}
+
+
+RunCC   'C++ on C++ program' (hscc hscc.cc pl.c)
+
+RunCC   'C++ on C program'   (j1 hsc.c pl.c)
+
+RunC    'C on C program'   (hsc hsc.c pl.c)
+
+RunGo   'GO on go program' (hsg  hsg.go)
+
