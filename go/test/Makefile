@@ -1,30 +1,38 @@
 ################################################
-top: hs1 hs2 hs3
+top: hsg hscc hsc
+
+.PHONY: hsg hscc hsc
 
 ################################################
-hs1: hs1.go 
-	go build hs1.go 
-	time ./hs1
+clean:
+	rm -f hsg hscc hsc
+################################################
+hsg: hsg.go 
+	@echo '====================================='
+	time go build hsg.go 
+	echo
+	time ./hsg
+	echo; echo
 
 ################################################
 #CPPFLAGS = -O3 -Wall -Werror -std=c++11
 #CPPFLAGS = -O3 -Wall -Werror -std=c++14
 CPPFLAGS = -O3 -Wall -Werror -std=c++1y
 
-hs2 : hs2.o
-	g++ $(CPPFLAGS) -o hs2 hs2.o
-	time ./hs2
-
-hs2.o: hs2.cc
-	g++ $(CPPFLAGS) -c hs2.cc
+hscc : hscc.cc
+	@echo '====================================='
+	time g++ $(CPPFLAGS) -o hscc hscc.cc
+	echo
+	time ./hscc
+	echo; echo
 
 ################################################
 CFLAGS = -std=c99 -O3 -Wall -Werror
 
-hs3 : hs3.o
-	gcc $(CFLAGS) -o hs3 hs3.o
-	time ./hs3
-
-hs3.o: hs3.c
-	gcc $(CFLAGS) -c hs3.c
+hsc : hsc.c
+	@echo '====================================='
+	time gcc $(CFLAGS) -o hsc hsc.c
+	echo
+	time ./hsc
+	echo; echo
 
