@@ -1,5 +1,10 @@
 #include <vector>
 #include <iostream>
+#include <chrono> 
+
+#include "pl.h"
+
+using namespace std::chrono; 
 
 typedef int Index; //using Index = int;
 using Value = int;
@@ -149,8 +154,9 @@ void prHeap(const Vec& v, Index k, const std::string& ident) {
     }
 }
 
-int main() {
-    constexpr long N = 10*1000*1000;
+int main(int argc, char* argv[]) {
+    //constexpr const long N = 10*1000*1000;
+    const long N = atol(argv[1]);
     Vec v;
     v.resize(N);
     for (long i = 0; i < Len(v); i++) {
@@ -159,8 +165,22 @@ int main() {
         v[i] = Value(r % N);
     }
     const auto cmp = CmpGT;
+
+    const auto start = high_resolution_clock::now(); 
     heapsort(v, cmp);
+    const auto stop = high_resolution_clock::now(); 
+    const auto duration = duration_cast<seconds>(stop - start); 
+
+    char buf[256];
+    printLong(N, &buf);
+
+    std::cout << "CC: Sorting int[" << buf << "]: " << duration.count() << " seconds\n";
+
     checkSorted(v, cmp);
     return 0;
 }
 
+  
+  
+// To get the value of duration use the count() 
+// member function on the duration object 

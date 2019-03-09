@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "pl.h"
+
 typedef int Index; //using Index = int;
 typedef int Value;
 typedef enum bool { false = 0, true = 1 } bool;
@@ -143,55 +145,6 @@ int CmpGT(Value l, Value r) {
 }
 
 /***********************************************************/
-void printLong(const long m, char (*buf2)[256]) {
-    const long base = 10;
-    static const char digits[] = "0123456789";
-
-    char buf[sizeof(*buf2)/sizeof((*buf2)[0])];
-    char* p = buf;
-    if (0 == m) {
-        buf[0] = digits[m];
-        buf[1] = '\0';
-        return;
-    }
-
-    long n = (m >= 0 ? m : -m);
-
-    while (n > 0) {
-        long d = n % base;
-        n = n / base;
-        *p = digits[d];
-        p++;
-    }
-    *p = '\0';
-
-    // suppose m == -1024
-    // digits are reverse buf = "4201\0"
-    // want buf2 = "-1'024\0"
-    int numDigits = p - buf;
-
-    char* p2 = &(*buf2)[0];
-    if (m < 0) {
-        *p2 = '-';
-        p2++;
-    }
-    --p;
-
-    while (numDigits > 0) {
-        *p2 = *p;
-
-        p2++;
-        p--;
-        numDigits--;
-        if (numDigits > 0 && (numDigits%3 == 0)) {
-            *p2 = '\'';
-            p2++;
-        }
-    }
-    *p2 = '\0';
-}
-
-/***********************************************************/
 void prHeap(const Value* v, Index sz, Index k, int ident) {
     char buf[512];
 
@@ -212,8 +165,9 @@ void prHeap(const Value* v, Index sz, Index k, int ident) {
 }
 
 /***********************************************************/
-int main() {
-    const long N = 100*1000*1000;
+int main(int argc, char* argv[]) {
+    //const long N = 10*1000*1000;
+    const long N = atol(argv[1]);
 
     Value* const v = (Value*)(malloc(N*sizeof(v[0])));
     for (long i = 0; i < N; i++) {
@@ -231,7 +185,7 @@ int main() {
     double cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
     char buf[256];
     printLong(N, &buf);
-    printf("C: Sorting %s ints: %f\n", buf, cpu_time_used);
+    printf("C: Sorting int[%s]: %.2f seconds\n", buf, cpu_time_used);
 
     checkSorted(v, N, cmp);
     return 0;

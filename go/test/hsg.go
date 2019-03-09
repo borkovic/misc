@@ -4,6 +4,8 @@ import (
     "fmt"
     "time"
     "math/rand"
+    "os"
+    "strconv"
 )
 import (
     hs "../heapsort"
@@ -122,20 +124,27 @@ func main() {
     /*
     const N = 1 * 1000 * 1000
     const N = 10
+    const N = 100*1000*1000
     const N = 10 * 1000 * 1000
     */
-    const N = 100*1000*1000
+    ts := os.Args[1]
+    N, err := strconv.ParseInt(ts, 10, 64)
+    if err != nil {
+        panic(err)
+    }
 
-    var v [N]Value
+    v := make([]Value, N) // [N]Value
     for i := 0; i < len(v); i++ {
-        v[i] = Value(rand.Int31n(N))
+        v[i] = Value(rand.Int31n(int32(N)))
     }
     cmp := cmpGT
 
     start := time.Now()
     hs.Heapsort(v[:], cmp)
     elapsed := time.Since(start)
-    fmt.Printf("GO: Sorting %s %T: %T  %v\n", printLong(N), v[0], elapsed, elapsed)
+    //elapsed *= 1000.0
+    fmt.Printf("GO: Sorting [%s]%T: %T  %v seconds\n",
+        printLong(N), v[0], elapsed, elapsed.Seconds())
 
     checkSorted(v[:], cmp)
 }

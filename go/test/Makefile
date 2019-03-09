@@ -1,3 +1,4 @@
+N = 200000000
 ################################################
 top: hsg hscc hsc
 
@@ -7,11 +8,11 @@ top: hsg hscc hsc
 clean:
 	rm -f hsg hscc hsc
 ################################################
-hsg: hsg.go 
+hsg: hsg.go
 	@echo '====================================='
 	time go build hsg.go 
 	echo
-	time ./hsg
+	time ./hsg  $(N)
 	echo; echo
 
 ################################################
@@ -21,9 +22,9 @@ CPPFLAGS = -O3 -Wall -Werror -std=c++1y
 
 hscc : hscc.cc
 	@echo '====================================='
-	time g++ $(CPPFLAGS) -o hscc hscc.cc
+	time g++ $(CPPFLAGS) -o hscc hscc.cc pl.c
 	echo
-	time ./hscc
+	time ./hscc $(N)
 	echo; echo
 
 ################################################
@@ -31,8 +32,8 @@ CFLAGS = -std=c99 -O3 -Wall -Werror
 
 hsc : hsc.c
 	@echo '====================================='
-	time gcc $(CFLAGS) -o hsc hsc.c
+	time gcc $(CFLAGS) -o hsc hsc.c pl.c
 	echo
-	time ./hsc
+	time ./hsc $(N)
 	echo; echo
 
