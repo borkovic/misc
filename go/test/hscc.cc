@@ -68,7 +68,6 @@ void toLeaves(Vec& v, Index k, Index last, CmpFunc cmp) {
         if (rCld <= last && cmp(v[rCld], v[smlCld]) < 0) {
             smlCld = rCld;
         }
-        //fmt.Println(v, k, v[k], smlCld, v[smlCld])
         if (cmp(v[smlCld], val) >= 0) {
             break;
         }
@@ -94,10 +93,7 @@ void heapify(Vec& v, CmpFunc cmp) {
  */
 void heapsort(Vec& v, CmpFunc cmp) {
     // make heap in linear time
-    //fmt.Println("A"); prHeap(v[:], 0, "")
-    //fmt.Println(v)
     heapify(v, cmp);
-    //fmt.Println("B"); prHeap(v[:], 0, "")
     const auto last = Len(v)-1;
     for (auto k = last; k >= 1; k--) {
         std::swap(v[0], v[k]);

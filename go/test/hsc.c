@@ -68,7 +68,6 @@ void toLeaves(Value* v, Index k, Index last, CmpFunc cmp) {
         if (rCld <= last && cmp(v[rCld], v[smlCld]) < 0) {
             smlCld = rCld;
         }
-        //fmt.Println(v, k, v[k], smlCld, v[smlCld])
         if (cmp(v[smlCld], val) >= 0) {
             break;
         }
@@ -94,10 +93,7 @@ void heapify(Value* v, Index sz, CmpFunc cmp) {
  */
 void heapsort(Value* v, Index sz, CmpFunc cmp) {
     // make heap in linear time
-    //fmt.Println("A"); prHeap(v[:], 0, 0)
-    //fmt.Println(v)
     heapify(v, sz, cmp);
-    //fmt.Println("B"); prHeap(v[:], 0, 0)
     const Index last = sz-1;
     for (Index k = last; k >= 1; k--) {
         Value t = v[0]; v[0] = v[k]; v[k] = t;
