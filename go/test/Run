@@ -55,13 +55,13 @@ fn RunGo { msg=() exe=() {
 
 
 g++ --version
-RunCC   'C++ on C++ program' (hscc hscc.cc pl.c)
+RunCC   'C++ compiler on C++ program' (hscc hscc.cc pl.c)
 
-RunCC   'C++ on C program'   (j1 hsc.c pl.c)
+RunCC   'C++ compiler on C program'   (j1 hsc.c pl.c)
 
 gcc --version
-RunC    'C on C program'   (hsc hsc.c pl.c)
+RunC    'C compiler on C program'   (hsc hsc.c pl.c)
 
 go version
-RunGo   'GO on go program' (hsg  hsg.go)
+RunGo   'GO compiler on go program' (hsg  hsg.go)
 
