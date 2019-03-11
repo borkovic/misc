@@ -85,7 +85,7 @@ void heapify(Value* v, Index sz, CmpFunc cmp) {
 /***********************************************************/
 /* Heapsort in descending order
  */
-void heapsort(Value* v, Index sz, CmpFunc cmp) {
+void Heapsort(Value* v, Index sz, CmpFunc cmp) {
     // make heap in linear time
     //fmt.Println("A"); prHeap(v[:], 0, 0)
     //fmt.Println(v)
@@ -225,7 +225,7 @@ int main() {
     clock_t start, end;
      
     start = clock();
-    heapsort(v, N, cmp);
+    Heapsort(v, N, cmp);
     end = clock();
 
     double cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;

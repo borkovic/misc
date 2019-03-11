@@ -1,6 +1,8 @@
 #include <vector>
 #include <iostream>
 
+namespace hs {
+
 typedef int Index; //using Index = int;
 using Value = int;
 using Vec = std::vector<Value>;
@@ -148,19 +150,22 @@ void prHeap(const Vec& v, Index k, const std::string& ident) {
         prHeap(v, rCld, ident+"  ");
     }
 }
+}
 
 int main() {
     constexpr long N = 10*1000*1000;
-    Vec v;
+    hs::Vec v;
     v.resize(N);
-    for (long i = 0; i < Len(v); i++) {
+    for (long i = 0; i < hs::Len(v); i++) {
         auto r = std::rand();
         r = r < 0 ? -r : r;
-        v[i] = Value(r % N);
+        v[i] = hs::Value(r % N);
     }
-    const auto cmp = CmpGT;
-    heapsort(v, cmp);
-    checkSorted(v, cmp);
+    const auto cmp = hs::CmpGT;
+    hs::heapsort(v, cmp);
+    hs::checkSorted(v, cmp);
     return 0;
 }
+
+
 
