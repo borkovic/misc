@@ -1,6 +1,6 @@
 OPT='-O3'
 CFLAGS   = (-std=c99 $OPT -Wall -Werror)
-CPPFLAGS = (-std=c++1y $OPT -Wall -Werror)
+CPPFLAGS = (-std=c++17 $OPT -Wall -Werror)
 
 calc 'N=200*1000*1000'
 echo N: $N
@@ -54,11 +54,14 @@ fn RunGo { msg=() exe=() {
 }}
 
 
+g++ --version
 RunCC   'C++ on C++ program' (hscc hscc.cc pl.c)
 
 RunCC   'C++ on C program'   (j1 hsc.c pl.c)
 
+gcc --version
 RunC    'C on C program'   (hsc hsc.c pl.c)
 
+go version
 RunGo   'GO on go program' (hsg  hsg.go)
 

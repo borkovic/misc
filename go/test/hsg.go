@@ -47,6 +47,10 @@ func printLong(m int64) string {
     // want buf2 = [1'024\0]
     var buf2 [256]byte
     b2 := 0
+    if m < 0 {
+        buf2[b2] = '-'
+        b2++
+    }
 
     for numDigits > 0 {
         buf2[b2] = buf[b]
