@@ -1,57 +1,8 @@
 package heapsort
 
-/***********************************************************/
-type (
-    Index int
-    Value int32
-    Vec []Value
-    CmpFunc func(l Value, r Value) int
-)
 
-
-/***********************************************************/
-func Len(v Vec) Index {
-    return Index(len(v))
-}
-
-
-
-
-/***********************************************************/
-/*
-Parent, Left and right child in array based heap (first index = 0)
-Heap of 6 elements: 
-    0
- 1     2
-3 4   5
-
-left,right -> parent
-     1,2   ->   0
-     3,4   ->   1
-       5   ->   2
-
-left(n) = 2*n+1
-right(n) = left(n)+1
-parent(n) = floor((n-1)/2)
-*/
-
-/***********************************************************/
-func parent(k Index) Index {
-    if k <= 0 {
-        panic("Negative index in parent")
-    }
-    return (k - 1) / 2
-}
-
-/***********************************************************/
-func LeftCld(k Index) Index {
-    return 2*k + 1
-}
-
-/***********************************************************/
-func RightCld(k Index) Index {
-    return 2*k + 2
-}
+// if cmp is cmpLT, sort will be descending
+// if cmp is cmpGT, sort will be ascending
 
 /***********************************************************/
 /* Move element k towards root if smaller than descendants

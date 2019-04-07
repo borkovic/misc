@@ -2,37 +2,10 @@
 #include <iostream>
 #include <chrono> 
 
+#include "heap.h"
 #include "pl.h"
 
 using namespace std::chrono; 
-
-typedef int Index; //using Index = int;
-using Value = int;
-using Vec = std::vector<Value>;
-
-Index Len(const Vec& v) {
-    return Index(v.size());
-}
-
-
-/***********************************************************/
-/*
-    1,2->0
-    3,4->1
-    5,6->2
-* Parent, Left and right child in array based heap
-*/
-Index parent(Index k) {
-    return (k-1) / 2;
-}
-
-Index leftCld(Index k) {
-    return 2*k+1;
-}
-
-Index rightCld(Index k) {
-    return 2*k+2;
-}
 
 
 /***********************************************************/
@@ -42,6 +15,7 @@ using CmpFunc = int (*)(Value l, Value r);
 /***********************************************************/
 /* Move element k towards root if it small
  */
+#if 0
 void toRoot(Vec& v, Index k, CmpFunc cmp) {
     const auto val = v[k];
     while (k > 0) {
@@ -56,6 +30,7 @@ void toRoot(Vec& v, Index k, CmpFunc cmp) {
     }
     v[k] = val;
 }
+#endif
 
 /***********************************************************/
 /* Move element k toward leaves if it is large
@@ -181,7 +156,7 @@ int main(int argc, char* argv[]) {
     char buf[256];
     printLong(N, &buf);
 
-    std::cout << "CC: Sorting int[" << buf << "]: " << duration.count() << " seconds\n";
+    std::cout << "CC hsort: Sorting int[" << buf << "]: " << duration.count() << " seconds\n";
 
     checkSorted(v, cmp);
     return 0;

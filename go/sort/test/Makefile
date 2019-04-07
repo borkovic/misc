@@ -1,39 +1,40 @@
 N = 200000000
+CFLAGS   = -std=c99   -O3 -Wall -Werror
+CPPFLAGS = -std=c++1y -O3 -Wall -Werror 
 ################################################
-top: hsg hscc hsc
+EXECsGo = hsg hsgf 
+EXECsCC = hscc hsccf hsc
+EXECs = $(EXECsGo) $(EXECsCC)
 
-.PHONY: hsg hscc hsc
+top: $(EXECs)
+	for f in $(EXECs); do \
+		time ./$$f $(N); \
+	done;
+
+.PHONY: $(EXECS)
 
 ################################################
 clean:
-	rm -f hsg hscc hsc
+	rm -f $(EXECs) *.o
 ################################################
-hsg: hsg.go
+%: %.go
 	@echo '====================================='
-	time go build hsg.go 
-	echo
-	time ./hsg  $(N)
+	time go build $?
 	echo; echo
 
 ################################################
 #CPPFLAGS = -O3 -Wall -Werror -std=c++11
 #CPPFLAGS = -O3 -Wall -Werror -std=c++14
-CPPFLAGS = -O3 -Wall -Werror -std=c++1y
 
-hscc : hscc.cc
+% : %.cc
 	@echo '====================================='
-	time g++ $(CPPFLAGS) -o hscc hscc.cc pl.c
-	echo
-	time ./hscc $(N)
+	time g++ $(CPPFLAGS) -o $@ $? pl.c
 	echo; echo
 
 ################################################
-CFLAGS = -std=c99 -O3 -Wall -Werror
 
-hsc : hsc.c
+% : %.c
 	@echo '====================================='
-	time gcc $(CFLAGS) -o hsc hsc.c pl.c
-	echo
-	time ./hsc $(N)
+	time gcc $(CFLAGS) -o $@ $? pl.c
 	echo; echo
 
