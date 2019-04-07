@@ -1,4 +1,6 @@
 
+namespace hs {
+
 typedef int Index; //using Index = int;
 using Value = int;
 using Vec = std::vector<Value>;
@@ -28,5 +30,5 @@ inline Index rightCld(Index k) {
     return 2*k+2;
 }
 
-
+}
 

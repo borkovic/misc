@@ -7,6 +7,13 @@
 
 using namespace std::chrono; 
 
+namespace hs {
+
+typedef int Index; //using Index = int;
+using Value = int;
+using Vec = std::vector<Value>;
+
+
 
 /***********************************************************/
 using CmpFunc = int (*)(Value l, Value r);
@@ -134,22 +141,28 @@ void prHeap(const Vec& v, Index k, const std::string& ident) {
         prHeap(v, rCld, ident+"  ");
     }
 }
+}
+
+
+
 
 /***********************************************************/
 int main(int argc, char* argv[]) {
     //constexpr const long N = 10*1000*1000;
     const long N = atol(argv[1]);
-    Vec v;
+    //Vec v;
+    hs::Vec v;
+
     v.resize(N);
-    for (long i = 0; i < Len(v); i++) {
+    for (long i = 0; i < hs::Len(v); i++) {
         auto r = std::rand();
         r = r < 0 ? -r : r;
-        v[i] = Value(r % N);
+        v[i] = hs::Value(r % N);
     }
-    const auto cmp = CmpGT;
+    const auto cmp = hs::CmpGT;
 
     const auto start = high_resolution_clock::now(); 
-    heapsort(v, cmp);
+    hs::heapsort(v, cmp);
     const auto stop = high_resolution_clock::now(); 
     const auto duration = duration_cast<seconds>(stop - start); 
 
@@ -158,11 +171,7 @@ int main(int argc, char* argv[]) {
 
     std::cout << "CC hsort: Sorting int[" << buf << "]: " << duration.count() << " seconds\n";
 
-    checkSorted(v, cmp);
+    hs::checkSorted(v, cmp);
     return 0;
 }
 
-  
-  
-// To get the value of duration use the count() 
-// member function on the duration object 

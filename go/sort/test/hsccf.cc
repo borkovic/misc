@@ -7,6 +7,7 @@
 
 using namespace std::chrono; 
 
+namespace hs {
 
 /***********************************************************/
 
@@ -116,20 +117,22 @@ prHeap(const Vec& v, Index k, const std::string& ident) {
     }
 }
 
+}
+
 /***********************************************************/
 int main(int argc, char* argv[]) {
     //constexpr const long N = 10*1000*1000;
     const long N = atol(argv[1]);
-    Vec v;
+    hs::Vec v;
     v.resize(N);
-    for (long i = 0; i < Len(v); i++) {
+    for (long i = 0; i < hs::Len(v); i++) {
         auto r = std::rand();
         r = r < 0 ? -r : r;
-        v[i] = Value(r % N);
+        v[i] = hs::Value(r % N);
     }
 
     const auto start = high_resolution_clock::now(); 
-    heapsort(v);
+    hs::heapsort(v);
     const auto stop = high_resolution_clock::now(); 
     const auto duration = duration_cast<seconds>(stop - start); 
 
@@ -138,7 +141,7 @@ int main(int argc, char* argv[]) {
 
     std::cout << "CC hsortF: Sorting int[" << buf << "]: " << duration.count() << " seconds\n";
 
-    checkSorted(v);
+    hs::checkSorted(v);
     return 0;
 }
 
