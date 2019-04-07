@@ -1,4 +1,5 @@
 N = 200000000
+
 CFLAGS   = -std=c99   -O3 -Wall -Werror
 CPPFLAGS = -std=c++1y -O3 -Wall -Werror 
 ################################################
@@ -12,15 +13,18 @@ top: $(EXECs)
 		echo; echo; \
 	done;
 
-.PHONY: $(EXECS)
+.PHONY: $(EXECs)
+
+execs: $(EXECs)
 
 ################################################
 clean:
 	rm -f $(EXECs) *.o
+
 ################################################
-%: %.go
+%: %.go pl.go
 	@echo '====================================='
-	time go build $? pl.go
+	time go build $?
 	echo; echo
 
 ################################################
