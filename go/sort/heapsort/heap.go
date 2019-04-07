@@ -3,7 +3,7 @@ package heapsort
 /***********************************************************/
 type (
     Index int
-    Value int32
+    Value int
     Vec []Value
     CmpFunc func(l Value, r Value) int
 )
@@ -51,5 +51,33 @@ func LeftCld(k Index) Index {
 /***********************************************************/
 func RightCld(k Index) Index {
     return 2*k + 2
+}
+
+/***********************************************************/
+/*
+ * Compare Less Than
+ */
+func CmpLT(l Value, r Value) int {
+    if l < r {
+        return -1
+    } else if l > r {
+        return 1
+    } else {
+        return 0
+    }
+}
+
+/***********************************************************/
+/*
+ * Compare Greater Than
+ */
+func CmpGT(l Value, r Value) int {
+    if l > r {
+        return -1
+    } else if l < r {
+        return 1
+    } else {
+        return 0
+    }
 }
 
