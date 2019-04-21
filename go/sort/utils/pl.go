@@ -1,7 +1,7 @@
-package main
+package utils
 
 /***********************************************************/
-func printLong(m int64) string {
+func PrintLong(m int64) string {
     if m == 0 {
         return "0"
     }

@@ -8,6 +8,7 @@ import (
     "strconv"
 )
 import (
+    "../utils"
     hs "../heapsort"
 )
 
@@ -77,7 +78,7 @@ func main() {
     elapsed := time.Since(start)
     //elapsed *= 1000.0
     fmt.Printf("GO: Sorting [%s]%T: %T  %v seconds\n",
-        printLong(N), v[0], elapsed, elapsed.Seconds())
+        utils.PrintLong(N), v[0], elapsed, elapsed.Seconds())
 
     checkSorted(v[:], cmp)
 }

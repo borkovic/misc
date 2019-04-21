@@ -8,6 +8,7 @@ import (
     "strconv"
 )
 import (
+    "../utils"
     hs "../heapsort"
 )
 
@@ -17,26 +18,6 @@ type (
     Index = hs.Index
     Value = hs.Value
 )
-
-/***********************************************************/
-func checkSortedF(v Vec) {
-    last := hs.Len(v) - 1
-    ok := true
-    for k := Index(0); k < last-1; k++ {
-        if v[k] > v[k+1] {
-            fmt.Println("Error: v[", k, "]=", v[k], "v[", k+1, "]=", v[k+1])
-            ok = false
-        }
-    }
-    if ok {
-        fmt.Println("hs1: OK")
-    } else {
-        fmt.Println("hs1: BAD")
-    }
-    //fmt.Println("C")
-    //prHeap(v[:], 0, "")
-    //fmt.Println(v)
-}
 
 /***********************************************************/
 func prHeap(v Vec, k Index, ident string) {
@@ -76,7 +57,7 @@ func main() {
     elapsed := time.Since(start)
     //elapsed *= 1000.0
     fmt.Printf("GOF: Sorting [%s]%T: %T  %v seconds\n",
-        printLong(N), v[0], elapsed, elapsed.Seconds())
+        utils.PrintLong(N), v[0], elapsed, elapsed.Seconds())
 
-    checkSortedF(v[:])
+    utils.CheckSorted(v[:])
 }

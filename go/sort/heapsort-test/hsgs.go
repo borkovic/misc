@@ -10,6 +10,7 @@ import (
 )
 
 import (
+    "../utils"
     hs "../heapsort"
 )
 type (
@@ -17,25 +18,6 @@ type (
     Index = hs.Index
 )
 
-/***********************************************************/
-func checkSortedS(v []int) {
-    last := len(v) - 1
-    ok := true
-    for k := 0; k < last-1; k++ {
-        if v[k] > v[k+1] {
-            fmt.Println("Error: v[", k, "]=", v[k], "v[", k+1, "]=", v[k+1])
-            ok = false
-        }
-    }
-    if ok {
-        fmt.Println("hs1: OK")
-    } else {
-        fmt.Println("hs1: BAD")
-    }
-    //fmt.Println("C")
-    //prHeap(v[:], 0, "")
-    //fmt.Println(v)
-}
 
 /***********************************************************/
 func main() {
@@ -61,7 +43,7 @@ func main() {
     elapsed := time.Since(start)
     //elapsed *= 1000.0
     fmt.Printf("GOS: Sorting [%s]%T: %T  %v seconds\n",
-        printLong(N), v[0], elapsed, elapsed.Seconds())
+        utils.PrintLong(N), v[0], elapsed, elapsed.Seconds())
 
-    checkSortedS(v[:])
+    utils.CheckSortedS(v[:])
 }

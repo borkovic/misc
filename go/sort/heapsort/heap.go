@@ -1,9 +1,11 @@
 package heapsort
+import "../utils"
 
 /***********************************************************/
 type (
-    Index int
-    Value int
+    Index = utils.IndexType
+    Value = utils.ValueType
+
     Vec []Value
     CmpFunc func(l Value, r Value) int
 )
