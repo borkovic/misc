@@ -4,7 +4,7 @@ import "../utils"
 /***********************************************************/
 type (
     Index = utils.IndexType
-    Value = utils.ValueType
+    Value = utils.ValType
 
     Vec []Value
     CmpFunc func(l Value, r Value) int

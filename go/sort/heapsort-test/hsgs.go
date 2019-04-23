@@ -45,5 +45,5 @@ func main() {
     fmt.Printf("GOS: Sorting [%s]%T: %T  %v seconds\n",
         utils.PrintLong(N), v[0], elapsed, elapsed.Seconds())
 
-    utils.CheckSortedS(v[:])
+    utils.CheckSorted(v[:])
 }

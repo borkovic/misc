@@ -13,7 +13,26 @@ type IndexType = utils.IndexType
 
 //***************************************************************************
 func gMedian(v []ValType) ValType {
-    return v[len(v)/2]
+    f := v[0]
+    m := v[len(v)/2]
+    l := v[len(v) - 1]
+    if f < m {
+        if m < l {
+            return m
+        } else if f < l {
+            return l
+        } else {
+            return f
+        }
+    } else {
+        if m > l {
+            return m
+        } else if f > l {
+            return l
+        } else {
+            return f
+        }
+    }
 }
 
 //***************************************************************************
@@ -53,13 +72,10 @@ func dnf2(v []ValType, pivotLow, pivotHigh ValType) (IndexType, IndexType) {
 
 
 //***************************************************************************
-func QSort2(v []ValType) {
+func qSort2r(v []ValType) {
     const debug bool = false
 
     if debug { fmt.Println("Q:", v) }
-    if len(v) < 2 {
-        return
-    }
     Begin := IndexType(0)
     End := IndexType(len(v))
     if debug { fmt.Println(len(v)) }
@@ -74,10 +90,10 @@ func QSort2(v []ValType) {
         if debug {fmt.Println("F v[be]:", v[Begin:End]) }
         p += Begin
         q += Begin
-        if p < Begin {
+        if debug && p < Begin {
             panic("bad p")
         }
-        if q > End {
+        if debug && q > End {
             panic("bad p")
         }
         //  x in [Begin, p) =>  v[x] < pivot1
@@ -87,13 +103,23 @@ func QSort2(v []ValType) {
         leftSize  := p - Begin
         rightSize := End - q
         if leftSize <= rightSize {
-            QSort2(v[Begin:p])
+            if leftSize > 1 {
+                qSort2r(v[Begin:p])
+            }
             Begin = q
         } else {
-            QSort2(v[q:End])
+            if rightSize > 1 {
+                qSort2r(v[q:End])
+            }
             End = p
         }
     } // while (Begin + 1 < End)
 }
 
+func QSort2(v []ValType) {
+    if len(v) < 2 {
+        return
+    }
+    qSort2r(v)
+}
 
