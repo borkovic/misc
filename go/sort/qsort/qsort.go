@@ -50,15 +50,11 @@ func dnf2(v []ValType, pivotLow, pivotHigh ValType) (IndexType, IndexType) {
 
   	for M < R {
         if v[M] < pivotLow {
-			tmp := v[L]
-			v[L] = v[M]
-			v[M] = tmp
+			v[L], v[M] = v[M], v[L]
    			L++
 			M++
     	} else if pivotHigh < v[M] {
-			tmp := v[M]
-			v[M] = v[R-1]
-			v[R-1] = tmp
+			v[M], v[R-1] = v[R-1], v[M] 
   			R--
   		} else { // pivotLow <= v[M] <= pivotHigh
   			M++
