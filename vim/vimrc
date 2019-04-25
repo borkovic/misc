@@ -39,11 +39,11 @@ set nowrapscan
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Buffer specific commands for: python, C/C++, makefiles
 au BufRead,BufNewFile *.py set filetype=py
-au BufEnter *.py set ai sw=4 ts=4 sta et fo=croql
+au BufEnter *.py set ai sw=4 ts=4 expandtab sta et fo=croql
 
 au BufEnter,BufNewFile *.cc,*.cpp,*.cxx,*.c,*.h set nu ai sw=4 ts=4 expandtab sta et fo=croql
 
-" Makefiles should keep tabs
+" Makefiles and golang should keep tabs
 au BufRead,BufNewFile,BufEnter *.go,make*,Make*  set noexpandtab
 
 command Bash ConqueTerm bash

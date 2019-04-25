@@ -1,8 +1,6 @@
-
-
 package main
 
 import (
-    "format"
-    "display"
+	"display"
+	"format"
 )
