@@ -1,8 +1,9 @@
 package main
 
-import "fmt"
-
-import "reflect"
+import (
+	"fmt"
+	"reflect"
+)
 
 type T *T
 
