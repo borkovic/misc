@@ -33,7 +33,7 @@ func main() {
 	}
 	start := time.Now()
 
-	qsort.QSort2(v[:])
+	qsort.QSort(v[:])
 
 	elapsed := time.Since(start)
 	//elapsed *= 1000.0

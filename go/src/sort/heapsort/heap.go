@@ -1,28 +1,25 @@
 package heapsort
+
 import "../utils"
 
 /***********************************************************/
 type (
-    Index = utils.IndexType
-    Value = utils.ValType
+	Index = utils.IndexType
+	Value = utils.ValType
 
-    Vec []Value
-    CmpFunc func(l Value, r Value) int
+	Vec     []Value
+	CmpFunc func(l Value, r Value) int
 )
-
 
 /***********************************************************/
 func Len(v Vec) Index {
-    return Index(len(v))
+	return Index(len(v))
 }
-
-
-
 
 /***********************************************************/
 /*
 Parent, Left and right child in array based heap (first index = 0)
-Heap of 6 elements: 
+Heap of 6 elements:
     0
  1     2
 3 4   5
@@ -39,20 +36,20 @@ parent(n) = floor((n-1)/2)
 
 /***********************************************************/
 func parent(k Index) Index {
-    if k <= 0 {
-        panic("Negative index in parent")
-    }
-    return (k - 1) / 2
+	if k <= 0 {
+		panic("Negative index in parent")
+	}
+	return (k - 1) / 2
 }
 
 /***********************************************************/
 func LeftCld(k Index) Index {
-    return 2*k + 1
+	return 2*k + 1
 }
 
 /***********************************************************/
 func RightCld(k Index) Index {
-    return 2*k + 2
+	return 2*k + 2
 }
 
 /***********************************************************/
@@ -60,13 +57,13 @@ func RightCld(k Index) Index {
  * Compare Less Than
  */
 func CmpLT(l Value, r Value) int {
-    if l < r {
-        return -1
-    } else if l > r {
-        return 1
-    } else {
-        return 0
-    }
+	if l < r {
+		return -1
+	} else if l > r {
+		return 1
+	} else {
+		return 0
+	}
 }
 
 /***********************************************************/
@@ -74,12 +71,11 @@ func CmpLT(l Value, r Value) int {
  * Compare Greater Than
  */
 func CmpGT(l Value, r Value) int {
-    if l > r {
-        return -1
-    } else if l < r {
-        return 1
-    } else {
-        return 0
-    }
+	if l > r {
+		return -1
+	} else if l < r {
+		return 1
+	} else {
+		return 0
+	}
 }
-
