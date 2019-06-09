@@ -10,6 +10,8 @@ type ValType = utils.ValType
 type IndexType = utils.IndexType
 
 //***************************************************************************
+// Find median of 3 values: most left, middle, most right
+//***************************************************************************
 func median(v []ValType) ValType {
 	f := v[0]
 	m := v[len(v)/2]
@@ -34,6 +36,9 @@ func median(v []ValType) ValType {
 }
 
 //***************************************************************************
+// Find median of 3 values: most left, middle, most right, and then
+// sort the 3 locations
+//***************************************************************************
 func medianSwap(v []ValType) ValType {
 	first := 0
 	mid := len(v) / 2
@@ -51,6 +56,11 @@ func medianSwap(v []ValType) ValType {
 }
 
 //***************************************************************************
+// Dutch national flag (DNF) - partition array in 3 parts:
+// Left with values: v < low pivot
+// Right with values: v > high pivot
+// Middle with values: low pivot <= v <= high pivot 
+//
 // Invariant:
 // B      L-1  L         M-1  M   R-1  R      E-1  E
 // [ x < p1 ]  [ p1<=x<=p2 ]  [ ??? ]  [ p2 < x ]
@@ -81,6 +91,11 @@ func dnf2(v []ValType, pivotLow, pivotHigh ValType) (IndexType, IndexType) {
 	return L, M
 } // dnf2
 
+//***************************************************************************
+// Recursive quicksort.
+// 1. Partition into two parts. Note that pivot_high==pivot_low.
+// 2. Recurse only on the shorter part to limit stack depth to log(N)
+// 3. Continue looping with the longer part
 //***************************************************************************
 func qsort2r(v []ValType) {
 	const debug bool = false
@@ -141,6 +156,8 @@ func qsort2r(v []ValType) {
 	} // while (Begin + 1 < End)
 }
 
+//***************************************************************************
+// Top sorter: call recursive sorter for arrays of len >= 2.
 //***************************************************************************
 func QSort2(v []ValType) {
 	if len(v) < 2 {
