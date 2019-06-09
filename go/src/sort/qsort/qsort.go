@@ -35,19 +35,19 @@ func median(v []ValType) ValType {
 
 //***************************************************************************
 func medianSwap(v []ValType) ValType {
-	first	:= 0
-	mid	 	:= len(v)/2
-	last 	:= len(v)-1
-    if v[last] < v[first] {
+	first := 0
+	mid := len(v) / 2
+	last := len(v) - 1
+	if v[last] < v[first] {
 		v[first], v[last] = v[last], v[first]
 	}
 	if v[mid] < v[first] {
 		v[mid], v[first] = v[first], v[mid]
 	}
-    if v[last] < v[mid] {
+	if v[last] < v[mid] {
 		v[last], v[mid] = v[mid], v[last]
 	}
-    return v[mid]
+	return v[mid]
 }
 
 //***************************************************************************
