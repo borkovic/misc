@@ -1,15 +1,15 @@
 package utils
 
 /***********************************************************/
-func PrintUlong(m uint64) string {
-	if m == 0 {
+func PrintUlong(u uint64) string {
+	if u == 0 {
 		return "0"
 	}
 	const base uint64 = 10
 	const digits = "0123456789"
 	const squote byte = '\''
 
-	n := m
+	n := u
 	var buf [256]byte
 	b := 0
 
@@ -44,13 +44,14 @@ func PrintUlong(m uint64) string {
 }
 
 /***********************************************************/
-func PrintLong(m int64) string {
-	if m >= 0 {
-		return PrintUlong(uint64(m))
+func PrintLong(s int64) string {
+	if s >= 0 {
+		return PrintUlong(uint64(s))
+	} else {
+		s += 1 // to avoid abs(int64_min) == 1 + abs(int64_max)
+		s = -s
+		var u uint64 = uint64(s)
+		u += 1
+		return "-" + PrintUlong(u)
 	}
-	m += 1 // to avoid abs(int64_min) == 1 + abs(int64_max)
-	m = -m
-	n := uint64(m)
-	n += 1
-	return "-" + PrintUlong(uint64(m))
 }
