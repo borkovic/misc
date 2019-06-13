@@ -1,9 +1,13 @@
 //***************************************************************************
 package qsort
 
-import "fmt"
+import (
+	"fmt"
+)
 
-import "../utils"
+import (
+	"../utils"
+)
 
 //***************************************************************************
 type ValType = utils.ValType
@@ -59,7 +63,7 @@ func medianSwap(v []ValType) ValType {
 // Dutch national flag (DNF) - partition array in 3 parts:
 // Left with values: v < low pivot
 // Right with values: v > high pivot
-// Middle with values: low pivot <= v <= high pivot 
+// Middle with values: low pivot <= v <= high pivot
 //
 // Invariant:
 // B      L-1  L         M-1  M   R-1  R      E-1  E

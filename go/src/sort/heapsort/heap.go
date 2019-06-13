@@ -1,6 +1,8 @@
 package heapsort
 
-import "../utils"
+import (
+	"../utils"
+)
 
 /***********************************************************
 * Get types from utils.
