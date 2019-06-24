@@ -7,12 +7,18 @@ import "reflect"
 func P(t string, n uintptr) {
 	fmt.Printf("%s :  %d\n", t, n)
 }
+
 func P2(t reflect.Type, v reflect.Value) {
 	fmt.Println("reflect t :", t, ", v :", v)
 }
 
 func f(x float32) float32 {
 	return x + 1
+}
+
+func ss(x int, c chan<- string) {
+	s := fmt.Sprintf("var int x = %d, size %d", x, unsafe.Sizeof(x))
+	c <- s
 }
 
 func main() {
@@ -31,14 +37,12 @@ func main() {
 		P2(t, v)
 	}
 	{
-	}
-	{
-	}
-	{
-	}
-	{
+		c := make(chan string)
 		var x int
-		P("int", unsafe.Sizeof(x))
+		go ss(x, c)
+		s := <-c
+		fmt.Println("from chan", s)
+		//P("int", unsafe.Sizeof(x))
 	}
 	{
 		x := 1
@@ -202,7 +206,8 @@ func main() {
 	}
 	{
 		type S = chan int
-		var x S
+		var x S = make(S)
+
 		P("chan int", unsafe.Sizeof(x))
 		fmt.Println("    ", x)
 	}
