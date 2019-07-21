@@ -6,9 +6,9 @@ import (
 )
 
 //***************************************************************************
-// Recursive quicksort.
+// Concurrent single recursive quicksort.
 // 1. Partition into two parts. Note that pivot_high==pivot_low.
-// 2. Recurse only on the shorter part to limit stack depth to log(N)
+// 2. Concurrent Recurse only on the shorter part to limit stack depth to log(N)
 // 3. Continue looping with the longer part
 //***************************************************************************
 func qsort2rc(v []ValType, Ret chan<-struct{}) {

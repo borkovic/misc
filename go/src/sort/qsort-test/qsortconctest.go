@@ -37,7 +37,7 @@ func main() {
 
 	elapsed := time.Since(start)
 	//elapsed *= 1000.0
-	fmt.Printf("GO: Sorting [%s]%T: %T  %v seconds\n",
+	fmt.Printf("GOC: Sorting [%s]%T: %T  %v seconds\n",
 		utils.PrintLong(N), v[0], elapsed, elapsed.Seconds())
 	if debug {
 		fmt.Println(v)
