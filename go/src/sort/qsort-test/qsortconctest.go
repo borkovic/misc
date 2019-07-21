@@ -9,7 +9,7 @@ import (
 )
 
 import (
-	"../qsortconc"
+	"../qsort"
 	"../utils"
 )
 
@@ -33,7 +33,7 @@ func main() {
 	}
 	start := time.Now()
 
-	qsortconc.QSort2(v[:])
+	qsort.QSort2c(v[:])
 
 	elapsed := time.Since(start)
 	//elapsed *= 1000.0
