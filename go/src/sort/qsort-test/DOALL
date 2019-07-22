@@ -1,0 +1,8 @@
+PROGS=(qsorttest qsortconctest)
+
+
+for (p in $PROGS) {
+    go build $p.go
+    ./$p $1
+}
+
