@@ -5,6 +5,10 @@ import (
 	"fmt"
 )
 
+const (
+	goLim int = 1000
+)
+
 //***************************************************************************
 // Concurrent single recursive quicksort.
 // 1. Partition into two parts. Note that pivot_high==pivot_low.
@@ -26,32 +30,18 @@ func qsort2rc(v []ValType, Ret chan<-struct{}) {
 	ret := make(chan struct{}, 20)
 
 	for Begin+1 < End {
-		if debug {
-			fmt.Println("F be:", Begin, End)
-		}
-		if debug {
-			fmt.Println("F v[be]:", v[Begin:End])
-		}
+		if debug { fmt.Println("F be:", Begin, End) }
+		if debug { fmt.Println("F v[be]:", v[Begin:End]) }
 		//medVal := medianSwap(v[Begin:End])
 		medVal := median(v[Begin:End])
-		if debug {
-			fmt.Println("F medVal:", medVal)
-		}
+		if debug { fmt.Println("F medVal:", medVal) }
 		p, q := dnf2(v[Begin:End], medVal, medVal) // Must call with equal pivots
-		if debug {
-			fmt.Println("F pq:", p, q)
-		}
-		if debug {
-			fmt.Println("F v[be]:", v[Begin:End])
-		}
+		if debug { fmt.Println("F pq:", p, q) }
+		if debug { fmt.Println("F v[be]:", v[Begin:End]) }
 		p += Begin
 		q += Begin
-		if debug && p < Begin {
-			panic("bad p")
-		}
-		if debug && q > End {
-			panic("bad p")
-		}
+		if debug && p < Begin { panic("bad p") }
+		if debug && q > End { panic("bad p") }
 		//  x in [Begin, p) =>  v[x] < pivot1
 		//  x in [p, q)     =>  pivot1 <= v[x] <= pivot2
 		//  x in [p, End)   =>  pivot2 < v[x]
@@ -60,21 +50,31 @@ func qsort2rc(v []ValType, Ret chan<-struct{}) {
 		rightSize := End - q
 		if leftSize <= rightSize {
 			if leftSize > 1 {
-				numGos++;
-				go qsort2rc(v[Begin:p], ret)
+				if (Begin + goLim < p) {
+					numGos++;
+					go qsort2rc(v[Begin:p], ret)
+				} else {
+					qsort2r(v[Begin:p])
+				}
 			}
 			Begin = q
 		} else {
 			if rightSize > 1 {
-				numGos++;
-				go qsort2rc(v[q:End], ret)
+				if (q + goLim < End) {
+					numGos++;
+					go qsort2rc(v[q:End], ret)
+				} else {
+					qsort2r(v[q:End])
+				}
 			}
 			End = p
 		}
 	} // while (Begin + 1 < End)
+
 	for i := 0; i < numGos; i++ {
 		<-ret 
 	}
+	close(ret)
 	Ret<-struct{}{}
 }
 
@@ -88,4 +88,5 @@ func QSort2c(v []ValType) {
 	ret := make(chan struct{}, 2)
 	qsort2rc(v, ret)
 	<-ret 
+	close(ret)
 }
