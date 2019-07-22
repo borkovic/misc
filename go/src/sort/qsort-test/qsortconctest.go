@@ -45,4 +45,3 @@ func main() {
 
 	utils.CheckSorted(v)
 }
-

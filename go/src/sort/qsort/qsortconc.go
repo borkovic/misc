@@ -15,13 +15,17 @@ const (
 // 2. Concurrent Recurse only on the shorter part to limit stack depth to log(N)
 // 3. Continue looping with the longer part
 //***************************************************************************
-func qsort2rc(v []ValType, Ret chan<-struct{}) {
+func qsort2rc(v []ValType, Ret chan<- struct{}) {
 	const debug bool = false
 
-	if debug { fmt.Println("Q:", v) }
+	if debug {
+		fmt.Println("Q:", v)
+	}
 	Begin := IndexType(0)
 	End := IndexType(len(v))
-	if debug { fmt.Println(len(v)) }
+	if debug {
+		fmt.Println(len(v))
+	}
 	numGos := 0
 	var ret chan struct{} = nil
 	if Ret != nil {
@@ -29,18 +33,32 @@ func qsort2rc(v []ValType, Ret chan<-struct{}) {
 	}
 
 	for Begin+1 < End {
-		if debug { fmt.Println("F be:", Begin, End) }
-		if debug { fmt.Println("F v[be]:", v[Begin:End]) }
+		if debug {
+			fmt.Println("F be:", Begin, End)
+		}
+		if debug {
+			fmt.Println("F v[be]:", v[Begin:End])
+		}
 		//medVal := medianSwap(v[Begin:End])
 		medVal := median(v[Begin:End])
-		if debug { fmt.Println("F medVal:", medVal) }
+		if debug {
+			fmt.Println("F medVal:", medVal)
+		}
 		p, q := dnf2(v[Begin:End], medVal, medVal) // Must call with equal pivots
-		if debug { fmt.Println("F pq:", p, q) }
-		if debug { fmt.Println("F v[be]:", v[Begin:End]) }
+		if debug {
+			fmt.Println("F pq:", p, q)
+		}
+		if debug {
+			fmt.Println("F v[be]:", v[Begin:End])
+		}
 		p += Begin
 		q += Begin
-		if debug && p < Begin { panic("bad p") }
-		if debug && q > End { panic("bad p") }
+		if debug && p < Begin {
+			panic("bad p")
+		}
+		if debug && q > End {
+			panic("bad p")
+		}
 		//  x in [Begin, p) =>  v[x] < pivot1
 		//  x in [p, q)     =>  pivot1 <= v[x] <= pivot2
 		//  x in [p, End)   =>  pivot2 < v[x]
@@ -49,8 +67,8 @@ func qsort2rc(v []ValType, Ret chan<-struct{}) {
 		rightSize := End - q
 		if leftSize <= rightSize {
 			if leftSize > 1 {
-				if (ret != nil && Begin + goLim < p) {
-					numGos++;
+				if ret != nil && Begin+goLim < p {
+					numGos++
 					go qsort2rc(v[Begin:p], ret)
 				} else {
 					qsort2rc(v[Begin:p], nil)
@@ -59,8 +77,8 @@ func qsort2rc(v []ValType, Ret chan<-struct{}) {
 			Begin = q
 		} else {
 			if rightSize > 1 {
-				if (ret != nil && q + goLim < End) {
-					numGos++;
+				if ret != nil && q+goLim < End {
+					numGos++
 					go qsort2rc(v[q:End], ret)
 				} else {
 					qsort2rc(v[q:End], nil)
@@ -72,14 +90,14 @@ func qsort2rc(v []ValType, Ret chan<-struct{}) {
 
 	if ret != nil {
 		for i := 0; i < numGos; i++ {
-			<-ret 
+			<-ret
 		}
 		if ret != nil {
 			close(ret)
 		}
 	}
 	if Ret != nil {
-		Ret<-struct{}{}
+		Ret <- struct{}{}
 	}
 }
 
@@ -92,6 +110,6 @@ func QSort2c(v []ValType) {
 	}
 	ret := make(chan struct{}, 2)
 	qsort2rc(v, ret)
-	<-ret 
+	<-ret
 	close(ret)
 }
