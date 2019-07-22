@@ -18,16 +18,15 @@ const (
 func qsort2rc(v []ValType, Ret chan<-struct{}) {
 	const debug bool = false
 
-	if debug {
-		fmt.Println("Q:", v)
-	}
+	if debug { fmt.Println("Q:", v) }
 	Begin := IndexType(0)
 	End := IndexType(len(v))
-	if debug {
-		fmt.Println(len(v))
-	}
+	if debug { fmt.Println(len(v)) }
 	numGos := 0
-	ret := make(chan struct{}, 20)
+	var ret chan struct{} = nil
+	if Ret != nil {
+		ret = make(chan struct{}, 20)
+	}
 
 	for Begin+1 < End {
 		if debug { fmt.Println("F be:", Begin, End) }
@@ -50,32 +49,38 @@ func qsort2rc(v []ValType, Ret chan<-struct{}) {
 		rightSize := End - q
 		if leftSize <= rightSize {
 			if leftSize > 1 {
-				if (Begin + goLim < p) {
+				if (ret != nil && Begin + goLim < p) {
 					numGos++;
 					go qsort2rc(v[Begin:p], ret)
 				} else {
-					qsort2r(v[Begin:p])
+					qsort2rc(v[Begin:p], nil)
 				}
 			}
 			Begin = q
 		} else {
 			if rightSize > 1 {
-				if (q + goLim < End) {
+				if (ret != nil && q + goLim < End) {
 					numGos++;
 					go qsort2rc(v[q:End], ret)
 				} else {
-					qsort2r(v[q:End])
+					qsort2rc(v[q:End], nil)
 				}
 			}
 			End = p
 		}
 	} // while (Begin + 1 < End)
 
-	for i := 0; i < numGos; i++ {
-		<-ret 
+	if ret != nil {
+		for i := 0; i < numGos; i++ {
+			<-ret 
+		}
+		if ret != nil {
+			close(ret)
+		}
 	}
-	close(ret)
-	Ret<-struct{}{}
+	if Ret != nil {
+		Ret<-struct{}{}
+	}
 }
 
 //***************************************************************************
