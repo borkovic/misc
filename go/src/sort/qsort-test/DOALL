@@ -2,7 +2,7 @@ PROGS=(qsorttest qsortconctest)
 
 
 for (p in $PROGS) {
-    cmd1 = (go build $p.go)
+    cmd1 = (go build --race $p.go)
     echo $cmd1
     if ($cmd1) {
         cmd2 = (./$p $1)
