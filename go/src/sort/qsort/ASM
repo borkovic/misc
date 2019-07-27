@@ -1,0 +1,3 @@
+file=$1
+#go tool 6g -S $file.go > $file.s
+go build -gcflags -S $file.go   >[2] $file.asm
