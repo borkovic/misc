@@ -1,11 +1,29 @@
 PROGS=(qsorttest qsortconctest)
 
+while (let $#* ' > 0') {
+    switch (x$1) {
+    case x-r x--race
+        RACE=(--race)
+    case x-*
+        echo >[1=2] Wrong option $1
+        exit 1
+    case *
+        break
+    }
+    shift
+}
+
+if (~ $#* 0) {
+    N=2000000
+} else {
+    N=$1
+}
 
 for (p in $PROGS) {
-    cmd1 = (go build --race $p.go)
+    cmd1 = (go build $RACE $p.go)
     echo $cmd1
     if ($cmd1) {
-        cmd2 = (./$p $1)
+        cmd2 = (./$p $N)
         echo $cmd2
         $cmd2
     } else {
