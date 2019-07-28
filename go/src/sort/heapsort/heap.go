@@ -60,7 +60,7 @@ func RightCld(k Index) Index {
 /***********************************************************
 * Compare Less Than
 ***********************************************************/
-func CmpLT(l Value, r Value) int {
+func cmpLt(l Value, r Value) int {
 	if l < r {
 		return -1
 	} else if l > r {
