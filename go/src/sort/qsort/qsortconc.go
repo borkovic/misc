@@ -67,7 +67,7 @@ func qsort2rc(v []ValType, Ret chan<- struct{}) {
 		rightSize := End - q
 		if leftSize <= rightSize {
 			if leftSize > 1 {
-				if ret != nil && Begin+goLim < p {
+				if ret != nil && goLim < leftSize {
 					numGos++
 					go qsort2rc(v[Begin:p], ret)
 				} else {
@@ -77,7 +77,7 @@ func qsort2rc(v []ValType, Ret chan<- struct{}) {
 			Begin = q
 		} else {
 			if rightSize > 1 {
-				if ret != nil && q+goLim < End {
+				if ret != nil && goLim < rightSize {
 					numGos++
 					go qsort2rc(v[q:End], ret)
 				} else {
