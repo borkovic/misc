@@ -1,9 +1,9 @@
 fn Error { echo >[1=2] $* }
 
 PROGS=(
-    qsorttest
-    qsortconctest 
-    qsortconcwgtest
+    qsort-test
+    qsortconc-test 
+    qsortconcwg-test
 )
 
 RACE=()
