@@ -1,6 +1,10 @@
 fn Error { echo >[1=2] $* }
 
-PROGS=(qsorttest qsortconctest)
+PROGS=(
+    qsorttest
+    qsortconctest 
+    qsortconcwgtest
+)
 
 RACE=()
 

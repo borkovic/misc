@@ -3,6 +3,7 @@ package qsort
 
 import (
 	"fmt"
+	"sync"
 )
 
 
@@ -12,7 +13,7 @@ import (
 // 2. Concurrent Recurse only on the shorter part to limit stack depth to log(N)
 // 3. Continue looping with the longer part
 //***************************************************************************
-func qsort2rc(v []ValType, Ret chan<- ChanSyncType) {
+func qsort2rcwg(v []ValType, wg *sync.WaitGroup) {
 	const debug bool = false
 	const (
 		goLim int = 1000
@@ -26,11 +27,7 @@ func qsort2rc(v []ValType, Ret chan<- ChanSyncType) {
 	if debug {
 		fmt.Println(len(v))
 	}
-	numGos := 0
-	var ret chan ChanSyncType = nil
-	if Ret != nil {
-		ret = make(chan ChanSyncType, 20)
-	}
+	var wg2 sync.WaitGroup
 
 	for Begin+1 < End {
 		if debug {
@@ -67,47 +64,43 @@ func qsort2rc(v []ValType, Ret chan<- ChanSyncType) {
 		rightSize := End - q
 		if leftSize <= rightSize {
 			if leftSize > 1 {
-				if ret != nil && goLim < leftSize {
-					numGos++
-					go qsort2rc(v[Begin:p], ret)
+				if wg != nil && goLim < leftSize {
+					wg2.Add(1)
+					go qsort2rcwg(v[Begin:p], &wg2)
 				} else {
-					qsort2rc(v[Begin:p], nil)
+					qsort2rcwg(v[Begin:p], nil)
 				}
 			}
 			Begin = q
 		} else {
 			if rightSize > 1 {
-				if ret != nil && goLim < rightSize {
-					numGos++
-					go qsort2rc(v[q:End], ret)
+				if wg != nil && goLim < rightSize {
+					wg2.Add(1)
+					go qsort2rcwg(v[q:End], &wg2)
 				} else {
-					qsort2rc(v[q:End], nil)
+					qsort2rcwg(v[q:End], nil)
 				}
 			}
 			End = p
 		}
 	} // while (Begin + 1 < End)
 
-	if ret != nil {
-		for i := 0; i < numGos; i++ {
-			<-ret
-		}
-		close(ret)
-	}
-	if Ret != nil {
-		Ret <- ChanSyncType{}
+	wg2.Wait()
+
+	if wg != nil {
+		wg.Done()
 	}
 }
 
 //***************************************************************************
 // Top sorter: call recursive sorter for arrays of len >= 2.
 //***************************************************************************
-func QSort2c(v []ValType) {
+func QSort2cwg(v []ValType) {
 	if len(v) < 2 {
 		return
 	}
-	ret := make(chan ChanSyncType, 2)
-	qsort2rc(v, ret)
-	<-ret
-	close(ret)
+	var wg sync.WaitGroup
+	wg.Add(1)
+	qsort2rcwg(v, &wg)
+	wg.Wait()
 }

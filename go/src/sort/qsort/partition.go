@@ -5,6 +5,8 @@ import (
 	"../utils"
 )
 
+type ChanSyncType struct{}
+
 //***************************************************************************
 type ValType = utils.ValType
 type IndexType = utils.IndexType
