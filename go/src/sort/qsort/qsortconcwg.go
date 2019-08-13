@@ -6,7 +6,6 @@ import (
 	"sync"
 )
 
-
 //***************************************************************************
 // Concurrent single recursive quicksort.
 // 1. Partition into two parts. Note that pivot_high==pivot_low.

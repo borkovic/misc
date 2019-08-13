@@ -2,7 +2,7 @@ fn Error { echo >[1=2] $* }
 
 PROGS=(
     qsort-test
-    qsortconc-test 
+    qsortconc-test
     qsortconcwg-test
 )
 

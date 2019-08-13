@@ -1,0 +1,4 @@
+
+for (f in *.go) {
+    go fmt $f
+}
