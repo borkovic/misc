@@ -5,7 +5,7 @@ package snapshot
  * It sends its neg. value to all children.
  * Collects sums from the children
 *************************************************************/
-func (proc *Proc) runMaster(neighbors NeighborChans) Data {
+func (proc *Proc) runRoot(neighbors NeighborChans) Data {
 	for _, n := range neighbors {
 		n.out <- (-proc.m_MyVal)
 	}
@@ -31,7 +31,7 @@ func (proc *Proc) runMaster(neighbors NeighborChans) Data {
  * 4. sums values from children (positive)`
  * 5. send sum to parent
 *************************************************************/
-func (proc *Proc) runSlave(neighbors NeighborChans) {
+func (proc *Proc) runChild(neighbors NeighborChans) {
 	var parIdx int = -1
 
 	// 1. read from parent in tree
@@ -70,12 +70,17 @@ func (proc *Proc) runSlave(neighbors NeighborChans) {
 	neighbors[parIdx].out <- sum
 }
 
+/*************************************************************
+ * This process recieves value from top.
+ * If negative, that's root, otherwise it's child
+*************************************************************/
 func (proc *Proc) run(topChan IoChan, neighbors NeighborChans) {
 	proc.m_MyVal = <-topChan.in
 	if proc.m_MyVal < 0 { // master
-		sum := proc.runMaster(neighbors)
+		proc.m_MyVal = -proc.m_MyVal
+		sum := proc.runRoot(neighbors)
 		topChan.out <- sum
 	} else { // slave
-		proc.runSlave(neighbors)
+		proc.runChild(neighbors)
 	}
 }
