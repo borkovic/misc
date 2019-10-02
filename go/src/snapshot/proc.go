@@ -7,18 +7,12 @@ package snapshot
 *************************************************************/
 func (proc *Proc) runRoot(neighbors NeighborChans) Data {
 	for _, n := range neighbors {
-		n.out <- (-proc.m_MyVal)
+		n.Out <- (-proc.m_MyVal)
 	}
 	sum := proc.m_MyVal
 	for i := 0; i < NumNeighbors; i++ {
-		select {
-		case x := <-(*neighbors)[0].in:
-			sum += x
-		case x := <-(*neighbors)[1].in:
-			sum += x
-		case x := <-(*neighbors)[2].in:
-			sum += x
-		}
+		x := <-neighbors[i].In
+		sum += x
 	}
 	return sum
 }
@@ -34,13 +28,13 @@ func (proc *Proc) runRoot(neighbors NeighborChans) Data {
 func (proc *Proc) runChild(neighbors NeighborChans) {
 	var parIdx int = -1
 
-	// 1. read from parent in tree
+	// 1. read from parent In tree
 	select {
-	case <-neighbors[0].in:
+	case <-neighbors[0].In:
 		parIdx = 0
-	case <-neighbors[1].in:
+	case <-neighbors[1].In:
 		parIdx = 1
-	case <-neighbors[2].in:
+	case <-neighbors[2].In:
 		parIdx = 2
 	}
 
@@ -49,7 +43,7 @@ func (proc *Proc) runChild(neighbors NeighborChans) {
 		if i == parIdx {
 			continue
 		}
-		neighbors[i].out <- (-proc.m_MyVal)
+		neighbors[i].Out <- (-proc.m_MyVal)
 	}
 
 	// 3. receive from children and siblings
@@ -60,27 +54,30 @@ func (proc *Proc) runChild(neighbors NeighborChans) {
 		if i == parIdx {
 			continue
 		}
-		v := <-neighbors[i].in
+		v := <-neighbors[i].In
 		if v > 0 { // this is child, siblings send negative
 			sum += v
 		}
 	}
 
 	// 5. send sum to parent
-	neighbors[parIdx].out <- sum
+	neighbors[parIdx].Out <- sum
 }
 
 /*************************************************************
  * This process recieves value from top.
  * If negative, that's root, otherwise it's child
 *************************************************************/
-func (proc *Proc) run(topChan IoChan, neighbors NeighborChans) {
-	proc.m_MyVal = <-topChan.in
+func (proc *Proc) Run(topChan *IoChans, neighbors NeighborChans) {
+	proc.m_MyVal = <-topChan.In
 	if proc.m_MyVal < 0 { // master
 		proc.m_MyVal = -proc.m_MyVal
 		sum := proc.runRoot(neighbors)
-		topChan.out <- sum
+		topChan.Out <- sum
 	} else { // slave
 		proc.runChild(neighbors)
 	}
 }
+
+
+

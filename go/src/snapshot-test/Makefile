@@ -1,7 +1,8 @@
 
+#	go build types.go proc.go driver.go
 
 b:
-	go build types.go proc.go
+	go build driver.go
 
 
 fmt:
