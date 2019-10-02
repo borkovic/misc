@@ -1,5 +1,17 @@
 package snapshot
 
+import (
+	"math/rand"
+	"time"
+)
+
+var RNG *rand.Rand
+
+func SLEEP(n int) {
+	m := 100 * n
+	time.Sleep(time.Duration(m) * time.Millisecond)
+}
+
 /*************************************************************
  * This process is root.
  * It sends its neg. value to all children.
@@ -9,9 +21,11 @@ func (proc *Proc) runRoot(neighbors NeighborChans) Data {
 	for _, n := range neighbors {
 		n.Out <- (-proc.m_MyVal)
 	}
+	SLEEP(RNG.Intn(4))
 	sum := proc.m_MyVal
 	for i := 0; i < NumNeighbors; i++ {
 		x := <-neighbors[i].In
+	SLEEP(RNG.Intn(4))
 		sum += x
 	}
 	return sum
@@ -28,6 +42,7 @@ func (proc *Proc) runRoot(neighbors NeighborChans) Data {
 func (proc *Proc) runChild(neighbors NeighborChans) {
 	var parIdx int = -1
 
+	SLEEP(RNG.Intn(4))
 	// 1. read from parent In tree
 	select {
 	case <-neighbors[0].In:
@@ -41,8 +56,10 @@ func (proc *Proc) runChild(neighbors NeighborChans) {
 	// 2. send to all but parent (children and siblings)
 	for i := 0; i < NumNeighbors; i++ {
 		if i == parIdx {
+	SLEEP(RNG.Intn(4))
 			continue
 		}
+	SLEEP(RNG.Intn(4))
 		neighbors[i].Out <- (-proc.m_MyVal)
 	}
 
@@ -54,6 +71,7 @@ func (proc *Proc) runChild(neighbors NeighborChans) {
 		if i == parIdx {
 			continue
 		}
+	SLEEP(RNG.Intn(4))
 		v := <-neighbors[i].In
 		if v > 0 { // this is child, siblings send negative
 			sum += v

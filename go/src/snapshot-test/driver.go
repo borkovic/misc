@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
+	"time"
 )
 import (
 	"snapshot"
@@ -10,6 +12,8 @@ import (
 /*************************************************************
 *************************************************************/
 func main() {
+	r0 := time.Now().UnixNano()
+	snapshot.RNG = rand.New(rand.NewSource(r0))
 	root := 2
 	nProc := snapshot.NumProc
 	procs := make([]snapshot.Proc, nProc)
@@ -17,16 +21,17 @@ func main() {
 
 	neighbors := make([][]snapshot.IoChans, nProc)
 	for i := 0; i < nProc-1; i++ {
-		for j := i+1; j < nProc; j++ {
+		for j := i + 1; j < nProc; j++ {
 			ijChan := make(snapshot.BiChan, 1)
 			jiChan := make(snapshot.BiChan, 1)
-			iIoChan := snapshot.IoChans{Out:ijChan, In:jiChan}
-			jIoChan := snapshot.IoChans{Out:jiChan, In:ijChan}
+			iIoChan := snapshot.IoChans{Out: ijChan, In: jiChan}
+			jIoChan := snapshot.IoChans{Out: jiChan, In: ijChan}
 			neighbors[i] = append(neighbors[i], iIoChan)
 			neighbors[j] = append(neighbors[j], jIoChan)
 		}
 	}
 	var rootBotUp snapshot.IChan
+	var sum int = 0
 	for i := 0; i < nProc; i++ {
 		topDown := make(snapshot.BiChan, 1)
 		tops[i].In = topDown
@@ -36,13 +41,16 @@ func main() {
 		go procs[i].Run(&tops[i], neighbors[i])
 
 		if i != root {
-			topDown<- snapshot.Data(i+3)
+			v := i + 5
+			topDown <- snapshot.Data(v)
+			sum += v
 		} else {
 			rootBotUp = botUp
-			topDown<- snapshot.Data(-(i+3))
+			v := i + 4
+			topDown <- snapshot.Data(-v)
+			sum += v
 		}
 	}
 	val := <-rootBotUp
 	fmt.Println("Root returns ", val)
 }
-
