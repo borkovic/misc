@@ -5,7 +5,7 @@ import (
 )
 
 //*********************************************
-type BitArray uint32
+type BitArray uint64
 
 //*********************************************
 func countBits(v BitArray) int32 {
@@ -32,6 +32,10 @@ func printBitCount(v BitArray) {
 func main() {
 	var v BitArray
 	for v = 0; v < 32; v++ {
+		printBitCount(v)
+	}
+	var s BitArray = 0xffffff0ffffff;
+	for v = s; v < s+32; v++ {
 		printBitCount(v)
 	}
 }
