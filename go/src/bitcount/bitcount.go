@@ -24,7 +24,7 @@ func countBits(v BitArray) int32 {
 //*********************************************
 func printBitCount(v BitArray) {
 	cnt := countBits(v)
-	fmt.Println("Value: ", v, ", cnt: ", cnt)
+	fmt.Println("Value: ", v, ", Bit count: ", cnt)
 
 }
 
@@ -35,7 +35,8 @@ func main() {
 		printBitCount(v)
 	}
 	var s BitArray = 0xffffff0ffffff;
-	for v = s; v < s+32; v++ {
+	var step BitArray = 7
+	for v = s; v < s+(32*step); v += step {
 		printBitCount(v)
 	}
 }
