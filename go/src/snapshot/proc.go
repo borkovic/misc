@@ -30,7 +30,9 @@ func (proc *Proc) runRoot(neighbors NeighborChans) Data {
 	for i := 0; i < NumNeighbors; i++ {
 		x := <-neighbors[i].In
 		proc.SLEEP(4)
-		sum += x
+		if x > 0 {
+			sum += x
+		}
 	}
 	return sum
 }
