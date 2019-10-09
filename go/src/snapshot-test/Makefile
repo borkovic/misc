@@ -1,6 +1,9 @@
 
 #	go build types.go proc.go driver.go
 
+r:
+	go run --race driver.go
+
 b:
 	go build driver.go
 

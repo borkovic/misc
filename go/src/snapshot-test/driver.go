@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math/rand"
-	"time"
 )
 import (
 	"snapshot"
@@ -12,8 +10,6 @@ import (
 /*************************************************************
 *************************************************************/
 func main() {
-	r0 := time.Now().UnixNano()
-	snapshot.RNG = rand.New(rand.NewSource(r0))
 	root := 2
 	nProc := snapshot.NumProc
 	procs := make([]snapshot.Proc, nProc)
