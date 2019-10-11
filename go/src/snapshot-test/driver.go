@@ -10,8 +10,13 @@ import (
 /*************************************************************
 *************************************************************/
 func main() {
-	root := 2
-	nProc := snapshot.NumProc
+	const (
+		NumNeighbors = 6
+		NumProc      = 10
+		root         = 2
+	)
+
+	nProc := NumProc
 	procs := make([]snapshot.Proc, nProc)
 	tops := make([]snapshot.VertChanPair, nProc)
 
@@ -47,13 +52,13 @@ func main() {
 		go procs[i].Run(&tops[i], neighbors[i])
 
 		if i != root {
-			v := i + 5
+			v := i + 10
 			localSum += v
 			topDown <- snapshot.Data(v)
 			sum += v
 		} else {
 			rootBotUp = botUp
-			v := i + 25
+			v := i + 100
 			localSum += v
 			topDown <- snapshot.Data(-v)
 			sum += v

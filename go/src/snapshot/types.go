@@ -26,11 +26,6 @@ type VertChanPair struct {
 	Out VertOutChan
 }
 
-const (
-	NumNeighbors = 6
-	NumProc      = 10
-)
-
 type NeighborChans = []HorizChanPair
 
 type Proc struct {

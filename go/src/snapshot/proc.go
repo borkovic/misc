@@ -23,12 +23,13 @@ func (proc *Proc) SLEEP(nn int) {
  * Collects sums from the children
 *************************************************************/
 func (proc *Proc) runRoot(neighbors NeighborChans) Data {
+	numNeighbors := len(neighbors)
 	for _, n := range neighbors {
 		n.Out <- HorizData(-proc.m_MyVal)
 	}
 	proc.SLEEP(4)
 	var sum HorizData = HorizData(proc.m_MyVal)
-	for i := 0; i < NumNeighbors; i++ {
+	for i := 0; i < numNeighbors; i++ {
 		x := <-neighbors[i].In
 		proc.SLEEP(4)
 		if x > 0 {
@@ -47,6 +48,7 @@ func (proc *Proc) runRoot(neighbors NeighborChans) Data {
  * 5. send sum to parent
 *************************************************************/
 func (proc *Proc) runChild(neighbors NeighborChans) {
+	numNeighbors := len(neighbors)
 	var parIdx int = -1
 
 	proc.SLEEP(4)
@@ -61,7 +63,7 @@ func (proc *Proc) runChild(neighbors NeighborChans) {
 	}
 
 	// 2. send to all but parent (children and siblings)
-	for i := 0; i < NumNeighbors; i++ {
+	for i := 0; i < numNeighbors; i++ {
 		if i == parIdx {
 			proc.SLEEP(4)
 			continue
@@ -74,7 +76,7 @@ func (proc *Proc) runChild(neighbors NeighborChans) {
 	// from children positive, from siblings negative
 	// 4. sum from children
 	var sum HorizData = HorizData(proc.m_MyVal)
-	for i := 0; i < NumNeighbors; i++ {
+	for i := 0; i < numNeighbors; i++ {
 		if i == parIdx {
 			continue
 		}
@@ -98,11 +100,10 @@ func (proc *Proc) runChild(neighbors NeighborChans) {
  * 5. send sum to parent
 *************************************************************/
 func (proc *Proc) runChild2(neighbors NeighborChans) {
+	numNeighbors := len(neighbors)
 
 	proc.SLEEP(4)
 	// 1. read from parent In tree
-
-	numNeighbors := len(neighbors)
 
 	/***********************************************************/
 	/*
@@ -133,7 +134,7 @@ func (proc *Proc) runChild2(neighbors NeighborChans) {
 	var parIdx int = -1
 	var parVal reflect.Value
 	parIdx, parVal, _ = reflect.Select(cases)
-	fmt.Println("my val ", proc.m_MyVal, ", par idx ", parIdx)
+	fmt.Println("Child with val ", proc.m_MyVal, ", par idx ", parIdx, ", par value ", parVal)
 
 	/*
 		select {
@@ -148,7 +149,7 @@ func (proc *Proc) runChild2(neighbors NeighborChans) {
 	/***********************************************************/
 
 	// 2. send to all but parent (children and siblings)
-	for i := 0; i < NumNeighbors; i++ {
+	for i := 0; i < numNeighbors; i++ {
 		if i == parIdx {
 			proc.SLEEP(4)
 			continue
@@ -161,7 +162,7 @@ func (proc *Proc) runChild2(neighbors NeighborChans) {
 	// from children positive, from siblings negative
 	// 4. sum from children
 	var sum HorizData = HorizData(proc.m_MyVal)
-	for i := 0; i < NumNeighbors; i++ {
+	for i := 0; i < numNeighbors; i++ {
 		if i == parIdx {
 			continue
 		}
@@ -173,7 +174,8 @@ func (proc *Proc) runChild2(neighbors NeighborChans) {
 	}
 
 	// 5. send sum to parent
-	fmt.Println("my val ", proc.m_MyVal, ", sum ", sum, ", par val ", parVal)
+	fmt.Println("Child back to parent: my val ", proc.m_MyVal,
+		", sum ", sum, ", par val ", parVal)
 	neighbors[parIdx].Out <- sum
 }
 
@@ -186,12 +188,13 @@ func (proc *Proc) Run(topChan *VertChanPair, neighbors NeighborChans) {
 	proc.RNG = rand.New(rand.NewSource(r0))
 
 	proc.m_MyVal = <-topChan.In
-	fmt.Println("Val ", proc.m_MyVal)
-	if proc.m_MyVal < 0 { // master
+	if proc.m_MyVal < 0 { // root
+		fmt.Println("Run root, my val ", proc.m_MyVal)
 		proc.m_MyVal = -proc.m_MyVal
 		sum := proc.runRoot(neighbors)
 		topChan.Out <- sum
 	} else { // slave
+		fmt.Println("Run child, my val ", proc.m_MyVal)
 		proc.runChild2(neighbors)
 	}
 }
