@@ -27,44 +27,50 @@ func main() {
 			jiChan := make(snapshot.HorizBidirChan, 1)
 
 			var iIoChan snapshot.HorizChanPair
-			iIoChan.In = snapshot.HorizInChan(jiChan)
-			iIoChan.Out = snapshot.HorizOutChan(ijChan)
+			iIoChan.In = snapshot.HorizBidir2InChan(jiChan)
+			iIoChan.Out = snapshot.HorizBidir2OutChan(ijChan)
 
 			var jIoChan snapshot.HorizChanPair
-			jIoChan.In = snapshot.HorizInChan(ijChan)
-			jIoChan.Out = snapshot.HorizOutChan(jiChan)
+			jIoChan.In = snapshot.HorizBidir2InChan(ijChan)
+			jIoChan.Out = snapshot.HorizBidir2OutChan(jiChan)
 
 			neighbors[i] = append(neighbors[i], iIoChan)
 			neighbors[j] = append(neighbors[j], jIoChan)
 		}
 	}
 
-	var rootBotUp snapshot.VertBidirChan
+	var rootBotUpIn snapshot.VertInChan
 	var localSum int = 0
 	var sum int = 0
 
 	for i := 0; i < nProc; i++ {
-		topDown := make(snapshot.VertBidirChan, 1)
-		tops[i].In = topDown
-		botUp := make(snapshot.VertBidirChan, 1)
-		tops[i].Out = botUp
+		var topDownOut snapshot.VertOutChan
+		var botUpIn snapshot.VertInChan
+		{
+			topDown := make(snapshot.VertBidirChan, 1)
+			topDownOut = snapshot.VertBidir2OutChan(topDown)
+			tops[i].In = snapshot.VertBidir2InChan(topDown)
+			botUp := make(snapshot.VertBidirChan, 1)
+			botUpIn = snapshot.VertBidir2InChan(botUp)
+			tops[i].Out = snapshot.VertBidir2OutChan(botUp)
+		}
 
 		go procs[i].Run(&tops[i], neighbors[i])
 
 		if i != root {
 			v := i + 10
 			localSum += v
-			topDown <- snapshot.Data(v)
+			topDownOut <- snapshot.Data(v)
 			sum += v
 		} else {
-			rootBotUp = botUp
+			rootBotUpIn = botUpIn
 			v := i + 100
 			localSum += v
-			topDown <- snapshot.Data(-v)
+			topDownOut <- snapshot.Data(-v)
 			sum += v
 		}
 	}
 	fmt.Println("Local sum ", localSum)
-	val := <-rootBotUp
+	val := <-rootBotUpIn
 	fmt.Println("Root returns ", val)
 }

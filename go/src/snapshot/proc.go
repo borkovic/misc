@@ -25,10 +25,10 @@ func (proc *Proc) SLEEP(nn int) {
 func (proc *Proc) runRoot(neighbors NeighborChans) Data {
 	numNeighbors := len(neighbors)
 	for _, n := range neighbors {
-		n.Out <- HorizData(-proc.m_MyVal)
+		n.Out <- (-proc.m_MyVal)
 	}
 	proc.SLEEP(4)
-	var sum HorizData = HorizData(proc.m_MyVal)
+	var sum Data = (proc.m_MyVal)
 	for i := 0; i < numNeighbors; i++ {
 		x := <-neighbors[i].In
 		proc.SLEEP(4)
@@ -69,13 +69,13 @@ func (proc *Proc) runChild(neighbors NeighborChans) {
 			continue
 		}
 		proc.SLEEP(4)
-		neighbors[i].Out <- HorizData(-proc.m_MyVal)
+		neighbors[i].Out <- (-proc.m_MyVal)
 	}
 
 	// 3. receive from children and siblings
 	// from children positive, from siblings negative
 	// 4. sum from children
-	var sum HorizData = HorizData(proc.m_MyVal)
+	sum := (proc.m_MyVal)
 	for i := 0; i < numNeighbors; i++ {
 		if i == parIdx {
 			continue
@@ -155,13 +155,13 @@ func (proc *Proc) runChild2(neighbors NeighborChans) {
 			continue
 		}
 		proc.SLEEP(4)
-		neighbors[i].Out <- HorizData(-proc.m_MyVal)
+		neighbors[i].Out <- (-proc.m_MyVal)
 	}
 
 	// 3. receive from children and siblings
 	// from children positive, from siblings negative
 	// 4. sum from children
-	var sum HorizData = HorizData(proc.m_MyVal)
+	sum := (proc.m_MyVal)
 	for i := 0; i < numNeighbors; i++ {
 		if i == parIdx {
 			continue
