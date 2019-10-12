@@ -87,7 +87,7 @@ func main() {
 			close(topDownOut)
 		} else {
 			rootBotUpIn = botUpIn
-			v := snapshot.Data(i + 100)
+			v := snapshot.Data(i + 1000)
 			localSum += v
 			topDownOut <- (-v)
 			close(topDownOut)
