@@ -1,0 +1,4 @@
+#! /usr/bin/env  rc
+
+git config --local include.path ../.gitconfig
+
