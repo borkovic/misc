@@ -25,13 +25,14 @@ func (proc *Proc) SLEEP(nn int) {
 func (proc *Proc) runRoot(neighbors NeighborChans) Data {
 	numNeighbors := len(neighbors)
 	for _, n := range neighbors {
+		proc.SLEEP(88)
 		n.Out <- (-proc.m_MyVal)
 	}
 	proc.SLEEP(4)
 	var sum Data = (proc.m_MyVal)
 	for i := 0; i < numNeighbors; i++ {
 		x := <-neighbors[i].In
-		proc.SLEEP(4)
+		proc.SLEEP(8)
 		if x > 0 {
 			sum += x
 		}
@@ -102,7 +103,7 @@ func (proc *Proc) runChild(neighbors NeighborChans) {
 func (proc *Proc) runChild2(neighbors NeighborChans) {
 	numNeighbors := len(neighbors)
 
-	proc.SLEEP(4)
+	proc.SLEEP(2)
 	// 1. read from parent In tree
 
 	/***********************************************************/
@@ -151,10 +152,10 @@ func (proc *Proc) runChild2(neighbors NeighborChans) {
 	// 2. send to all but parent (children and siblings)
 	for i := 0; i < numNeighbors; i++ {
 		if i == parIdx {
-			proc.SLEEP(4)
+			proc.SLEEP(2)
 			continue
 		}
-		proc.SLEEP(4)
+		proc.SLEEP(2)
 		neighbors[i].Out <- (-proc.m_MyVal)
 	}
 

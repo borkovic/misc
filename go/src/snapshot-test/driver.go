@@ -12,7 +12,7 @@ import (
 func main() {
 	const (
 		NumNeighbors = 6
-		NumProc      = 10
+		NumProc      = 100
 		root         = 2
 	)
 
