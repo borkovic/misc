@@ -31,8 +31,7 @@ type Proc struct {
 	RNG     *rand.Rand
 }
 
-
-func HorizBidir2InChan(c HorizBidirChan) HorizInChan{
+func HorizBidir2InChan(c HorizBidirChan) HorizInChan {
 	var c2 chan Data = (chan Data)(c)
 	var c3 <-chan Data = (<-chan Data)(c2)
 	var c4 HorizInChan = HorizInChan(c3)
