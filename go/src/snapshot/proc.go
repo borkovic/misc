@@ -72,7 +72,7 @@ func (proc *Proc) runChild(neighbors NeighborChans) {
 	}
 	if Debug {
 		fmt.Println("Child with val ", proc.m_MyVal, ", par idx ", parIdx,
-					", par value ", parVal)
+			", par value ", parVal)
 	}
 
 	// 2. send to all but parent (children and siblings)
@@ -160,7 +160,7 @@ func (proc *Proc) runChild2(neighbors NeighborChans) {
 
 	if Debug {
 		fmt.Println("Child with val ", proc.m_MyVal, ", par idx ", parIdx,
-					", par value ", parVal)
+			", par value ", parVal)
 	}
 
 	/***********************************************************/
@@ -193,7 +193,7 @@ func (proc *Proc) runChild2(neighbors NeighborChans) {
 	// 5. send sum to parent
 	if Debug {
 		fmt.Println("Child back to parent: my val ", proc.m_MyVal,
-					", sum ", sum, ", par val ", parVal)
+			", sum ", sum, ", par val ", parVal)
 	}
 	neighbors[parIdx].Out <- sum
 }
