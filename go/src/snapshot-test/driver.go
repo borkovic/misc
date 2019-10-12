@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"time"
+	"math/rand"
 )
 import (
 	"snapshot"
@@ -16,6 +18,9 @@ func main() {
 		root         = 2
 	)
 
+	r0 := time.Now().UnixNano()
+	RNG := rand.New(rand.NewSource(r0))
+
 	nProc := NumProc
 	procs := make([]snapshot.Proc, nProc)
 	tops := make([]snapshot.VertChanPair, nProc)
@@ -23,6 +28,13 @@ func main() {
 	neighbors := make([][]snapshot.HorizChanPair, nProc)
 	for i := 0; i < nProc-1; i++ {
 		for j := i + 1; j < nProc; j++ {
+			if i + 1 < j { // connect i at least with j==i+1 to have fully connected graph
+				var n int = RNG.Intn(11)
+				var b bool = n < 3   // with 30% probability do not have a connection
+				if b {
+					continue
+				}
+			}
 			ijChan := make(snapshot.HorizBidirChan, 1)
 			jiChan := make(snapshot.HorizBidirChan, 1)
 

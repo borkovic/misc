@@ -13,8 +13,10 @@ import (
 *************************************************************/
 func (proc *Proc) SLEEP(nn int) {
 	var n int = proc.RNG.Intn(nn)
-	m := 100 * n
-	time.Sleep(time.Duration(m) * time.Millisecond)
+	m := 1000 * n
+	//t := time.Duration(m) * time.Millisecond
+	t := time.Duration(m) * time.Microsecond
+	time.Sleep(t)
 }
 
 /*************************************************************
