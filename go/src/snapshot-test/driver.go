@@ -28,6 +28,7 @@ func main() {
 	nProc := NumProc
 	procs := make([]snapshot.Proc, nProc)
 	tops := make([]snapshot.VertChanPair, nProc)
+	driverTops := make([]snapshot.VertChanPair, nProc)
 
 	neighbors := make([][]snapshot.HorizChanPair, nProc)
 	for i := 0; i < nProc-1; i++ {
@@ -64,11 +65,16 @@ func main() {
 		var botUpIn snapshot.VertInChan
 		{
 			topDown := make(snapshot.VertBidirChan, 1)
-			topDownOut = snapshot.VertBidir2OutChan(topDown)
-			tops[i].In = snapshot.VertBidir2InChan(topDown)
 			botUp := make(snapshot.VertBidirChan, 1)
+
+			topDownOut = snapshot.VertBidir2OutChan(topDown)
 			botUpIn = snapshot.VertBidir2InChan(botUp)
+
+			tops[i].In = snapshot.VertBidir2InChan(topDown)
 			tops[i].Out = snapshot.VertBidir2OutChan(botUp)
+
+			driverTops[i].In = snapshot.VertBidir2InChan(botUp)
+			driverTops[i].Out = snapshot.VertBidir2OutChan(topDown)
 		}
 
 		go procs[i].Run(&tops[i], neighbors[i])
@@ -76,17 +82,25 @@ func main() {
 		if i != root {
 			v := i + 10
 			localSum += v
-			topDownOut <- snapshot.Data(v)
+			topDownOut<- snapshot.Data(v)
+			close(topDownOut)
 			sum += v
 		} else {
 			rootBotUpIn = botUpIn
 			v := i + 100
 			localSum += v
-			topDownOut <- snapshot.Data(-v)
+			topDownOut<- snapshot.Data(-v)
+			close(topDownOut)
 			sum += v
 		}
 	}
 	fmt.Println("Local sum ", localSum)
+
 	val := <-rootBotUpIn
 	fmt.Println("Root returns ", val)
+	for i := 0; i < nProc; i++ {
+		if i != root {
+			val = <-driverTops[i].In
+		}
+	}
 }
