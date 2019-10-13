@@ -155,4 +155,3 @@ func (proc *Proc) runChild2(neighbors NeighborChans) {
 	}
 	neighbors[parIdx].Out <- sum
 }
-

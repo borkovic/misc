@@ -1,6 +1,5 @@
 package snapshot
 
-
 /*************************************************************
  * This process is root.
  * It sends its neg. value to all children.
