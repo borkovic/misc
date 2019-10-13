@@ -20,6 +20,8 @@ func main() {
 		NumNeighbors = 6
 		NumProc      = 100
 		root         = 2
+		VertChanCap  = 0
+		HorizChanCap = 1
 	)
 
 	r0 := time.Now().UnixNano()
@@ -40,8 +42,8 @@ func main() {
 					continue
 				}
 			}
-			ijChan := make(snapshot.HorizBidirChan, 1)
-			jiChan := make(snapshot.HorizBidirChan, 1)
+			ijChan := make(snapshot.HorizBidirChan, HorizChanCap)
+			jiChan := make(snapshot.HorizBidirChan, HorizChanCap)
 
 			var iIoChan snapshot.HorizChanPair
 			iIoChan.In = snapshot.HorizBidir2InChan(jiChan)
@@ -64,8 +66,8 @@ func main() {
 		var topDownOut snapshot.VertOutChan
 		var botUpIn snapshot.VertInChan
 		{
-			topDown := make(snapshot.VertBidirChan, 1)
-			botUp := make(snapshot.VertBidirChan, 1)
+			topDown := make(snapshot.VertBidirChan, VertChanCap)
+			botUp := make(snapshot.VertBidirChan, VertChanCap)
 
 			topDownOut = snapshot.VertBidir2OutChan(topDown)
 			botUpIn = snapshot.VertBidir2InChan(botUp)
