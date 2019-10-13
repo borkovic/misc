@@ -59,8 +59,7 @@ func main() {
 	}
 
 	var rootBotUpIn snapshot.VertInChan
-	var localSum int = 0
-	var sum int = 0
+	var localSum snapshot.Data = 0
 
 	for i := 0; i < nProc; i++ {
 		var topDownOut snapshot.VertOutChan
@@ -82,18 +81,16 @@ func main() {
 		go procs[i].Run(&tops[i], neighbors[i])
 
 		if i != root {
-			v := i + 10
+			v := snapshot.Data(i + 10)
 			localSum += v
-			topDownOut<- snapshot.Data(v)
+			topDownOut<- v
 			close(topDownOut)
-			sum += v
 		} else {
 			rootBotUpIn = botUpIn
-			v := i + 100
+			v := snapshot.Data(i + 100)
 			localSum += v
-			topDownOut<- snapshot.Data(-v)
+			topDownOut<- (-v)
 			close(topDownOut)
-			sum += v
 		}
 	}
 	fmt.Println("Local sum ", localSum)
