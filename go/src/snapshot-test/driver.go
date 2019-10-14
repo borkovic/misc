@@ -95,11 +95,17 @@ func main() {
 	}
 	fmt.Println("Local sum ", localSum)
 
-	val := <-rootBotUpIn
+	val, ok := <-rootBotUpIn
+	if !ok {
+		panic("Bad receive")
+	}
 	fmt.Println("Root returns ", val)
 	for i := 0; i < nProc; i++ {
 		if i != root {
-			val = <-driverTops[i].In
+			val, ok = <-driverTops[i].In
+			if !ok {
+				panic("Bad receive")
+			}
 		}
 	}
 }

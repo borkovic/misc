@@ -13,7 +13,7 @@ import (
  * 4. sums values from children (+)
  * 5. send sum to parent
 *********************************************************/
-func (proc *Proc) runChild(neighbors NeighborChans) {
+func (proc *Proc) runChild1(neighbors NeighborChans) {
 	//numNeighbors := len(neighbors)
 	var parIdx int = -1
 	var parVal Data
@@ -41,7 +41,7 @@ func (proc *Proc) runChild(neighbors NeighborChans) {
 			continue
 		}
 		proc.SLEEP(4)
-		n.Out <- (-proc.m_MyVal)
+		n.Out<- (-proc.m_MyVal)
 		close(n.Out)
 	}
 
@@ -61,7 +61,7 @@ func (proc *Proc) runChild(neighbors NeighborChans) {
 	}
 
 	// 5. send sum to parent
-	neighbors[parIdx].Out <- sum
+	neighbors[parIdx].Out<- sum
 }
 
 /*********************************************************
@@ -171,6 +171,6 @@ func (proc *Proc) runChild2(neighbors NeighborChans) {
 			proc.m_MyVal,
 			", sum ", sum, ", par val ", parVal)
 	}
-	neighbors[parIdx].Out <- sum
+	neighbors[parIdx].Out<- sum
 	close(neighbors[parIdx].Out)
 }

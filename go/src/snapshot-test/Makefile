@@ -2,6 +2,7 @@
 #	go build types.go proc.go driver.go
 
 r:
+	rm -f driver
 	go run --race driver.go
 
 b:
