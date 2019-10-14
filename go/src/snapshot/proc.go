@@ -28,13 +28,13 @@ func (proc *Proc) SLEEP(nn int) {
  * If negative, that's root, otherwise it's child
 *********************************************************/
 func (proc *Proc) Run(topChan *VertChanPair,
-					  neighbors NeighborChans) {
+	neighbors NeighborChans) {
 	var ok bool
 	r0 := time.Now().UnixNano()
 	proc.RNG = rand.New(rand.NewSource(r0))
 
-	proc.m_MyVal,ok  = <-topChan.In
-	if ! ok {
+	proc.m_MyVal, ok = <-topChan.In
+	if !ok {
 		panic("Recieve from closed top chan")
 	}
 	if proc.m_MyVal < 0 { // root
@@ -43,15 +43,15 @@ func (proc *Proc) Run(topChan *VertChanPair,
 		}
 		proc.m_MyVal = -proc.m_MyVal
 		sum := proc.runRoot(neighbors)
-		topChan.Out<- sum
+		topChan.Out <- sum
 		close(topChan.Out)
 	} else { // slave
 		if Debug {
 			fmt.Println("Run child, my val ",
-						proc.m_MyVal)
+				proc.m_MyVal)
 		}
 		proc.runChild2(neighbors)
-		topChan.Out<- proc.m_MyVal
+		topChan.Out <- proc.m_MyVal
 		close(topChan.Out)
 	}
 }

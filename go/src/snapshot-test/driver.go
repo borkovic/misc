@@ -83,13 +83,13 @@ func main() {
 		if i != root {
 			v := snapshot.Data(i + 10)
 			localSum += v
-			topDownOut<- v
+			topDownOut <- v
 			close(topDownOut)
 		} else {
 			rootBotUpIn = botUpIn
 			v := snapshot.Data(i + 100)
 			localSum += v
-			topDownOut<- (-v)
+			topDownOut <- (-v)
 			close(topDownOut)
 		}
 	}

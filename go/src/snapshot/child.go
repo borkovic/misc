@@ -30,8 +30,8 @@ func (proc *Proc) runChild1(neighbors NeighborChans) {
 	}
 	if Debug {
 		fmt.Println("Child with val ", proc.m_MyVal,
-					", par idx ", parIdx,
-					", par value ", parVal)
+			", par idx ", parIdx,
+			", par value ", parVal)
 	}
 
 	// 2. send to all but parent (children and siblings)
@@ -41,7 +41,7 @@ func (proc *Proc) runChild1(neighbors NeighborChans) {
 			continue
 		}
 		proc.SLEEP(4)
-		n.Out<- (-proc.m_MyVal)
+		n.Out <- (-proc.m_MyVal)
 		close(n.Out)
 	}
 
@@ -61,7 +61,7 @@ func (proc *Proc) runChild1(neighbors NeighborChans) {
 	}
 
 	// 5. send sum to parent
-	neighbors[parIdx].Out<- sum
+	neighbors[parIdx].Out <- sum
 }
 
 /*********************************************************
@@ -119,18 +119,18 @@ func (proc *Proc) runChild2(neighbors NeighborChans) {
 	}
 	//var parIdx int = -1
 	//var parVal reflect.Value
-	//var recvOk bool 
+	//var recvOk bool
 	//parIdx, parVal, recvOk = reflect.Select(cases)
 	parIdx, parVal, recvOk := reflect.Select(cases)
-	if ! recvOk {
+	if !recvOk {
 		panic("Child did not receive ok")
 	}
 
 	/*-------------------------------------------------*/
 	if Debug {
 		fmt.Println("Child with val ", proc.m_MyVal,
-					", par idx ", parIdx,
-					", par value ", parVal)
+			", par idx ", parIdx,
+			", par value ", parVal)
 	}
 
 	/*-------------------------------------------------*/
@@ -143,7 +143,7 @@ func (proc *Proc) runChild2(neighbors NeighborChans) {
 			continue
 		}
 		proc.SLEEP(2)
-		neighbors[i].Out<- (-proc.m_MyVal)
+		neighbors[i].Out <- (-proc.m_MyVal)
 		close(neighbors[i].Out)
 	}
 
@@ -155,8 +155,8 @@ func (proc *Proc) runChild2(neighbors NeighborChans) {
 			continue
 		}
 		proc.SLEEP(4)
-		v,ok := <-neighbors[i].In
-		if ! ok {
+		v, ok := <-neighbors[i].In
+		if !ok {
 			panic("Child receive from closed neighbor")
 		}
 		if v > 0 { // this is child, siblings negative
@@ -171,6 +171,6 @@ func (proc *Proc) runChild2(neighbors NeighborChans) {
 			proc.m_MyVal,
 			", sum ", sum, ", par val ", parVal)
 	}
-	neighbors[parIdx].Out<- sum
+	neighbors[parIdx].Out <- sum
 	close(neighbors[parIdx].Out)
 }
