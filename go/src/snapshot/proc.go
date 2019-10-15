@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	Debug bool = true
-	//Debug bool = false
+	//Debug bool = true
+	Debug bool = false
 )
 
 /*********************************************************
