@@ -3,7 +3,7 @@
 
 r:
 	rm -f driver
-	go run --race driver.go
+	go run --race driver.go 2>&1 | tee r.log
 
 b:
 	go build driver.go
@@ -14,3 +14,6 @@ fmt:
 
 s:
 	sha1sum *.go
+
+c:
+	rm -f driver
