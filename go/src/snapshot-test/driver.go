@@ -27,9 +27,9 @@ func makeNeighborChans(nProc int) [][]snapshot.HorizChanPair {
 	neighbors := make([][]snapshot.HorizChanPair, nProc)
 	for i := 0; i < nProc-1; i++ {
 		for j := i + 1; j < nProc; j++ {
-			if i+1 < j { // connect i at least with j==i+1 to have fully connected graph
+			if i+1 < j { // always connect (i -> j) with j==i+1 for full connectedness
 				n := RNG.Intn(11)
-				b := n < 3 // with 30% probability do not have a connection
+				b := n < 6 // with 60% probability do not have a connection
 				if b {
 					continue
 				}
@@ -56,8 +56,8 @@ func makeNeighborChans(nProc int) [][]snapshot.HorizChanPair {
 *************************************************************/
 func main() {
 	const (
-		NumNeighbors = 6
-		NumProc      = 100
+		NumNeighbors = 9
+		NumProc      = 102
 		root         = 2
 		VertChanCap  = 0
 	)
