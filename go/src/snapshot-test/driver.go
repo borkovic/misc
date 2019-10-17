@@ -36,8 +36,8 @@ func main() {
 	for i := 0; i < nProc-1; i++ {
 		for j := i + 1; j < nProc; j++ {
 			if i+1 < j { // connect i at least with j==i+1 to have fully connected graph
-				var n int = RNG.Intn(11)
-				var b bool = n < 3 // with 30% probability do not have a connection
+				n := RNG.Intn(11)
+				b := n < 3 // with 30% probability do not have a connection
 				if b {
 					continue
 				}
