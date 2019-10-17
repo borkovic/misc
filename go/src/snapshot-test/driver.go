@@ -15,22 +15,13 @@ const (
 
 /*************************************************************
 *************************************************************/
-func main() {
+func makeNeighborChans(nProc int) [][]snapshot.HorizChanPair {
 	const (
-		NumNeighbors = 6
-		NumProc      = 100
-		root         = 2
-		VertChanCap  = 0
 		HorizChanCap = 1
 	)
 
 	r0 := time.Now().UnixNano()
 	RNG := rand.New(rand.NewSource(r0))
-
-	nProc := NumProc
-	procs := make([]snapshot.Proc, nProc)
-	tops := make([]snapshot.VertChanPair, nProc)
-	driverTops := make([]snapshot.VertChanPair, nProc)
 
 	// make neighbor channels
 	neighbors := make([][]snapshot.HorizChanPair, nProc)
@@ -58,6 +49,27 @@ func main() {
 			neighbors[j] = append(neighbors[j], jIoChan)
 		}
 	}
+	return neighbors
+}
+
+
+/*************************************************************
+*************************************************************/
+func main() {
+	const (
+		NumNeighbors = 6
+		NumProc      = 100
+		root         = 2
+		VertChanCap  = 0
+	)
+
+
+	nProc := NumProc
+	procs := make([]snapshot.Proc, nProc)
+	tops := make([]snapshot.VertChanPair, nProc)
+	driverTops := make([]snapshot.VertChanPair, nProc)
+
+	neighbors := makeNeighborChans(nProc)
 
 	// make vert channels, start goroutines and send data down
 	var rootBotUpIn snapshot.VertInChan
