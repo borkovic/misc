@@ -123,7 +123,7 @@ func (proc *Proc) runChild2(neighbors NeighborChans) {
 	//parIdx, parVal, recvOk = reflect.Select(cases)
 	parIdx, parVal, recvOk := reflect.Select(cases)
 	if !recvOk {
-		panic("Child did not receive ok")
+		panic("Child did not receive ok 5")
 	}
 
 	/*-------------------------------------------------*/
@@ -157,7 +157,7 @@ func (proc *Proc) runChild2(neighbors NeighborChans) {
 		proc.SLEEP(4)
 		v, ok := <-neighbors[i].In
 		if !ok {
-			panic("Child receive from closed neighbor")
+			panic("Child receive from closed neighbor 6")
 		}
 		if v > 0 { // this is child, siblings negative
 			sum += v

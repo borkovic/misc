@@ -35,7 +35,7 @@ func (proc *Proc) Run(topChan *VertChanPair,
 
 	proc.m_MyVal, ok = <-topChan.In
 	if !ok {
-		panic("Recieve from closed top chan")
+		panic("Recieve from closed top chan 3")
 	}
 	if proc.m_MyVal < 0 { // root
 		if Debug {

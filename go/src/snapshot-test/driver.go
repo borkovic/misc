@@ -32,6 +32,7 @@ func main() {
 	tops := make([]snapshot.VertChanPair, nProc)
 	driverTops := make([]snapshot.VertChanPair, nProc)
 
+	// make neighbor channels
 	neighbors := make([][]snapshot.HorizChanPair, nProc)
 	for i := 0; i < nProc-1; i++ {
 		for j := i + 1; j < nProc; j++ {
@@ -58,6 +59,7 @@ func main() {
 		}
 	}
 
+	// make vert channels, start goroutines and send data down
 	var rootBotUpIn snapshot.VertInChan
 	var localSum snapshot.Data = 0
 
@@ -93,18 +95,22 @@ func main() {
 			close(topDownOut)
 		}
 	}
-	fmt.Println("Local sum ", localSum)
+	fmt.Println("Local sum: ", localSum)
 
+	// receive value from root
 	val, ok := <-rootBotUpIn
 	if !ok {
-		panic("Bad receive")
+		panic("Bad receive 1")
 	}
-	fmt.Println("Root returns ", val)
+	fmt.Println("Root returns: ", val)
+	if val != localSum {
+		fmt.Println("Local sum (", localSum, ") != received sum (", val, ")")
+	}
 	for i := 0; i < nProc; i++ {
 		if i != root {
 			val, ok = <-driverTops[i].In
 			if !ok {
-				panic("Bad receive")
+				panic("Bad receive 2")
 			}
 		}
 	}

@@ -17,7 +17,7 @@ func (proc *Proc) runRoot(neighbors NeighborChans) Data {
 	for _, n := range neighbors {
 		x, ok := <-n.In
 		if !ok {
-			panic("Root recv from closed neighbor chan")
+			panic("Root recv from closed neighbor chan 4")
 		}
 		proc.SLEEP(8)
 		if x > 0 {
