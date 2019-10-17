@@ -52,7 +52,6 @@ func makeNeighborChans(nProc int) [][]snapshot.HorizChanPair {
 	return neighbors
 }
 
-
 /*************************************************************
 *************************************************************/
 func main() {
@@ -62,7 +61,6 @@ func main() {
 		root         = 2
 		VertChanCap  = 0
 	)
-
 
 	nProc := NumProc
 	procs := make([]snapshot.Proc, nProc)
