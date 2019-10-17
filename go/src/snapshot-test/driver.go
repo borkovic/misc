@@ -97,7 +97,7 @@ func main() {
 	}
 	fmt.Println("Local sum: ", localSum)
 
-	// receive value from root
+	// receive value from root first
 	val, ok := <-rootBotUpIn
 	if !ok {
 		panic("Bad receive 1")
@@ -106,6 +106,8 @@ func main() {
 	if val != localSum {
 		fmt.Println("Local sum (", localSum, ") != received sum (", val, ")")
 	}
+
+	// receive on remaining vert channel
 	for i := 0; i < nProc; i++ {
 		if i != root {
 			val, ok = <-driverTops[i].In
