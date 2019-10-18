@@ -136,16 +136,14 @@ func main() {
 	// make vert channels, start goroutines and send data down
 
 	for i := ProcIdx(0); i < nProc; i++ {
-		{
-			topDown := make(snapshot.VertBidirChan, VertChanCap)
-			botUp := make(snapshot.VertBidirChan, VertChanCap)
+		topDown := make(snapshot.VertBidirChan, VertChanCap)
+		botUp := make(snapshot.VertBidirChan, VertChanCap)
 
-			tops[i].In = snapshot.VertBidir2InChan(topDown)
-			tops[i].Out = snapshot.VertBidir2OutChan(botUp)
+		tops[i].In = snapshot.VertBidir2InChan(topDown)
+		tops[i].Out = snapshot.VertBidir2OutChan(botUp)
 
-			driverTops[i].In = snapshot.VertBidir2InChan(botUp)
-			driverTops[i].Out = snapshot.VertBidir2OutChan(topDown)
-		}
+		driverTops[i].In = snapshot.VertBidir2InChan(botUp)
+		driverTops[i].Out = snapshot.VertBidir2OutChan(topDown)
 	}
 
 	startProcs(procs, tops, neighbors)
