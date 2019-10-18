@@ -56,9 +56,8 @@ func makeNeighborChans(nProc int) [][]snapshot.HorizChanPair {
 *************************************************************/
 func main() {
 	const (
-		NumNeighbors = 9
+		//NumNeighbors = 9
 		NumProc      = 102
-		root         = 2
 		VertChanCap  = 0
 	)
 
@@ -72,6 +71,12 @@ func main() {
 	// make vert channels, start goroutines and send data down
 	var rootBotUpIn snapshot.VertInChan
 	var localSum snapshot.Data = 0
+
+	r0 := time.Now().UnixNano()
+	RNG := rand.New(rand.NewSource(r0))
+	bias := RNG.Intn(5)
+	root := RNG.Intn(NumProc)
+	fmt.Println("Num proc ", nProc, ", Bias is ", bias, ", root is ", root)
 
 	for i := 0; i < nProc; i++ {
 		var topDownOut snapshot.VertOutChan
@@ -93,13 +98,13 @@ func main() {
 		go procs[i].Run(&tops[i], neighbors[i])
 
 		if i != root {
-			v := snapshot.Data(i + 10)
+			v := snapshot.Data(i + bias + 10)
 			localSum += v
 			topDownOut <- v
 			close(topDownOut)
 		} else {
 			rootBotUpIn = botUpIn
-			v := snapshot.Data(i + 1000)
+			v := snapshot.Data(i + bias + 1000)
 			localSum += v
 			topDownOut <- (-v)
 			close(topDownOut)
