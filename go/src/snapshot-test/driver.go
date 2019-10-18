@@ -92,14 +92,15 @@ func main() {
 		go procs[i].Run(&tops[i], neighbors[i])
 
 		downChanOut := driverTops[i].Out
-		var v snapshot.Data
+		var v, sendv snapshot.Data
 		if i != root {
 			v = snapshot.Data(i + bias + 10)
-			downChanOut <- v
+			sendv = v
 		} else {
 			v = snapshot.Data(i + bias + 1000)
-			downChanOut <- (-v)
+			sendv = -v
 		}
+		downChanOut <- sendv
 		localSum += v
 		close(downChanOut)
 	}
