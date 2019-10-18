@@ -78,12 +78,12 @@ func main() {
 	fmt.Println("Num proc ", nProc, ", Bias is ", bias, ", root is ", root)
 
 	for i := 0; i < nProc; i++ {
-		var topDownOut snapshot.VertOutChan
+		var //topDownOut snapshot.VertOutChan
 		{
 			topDown := make(snapshot.VertBidirChan, VertChanCap)
 			botUp := make(snapshot.VertBidirChan, VertChanCap)
 
-			topDownOut = snapshot.VertBidir2OutChan(topDown)
+			//topDownOut = snapshot.VertBidir2OutChan(topDown)
 
 			tops[i].In = snapshot.VertBidir2InChan(topDown)
 			tops[i].Out = snapshot.VertBidir2OutChan(botUp)
@@ -98,19 +98,19 @@ func main() {
 		if i != root {
 			v := snapshot.Data(i + bias + 10)
 			localSum += v
-			if topDownOut != downChanOut {
-				panic("Bad top down out")
-			}
-			topDownOut <- v
-			close(topDownOut)
+			//if topDownOut != downChanOut {
+			//	panic("Bad top down out")
+			//}
+			downChanOut <- v
+			close(downChanOut)
 		} else {
 			v := snapshot.Data(i + bias + 1000)
 			localSum += v
-			if topDownOut != downChanOut {
-				panic("Bad top down out")
-			}
-			topDownOut <- (-v)
-			close(topDownOut)
+			//if topDownOut != downChanOut {
+			//	panic("Bad top down out")
+			//}
+			downChanOut <- (-v)
+			close(downChanOut)
 		}
 	}
 	fmt.Println("Local sum: ", localSum)
