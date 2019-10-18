@@ -78,12 +78,9 @@ func main() {
 	fmt.Println("Num proc ", nProc, ", Bias is ", bias, ", root is ", root)
 
 	for i := 0; i < nProc; i++ {
-		var //topDownOut snapshot.VertOutChan
 		{
 			topDown := make(snapshot.VertBidirChan, VertChanCap)
 			botUp := make(snapshot.VertBidirChan, VertChanCap)
-
-			//topDownOut = snapshot.VertBidir2OutChan(topDown)
 
 			tops[i].In = snapshot.VertBidir2InChan(topDown)
 			tops[i].Out = snapshot.VertBidir2OutChan(botUp)
@@ -95,23 +92,16 @@ func main() {
 		go procs[i].Run(&tops[i], neighbors[i])
 
 		downChanOut := driverTops[i].Out
+		var v snapshot.Data
 		if i != root {
-			v := snapshot.Data(i + bias + 10)
-			localSum += v
-			//if topDownOut != downChanOut {
-			//	panic("Bad top down out")
-			//}
+			v = snapshot.Data(i + bias + 10)
 			downChanOut <- v
-			close(downChanOut)
 		} else {
-			v := snapshot.Data(i + bias + 1000)
-			localSum += v
-			//if topDownOut != downChanOut {
-			//	panic("Bad top down out")
-			//}
+			v = snapshot.Data(i + bias + 1000)
 			downChanOut <- (-v)
-			close(downChanOut)
 		}
+		localSum += v
+		close(downChanOut)
 	}
 	fmt.Println("Local sum: ", localSum)
 
