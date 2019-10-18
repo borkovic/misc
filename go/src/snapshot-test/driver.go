@@ -97,6 +97,22 @@ func sendDataDown(
 
 /*************************************************************
 *************************************************************/
+func receiveData(
+		driverTops []snapshot.VertChanPair,
+		root ProcIdx) {
+
+	nProc := ProcIdx(len(driverTops))
+	for i := ProcIdx(0); i < nProc; i++ {
+		if i != root {
+			_, ok := <-driverTops[i].In
+			if !ok {
+				panic("Bad receive 2")
+			}
+		}
+	}
+}
+/*************************************************************
+*************************************************************/
 func main() {
 	const (
 		VertChanCap  = 0
@@ -146,13 +162,5 @@ func main() {
 		fmt.Println("Local sum (", localSum, ") != received sum (", val, ")")
 	}
 
-	// receive on remaining vert channel
-	for i := ProcIdx(0); i < nProc; i++ {
-		if i != root {
-			val, ok = <-driverTops[i].In
-			if !ok {
-				panic("Bad receive 2")
-			}
-		}
-	}
+	receiveData(driverTops, root)
 }
