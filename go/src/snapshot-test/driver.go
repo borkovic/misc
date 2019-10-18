@@ -116,7 +116,7 @@ func main() {
 	if rootBotUpIn != driverTops[root].In {
 		panic("Bad root bottom up in")
 	}
-	val, ok := <-rootBotUpIn
+	val, ok := <-driverTops[root].In
 	if !ok {
 		panic("Bad receive 1")
 	}
