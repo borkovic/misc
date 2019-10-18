@@ -113,6 +113,9 @@ func main() {
 	fmt.Println("Local sum: ", localSum)
 
 	// receive value from root first
+	if rootBotUpIn != driverTops[root].In {
+		panic("Bad root bottom up in")
+	}
 	val, ok := <-rootBotUpIn
 	if !ok {
 		panic("Bad receive 1")
