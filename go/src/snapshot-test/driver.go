@@ -116,7 +116,7 @@ func sendDataDown(
 
 /*************************************************************
 *************************************************************/
-func receiveData(
+func receiveFromNonRoots(
 	driverTops []snapshot.VertChanPair,
 	root ProcIdx) {
 
@@ -144,15 +144,7 @@ func receiveFromRoot(fromRoot snapshot.VertInChan) snapshot.Data {
 
 /*************************************************************
 *************************************************************/
-func main() {
-
-	r0 := time.Now().UnixNano()
-	RNG := rand.New(rand.NewSource(r0))
-
-	bias := RNG.Intn(5)
-	nProc := ProcIdx(100 + RNG.Intn(20))
-	root := ProcIdx(RNG.Intn(int(nProc)))
-	fmt.Println("Num proc ", nProc, ", Bias is ", bias, ", root is ", root)
+func Driver(nProc ProcIdx, root ProcIdx, bias int) {
 
 	neighbors := makeNeighborChans(nProc)
 
@@ -172,5 +164,20 @@ func main() {
 		fmt.Println("Local sum (", localSum, ") != received sum (", val, ")")
 	}
 
-	receiveData(driverTops, root)
+	receiveFromNonRoots(driverTops, root)
+}
+
+/*************************************************************
+*************************************************************/
+func main() {
+
+	r0 := time.Now().UnixNano()
+	RNG := rand.New(rand.NewSource(r0))
+
+	bias := RNG.Intn(5)
+	nProc := ProcIdx(100 + RNG.Intn(20))
+	root := ProcIdx(RNG.Intn(int(nProc)))
+	fmt.Println("Num proc ", nProc, ", Bias is ", bias, ", root is ", root)
+
+	Driver(nProc, root, bias)
 }
