@@ -69,7 +69,6 @@ func main() {
 	neighbors := makeNeighborChans(nProc)
 
 	// make vert channels, start goroutines and send data down
-	//var rootBotUpIn snapshot.VertInChan
 	var localSum snapshot.Data = 0
 
 	r0 := time.Now().UnixNano()
@@ -95,14 +94,21 @@ func main() {
 
 		go procs[i].Run(&tops[i], neighbors[i])
 
+		downChanOut := driverTops[i].Out
 		if i != root {
 			v := snapshot.Data(i + bias + 10)
 			localSum += v
+			if topDownOut != downChanOut {
+				panic("Bad top down out")
+			}
 			topDownOut <- v
 			close(topDownOut)
 		} else {
 			v := snapshot.Data(i + bias + 1000)
 			localSum += v
+			if topDownOut != downChanOut {
+				panic("Bad top down out")
+			}
 			topDownOut <- (-v)
 			close(topDownOut)
 		}
