@@ -14,6 +14,7 @@ const (
 )
 const (
 	VertChanCap = 0
+	HorizChanCap = 1
 )
 
 type ProcIdx int
@@ -21,9 +22,6 @@ type ProcIdx int
 /*************************************************************
 *************************************************************/
 func makeNeighborChans(nProc ProcIdx) [][]snapshot.HorizChanPair {
-	const (
-		HorizChanCap = 1
-	)
 
 	r0 := time.Now().UnixNano()
 	RNG := rand.New(rand.NewSource(r0))
@@ -135,6 +133,17 @@ func receiveData(
 
 /*************************************************************
 *************************************************************/
+func receiveFromRoot(fromRoot snapshot.VertInChan) snapshot.Data {
+	val, ok := <-fromRoot
+	if !ok {
+		panic("Bad receive 1")
+	}
+	fmt.Println("Root returns: ", val)
+	return val
+}
+
+/*************************************************************
+*************************************************************/
 func main() {
 
 	r0 := time.Now().UnixNano()
@@ -151,7 +160,6 @@ func main() {
 	tops := make([]snapshot.VertChanPair, nProc)
 	driverTops := make([]snapshot.VertChanPair, nProc)
 
-	// make vert channels, start goroutines and send data down
 	makeVertChans(nProc, tops, driverTops)
 
 	startProcs(procs, tops, neighbors)
@@ -159,11 +167,7 @@ func main() {
 	localSum := sendDataDown(driverTops, root, bias)
 
 	// receive value from root first
-	val, ok := <-driverTops[root].In
-	if !ok {
-		panic("Bad receive 1")
-	}
-	fmt.Println("Root returns: ", val)
+	val := receiveFromRoot(driverTops[root].In)
 	if val != localSum {
 		fmt.Println("Local sum (", localSum, ") != received sum (", val, ")")
 	}
