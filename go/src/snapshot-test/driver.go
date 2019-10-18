@@ -148,12 +148,12 @@ func Driver(nProc ProcIdx, root ProcIdx, bias int) {
 
 	neighbors := makeNeighborChans(nProc)
 
-	procs := make([]snapshot.Proc, nProc)
 	tops := make([]snapshot.VertChanPair, nProc)
 	driverTops := make([]snapshot.VertChanPair, nProc)
 
 	makeVertChans(nProc, tops, driverTops)
 
+	procs := make([]snapshot.Proc, nProc)
 	startProcs(procs, tops, neighbors)
 
 	localSum := sendDataDown(driverTops, root, bias)
