@@ -13,7 +13,7 @@ const (
 	Debug bool = snapshot.Debug
 )
 const (
-	VertChanCap = 0
+	VertChanCap  = 0
 	HorizChanCap = 1
 )
 
