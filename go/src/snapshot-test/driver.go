@@ -66,13 +66,12 @@ func startProcs(procs []snapshot.Proc,
 	}
 }
 
-
 /*************************************************************
 *************************************************************/
 func sendDataDown(
-		driverTops []snapshot.VertChanPair,
-		root ProcIdx,
-		bias int) snapshot.Data {
+	driverTops []snapshot.VertChanPair,
+	root ProcIdx,
+	bias int) snapshot.Data {
 
 	nProc := ProcIdx(len(driverTops))
 	var localSum snapshot.Data = 0
@@ -98,8 +97,8 @@ func sendDataDown(
 /*************************************************************
 *************************************************************/
 func receiveData(
-		driverTops []snapshot.VertChanPair,
-		root ProcIdx) {
+	driverTops []snapshot.VertChanPair,
+	root ProcIdx) {
 
 	nProc := ProcIdx(len(driverTops))
 	for i := ProcIdx(0); i < nProc; i++ {
@@ -111,19 +110,20 @@ func receiveData(
 		}
 	}
 }
+
 /*************************************************************
 *************************************************************/
 func main() {
 	const (
-		VertChanCap  = 0
+		VertChanCap = 0
 	)
 
 	r0 := time.Now().UnixNano()
 	RNG := rand.New(rand.NewSource(r0))
 
-	bias  := RNG.Intn(5)
+	bias := RNG.Intn(5)
 	nProc := ProcIdx(100 + RNG.Intn(20))
-	root  := ProcIdx(RNG.Intn(int(nProc)))
+	root := ProcIdx(RNG.Intn(int(nProc)))
 	fmt.Println("Num proc ", nProc, ", Bias is ", bias, ", root is ", root)
 
 	neighbors := makeNeighborChans(nProc)
@@ -131,7 +131,6 @@ func main() {
 	procs := make([]snapshot.Proc, nProc)
 	tops := make([]snapshot.VertChanPair, nProc)
 	driverTops := make([]snapshot.VertChanPair, nProc)
-
 
 	// make vert channels, start goroutines and send data down
 
