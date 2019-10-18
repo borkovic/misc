@@ -12,6 +12,9 @@ import (
 const (
 	Debug bool = snapshot.Debug
 )
+const (
+	VertChanCap = 0
+)
 
 type ProcIdx int
 
@@ -52,6 +55,25 @@ func makeNeighborChans(nProc ProcIdx) [][]snapshot.HorizChanPair {
 		}
 	}
 	return neighbors
+}
+
+/*************************************************************
+*************************************************************/
+func makeVertChans(
+	nProc ProcIdx,
+	tops []snapshot.VertChanPair,
+	driverTops []snapshot.VertChanPair) {
+
+	for i := ProcIdx(0); i < nProc; i++ {
+		topDown := make(snapshot.VertBidirChan, VertChanCap)
+		botUp := make(snapshot.VertBidirChan, VertChanCap)
+
+		tops[i].In = snapshot.VertBidir2InChan(topDown)
+		tops[i].Out = snapshot.VertBidir2OutChan(botUp)
+
+		driverTops[i].In = snapshot.VertBidir2InChan(botUp)
+		driverTops[i].Out = snapshot.VertBidir2OutChan(topDown)
+	}
 }
 
 /*************************************************************
@@ -114,9 +136,6 @@ func receiveData(
 /*************************************************************
 *************************************************************/
 func main() {
-	const (
-		VertChanCap = 0
-	)
 
 	r0 := time.Now().UnixNano()
 	RNG := rand.New(rand.NewSource(r0))
@@ -133,17 +152,7 @@ func main() {
 	driverTops := make([]snapshot.VertChanPair, nProc)
 
 	// make vert channels, start goroutines and send data down
-
-	for i := ProcIdx(0); i < nProc; i++ {
-		topDown := make(snapshot.VertBidirChan, VertChanCap)
-		botUp := make(snapshot.VertBidirChan, VertChanCap)
-
-		tops[i].In = snapshot.VertBidir2InChan(topDown)
-		tops[i].Out = snapshot.VertBidir2OutChan(botUp)
-
-		driverTops[i].In = snapshot.VertBidir2InChan(botUp)
-		driverTops[i].Out = snapshot.VertBidir2OutChan(topDown)
-	}
+	makeVertChans(nProc, tops, driverTops)
 
 	startProcs(procs, tops, neighbors)
 
