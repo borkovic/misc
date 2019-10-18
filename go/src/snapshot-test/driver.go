@@ -69,7 +69,7 @@ func main() {
 	neighbors := makeNeighborChans(nProc)
 
 	// make vert channels, start goroutines and send data down
-	var rootBotUpIn snapshot.VertInChan
+	//var rootBotUpIn snapshot.VertInChan
 	var localSum snapshot.Data = 0
 
 	r0 := time.Now().UnixNano()
@@ -80,13 +80,13 @@ func main() {
 
 	for i := 0; i < nProc; i++ {
 		var topDownOut snapshot.VertOutChan
-		var botUpIn snapshot.VertInChan
+		//var botUpIn snapshot.VertInChan
 		{
 			topDown := make(snapshot.VertBidirChan, VertChanCap)
 			botUp := make(snapshot.VertBidirChan, VertChanCap)
 
 			topDownOut = snapshot.VertBidir2OutChan(topDown)
-			botUpIn = snapshot.VertBidir2InChan(botUp)
+			//botUpIn = snapshot.VertBidir2InChan(botUp)
 
 			tops[i].In = snapshot.VertBidir2InChan(topDown)
 			tops[i].Out = snapshot.VertBidir2OutChan(botUp)
@@ -103,7 +103,7 @@ func main() {
 			topDownOut <- v
 			close(topDownOut)
 		} else {
-			rootBotUpIn = botUpIn
+			//rootBotUpIn = botUpIn
 			v := snapshot.Data(i + bias + 1000)
 			localSum += v
 			topDownOut <- (-v)
@@ -113,9 +113,9 @@ func main() {
 	fmt.Println("Local sum: ", localSum)
 
 	// receive value from root first
-	if rootBotUpIn != driverTops[root].In {
-		panic("Bad root bottom up in")
-	}
+	//if rootBotUpIn != driverTops[root].In {
+	//	panic("Bad root bottom up in")
+	//}
 	val, ok := <-driverTops[root].In
 	if !ok {
 		panic("Bad receive 1")
