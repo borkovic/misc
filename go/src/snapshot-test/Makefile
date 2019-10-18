@@ -9,6 +9,10 @@ f:
 	rm -f driver
 	time go run driver.go 2>&1 | tee f.log
 
+five:
+	rm -f driver
+	for f in 0 1 2 3 4; do go run driver.go; echo; echo; done
+
 b:
 	time go build driver.go
 

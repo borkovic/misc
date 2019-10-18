@@ -13,9 +13,11 @@ const (
 	Debug bool = snapshot.Debug
 )
 
+type ProcIdx int
+
 /*************************************************************
 *************************************************************/
-func makeNeighborChans(nProc int) [][]snapshot.HorizChanPair {
+func makeNeighborChans(nProc ProcIdx) [][]snapshot.HorizChanPair {
 	const (
 		HorizChanCap = 1
 	)
@@ -25,7 +27,7 @@ func makeNeighborChans(nProc int) [][]snapshot.HorizChanPair {
 
 	// make neighbor channels
 	neighbors := make([][]snapshot.HorizChanPair, nProc)
-	for i := 0; i < nProc-1; i++ {
+	for i := ProcIdx(0); i < nProc-1; i++ {
 		for j := i + 1; j < nProc; j++ {
 			if i+1 < j { // always connect (i -> j) with j==i+1 for full connectedness
 				n := RNG.Intn(11)
@@ -67,6 +69,34 @@ func startProcs(procs []snapshot.Proc,
 
 /*************************************************************
 *************************************************************/
+func sendDataDown(
+		driverTops []snapshot.VertChanPair,
+		root ProcIdx,
+		bias int) snapshot.Data {
+
+	nProc := ProcIdx(len(driverTops))
+	var localSum snapshot.Data = 0
+	for i := ProcIdx(0); i < nProc; i++ {
+		var sendv snapshot.Data
+		v := snapshot.Data(int(i) + bias)
+		if i != root {
+			v += 10
+			sendv = v
+		} else {
+			v += 1000
+			sendv = -v
+		}
+		localSum += v
+		downChanOut := driverTops[i].Out
+		downChanOut <- sendv
+		close(downChanOut)
+	}
+	fmt.Println("Local sum: ", localSum)
+	return localSum
+}
+
+/*************************************************************
+*************************************************************/
 func main() {
 	const (
 		VertChanCap  = 0
@@ -75,9 +105,9 @@ func main() {
 	r0 := time.Now().UnixNano()
 	RNG := rand.New(rand.NewSource(r0))
 
-	bias := RNG.Intn(5)
-	nProc := 100 + RNG.Intn(20)
-	root := RNG.Intn(nProc)
+	bias  := RNG.Intn(5)
+	nProc := ProcIdx(100 + RNG.Intn(20))
+	root  := ProcIdx(RNG.Intn(int(nProc)))
 	fmt.Println("Num proc ", nProc, ", Bias is ", bias, ", root is ", root)
 
 	neighbors := makeNeighborChans(nProc)
@@ -88,9 +118,8 @@ func main() {
 
 
 	// make vert channels, start goroutines and send data down
-	var localSum snapshot.Data = 0
 
-	for i := 0; i < nProc; i++ {
+	for i := ProcIdx(0); i < nProc; i++ {
 		{
 			topDown := make(snapshot.VertBidirChan, VertChanCap)
 			botUp := make(snapshot.VertBidirChan, VertChanCap)
@@ -105,21 +134,7 @@ func main() {
 
 	startProcs(procs, tops, neighbors)
 
-	for i := 0; i < nProc; i++ {
-		var v, sendv snapshot.Data
-		if i != root {
-			v = snapshot.Data(i + bias + 10)
-			sendv = v
-		} else {
-			v = snapshot.Data(i + bias + 1000)
-			sendv = -v
-		}
-		localSum += v
-		downChanOut := driverTops[i].Out
-		downChanOut <- sendv
-		close(downChanOut)
-	}
-	fmt.Println("Local sum: ", localSum)
+	localSum := sendDataDown(driverTops, root, bias)
 
 	// receive value from root first
 	val, ok := <-driverTops[root].In
@@ -132,7 +147,7 @@ func main() {
 	}
 
 	// receive on remaining vert channel
-	for i := 0; i < nProc; i++ {
+	for i := ProcIdx(0); i < nProc; i++ {
 		if i != root {
 			val, ok = <-driverTops[i].In
 			if !ok {
