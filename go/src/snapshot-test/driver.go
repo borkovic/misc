@@ -67,11 +67,12 @@ func main() {
 	root := RNG.Intn(nProc)
 	fmt.Println("Num proc ", nProc, ", Bias is ", bias, ", root is ", root)
 
+	neighbors := makeNeighborChans(nProc)
+
 	procs := make([]snapshot.Proc, nProc)
 	tops := make([]snapshot.VertChanPair, nProc)
 	driverTops := make([]snapshot.VertChanPair, nProc)
 
-	neighbors := makeNeighborChans(nProc)
 
 	// make vert channels, start goroutines and send data down
 	var localSum snapshot.Data = 0
@@ -87,9 +88,13 @@ func main() {
 			driverTops[i].In = snapshot.VertBidir2InChan(botUp)
 			driverTops[i].Out = snapshot.VertBidir2OutChan(topDown)
 		}
+	}
 
+	for i := 0; i < nProc; i++ {
 		go procs[i].Run(&tops[i], neighbors[i])
+	}
 
+	for i := 0; i < nProc; i++ {
 		var v, sendv snapshot.Data
 		if i != root {
 			v = snapshot.Data(i + bias + 10)
