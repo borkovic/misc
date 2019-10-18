@@ -54,6 +54,19 @@ func makeNeighborChans(nProc int) [][]snapshot.HorizChanPair {
 
 /*************************************************************
 *************************************************************/
+func startProcs(procs []snapshot.Proc,
+	tops []snapshot.VertChanPair,
+	neighbors [][]snapshot.HorizChanPair) {
+
+	nProc := len(procs)
+	for i := 0; i < nProc; i++ {
+		go procs[i].Run(&tops[i], neighbors[i])
+	}
+}
+
+
+/*************************************************************
+*************************************************************/
 func main() {
 	const (
 		VertChanCap  = 0
@@ -90,9 +103,7 @@ func main() {
 		}
 	}
 
-	for i := 0; i < nProc; i++ {
-		go procs[i].Run(&tops[i], neighbors[i])
-	}
+	startProcs(procs, tops, neighbors)
 
 	for i := 0; i < nProc; i++ {
 		var v, sendv snapshot.Data
