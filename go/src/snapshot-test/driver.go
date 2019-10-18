@@ -26,7 +26,6 @@ func makeNeighborChans(nProc ProcIdx) [][]snapshot.HorizChanPair {
 	r0 := time.Now().UnixNano()
 	RNG := rand.New(rand.NewSource(r0))
 
-	// make neighbor channels
 	neighbors := make([][]snapshot.HorizChanPair, nProc)
 	for i := ProcIdx(0); i < nProc-1; i++ {
 		for j := i + 1; j < nProc; j++ {
@@ -58,9 +57,10 @@ func makeNeighborChans(nProc ProcIdx) [][]snapshot.HorizChanPair {
 /*************************************************************
 *************************************************************/
 func makeVertChans(
-	nProc ProcIdx,
 	tops []snapshot.VertChanPair,
 	driverTops []snapshot.VertChanPair) {
+
+	nProc := ProcIdx(len(tops))
 
 	for i := ProcIdx(0); i < nProc; i++ {
 		topDown := make(snapshot.VertBidirChan, VertChanCap)
@@ -80,8 +80,8 @@ func startProcs(procs []snapshot.Proc,
 	tops []snapshot.VertChanPair,
 	neighbors [][]snapshot.HorizChanPair) {
 
-	nProc := len(procs)
-	for i := 0; i < nProc; i++ {
+	nProc := ProcIdx(len(procs))
+	for i := ProcIdx(0); i < nProc; i++ {
 		go procs[i].Run(&tops[i], neighbors[i])
 	}
 }
@@ -151,7 +151,7 @@ func Driver(nProc ProcIdx, root ProcIdx, bias int) {
 	tops := make([]snapshot.VertChanPair, nProc)
 	driverTops := make([]snapshot.VertChanPair, nProc)
 
-	makeVertChans(nProc, tops, driverTops)
+	makeVertChans(tops, driverTops)
 
 	procs := make([]snapshot.Proc, nProc)
 	startProcs(procs, tops, neighbors)

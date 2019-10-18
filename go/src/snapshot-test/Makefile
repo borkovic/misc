@@ -11,7 +11,7 @@ f:
 
 five:
 	rm -f driver
-	N=5; n=0; while let "$$n < $$N"; do go run driver.go; echo; echo; let "n=$$n+1"; done
+	N=5; echo; n=0; while let "$$n < $$N"; do go run driver.go; echo; echo; let "n=$$n+1"; done
 
 b:
 	time go build driver.go
