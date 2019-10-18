@@ -3,10 +3,14 @@
 
 r:
 	rm -f driver
-	go run --race driver.go 2>&1 | tee r.log
+	time go run --race driver.go 2>&1 | tee r.log
+
+f:
+	rm -f driver
+	time go run driver.go 2>&1 | tee f.log
 
 b:
-	go build driver.go
+	time go build driver.go
 
 
 fmt:
