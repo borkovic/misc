@@ -17,7 +17,7 @@ const (
 	HorizChanCap = 1
 )
 
-type ProcIdx int
+type ProcIdx = snapshot.ProcIdx
 
 /*************************************************************
 *************************************************************/
@@ -42,10 +42,14 @@ func makeNeighborChans(nProc ProcIdx) [][]snapshot.HorizChanPair {
 			var iIoChan snapshot.HorizChanPair
 			iIoChan.In = snapshot.HorizBidir2InChan(jiChan)
 			iIoChan.Out = snapshot.HorizBidir2OutChan(ijChan)
+			iIoChan.From = i
+			iIoChan.To = j
 
 			var jIoChan snapshot.HorizChanPair
 			jIoChan.In = snapshot.HorizBidir2InChan(ijChan)
 			jIoChan.Out = snapshot.HorizBidir2OutChan(jiChan)
+			jIoChan.From = j
+			jIoChan.To = i
 
 			neighbors[i] = append(neighbors[i], iIoChan)
 			neighbors[j] = append(neighbors[j], jIoChan)

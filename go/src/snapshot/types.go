@@ -14,6 +14,8 @@ type HorizOutChan chan<- Data
 type HorizChanPair struct {
 	In  HorizInChan
 	Out HorizOutChan
+	From ProcIdx
+	To ProcIdx
 }
 
 type VertBidirChan chan Data
