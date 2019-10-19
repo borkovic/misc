@@ -11,7 +11,6 @@ const (
 	HorizChanCap = 1
 )
 
-
 /*************************************************************
 *************************************************************/
 func makeNeighborChans(nProc ProcIdx) [][]HorizChanPair {
@@ -163,4 +162,3 @@ func Driver(nProc ProcIdx, root ProcIdx, bias int) {
 
 	receiveFromNonRoots(driverTops, root)
 }
-
