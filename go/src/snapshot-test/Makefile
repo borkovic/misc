@@ -1,20 +1,21 @@
+PROG=main
 
-#	go build types.go proc.go driver.go
+#	go build types.go proc.go $(PROG).go
 
 r:
-	rm -f driver
-	time go run --race driver.go 2>&1 | tee r.log
+	rm -f main
+	time go run --race $(PROG).go 2>&1 | tee r.log
 
 f:
-	rm -f driver
-	time go run driver.go 2>&1 | tee f.log
+	rm -f $(PROG)
+	time go run $(PROG).go 2>&1 | tee f.log
 
 five:
-	rm -f driver
-	N=5; echo; n=0; while let "$$n < $$N"; do go run driver.go; echo; echo; let "n=$$n+1"; done
+	rm -f $(PROG)
+	N=5; echo; n=0; while let "$$n < $$N"; do go run $(PROG).go; echo; echo; let "n=$$n+1"; done
 
 b:
-	time go build driver.go
+	time go build $(PROG).go
 
 
 fmt:
@@ -27,4 +28,4 @@ s:
 	sha1sum *.go
 
 c:
-	rm -f driver
+	rm -f $(PROG)

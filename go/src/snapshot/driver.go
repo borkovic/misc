@@ -1,32 +1,25 @@
-package main
+package snapshot
 
 import (
 	"fmt"
 	"math/rand"
 	"time"
 )
-import (
-	"snapshot"
-)
 
-const (
-	Debug bool = snapshot.Debug
-)
 const (
 	VertChanCap  = 0
 	HorizChanCap = 1
 )
 
-type ProcIdx = snapshot.ProcIdx
 
 /*************************************************************
 *************************************************************/
-func makeNeighborChans(nProc ProcIdx) [][]snapshot.HorizChanPair {
+func makeNeighborChans(nProc ProcIdx) [][]HorizChanPair {
 
 	r0 := time.Now().UnixNano()
 	RNG := rand.New(rand.NewSource(r0))
 
-	neighbors := make([][]snapshot.HorizChanPair, nProc)
+	neighbors := make([][]HorizChanPair, nProc)
 	for i := ProcIdx(0); i < nProc-1; i++ {
 		for j := i + 1; j < nProc; j++ {
 			if i+1 < j { // always connect (i -> j) with j==i+1 for full connectedness
@@ -36,18 +29,18 @@ func makeNeighborChans(nProc ProcIdx) [][]snapshot.HorizChanPair {
 					continue
 				}
 			}
-			ijChan := make(snapshot.HorizBidirChan, HorizChanCap)
-			jiChan := make(snapshot.HorizBidirChan, HorizChanCap)
+			ijChan := make(HorizBidirChan, HorizChanCap)
+			jiChan := make(HorizBidirChan, HorizChanCap)
 
-			var iIoChan snapshot.HorizChanPair
-			iIoChan.In = snapshot.HorizBidir2InChan(jiChan)
-			iIoChan.Out = snapshot.HorizBidir2OutChan(ijChan)
+			var iIoChan HorizChanPair
+			iIoChan.In = HorizBidir2InChan(jiChan)
+			iIoChan.Out = HorizBidir2OutChan(ijChan)
 			iIoChan.From = i
 			iIoChan.To = j
 
-			var jIoChan snapshot.HorizChanPair
-			jIoChan.In = snapshot.HorizBidir2InChan(ijChan)
-			jIoChan.Out = snapshot.HorizBidir2OutChan(jiChan)
+			var jIoChan HorizChanPair
+			jIoChan.In = HorizBidir2InChan(ijChan)
+			jIoChan.Out = HorizBidir2OutChan(jiChan)
 			jIoChan.From = j
 			jIoChan.To = i
 
@@ -61,28 +54,28 @@ func makeNeighborChans(nProc ProcIdx) [][]snapshot.HorizChanPair {
 /*************************************************************
 *************************************************************/
 func makeVertChans(
-	tops []snapshot.VertChanPair,
-	driverTops []snapshot.VertChanPair) {
+	tops []VertChanPair,
+	driverTops []VertChanPair) {
 
 	nProc := ProcIdx(len(tops))
 
 	for i := ProcIdx(0); i < nProc; i++ {
-		topDown := make(snapshot.VertBidirChan, VertChanCap)
-		botUp := make(snapshot.VertBidirChan, VertChanCap)
+		topDown := make(VertBidirChan, VertChanCap)
+		botUp := make(VertBidirChan, VertChanCap)
 
-		tops[i].In = snapshot.VertBidir2InChan(topDown)
-		tops[i].Out = snapshot.VertBidir2OutChan(botUp)
+		tops[i].In = VertBidir2InChan(topDown)
+		tops[i].Out = VertBidir2OutChan(botUp)
 
-		driverTops[i].In = snapshot.VertBidir2InChan(botUp)
-		driverTops[i].Out = snapshot.VertBidir2OutChan(topDown)
+		driverTops[i].In = VertBidir2InChan(botUp)
+		driverTops[i].Out = VertBidir2OutChan(topDown)
 	}
 }
 
 /*************************************************************
 *************************************************************/
-func startProcs(procs []snapshot.Proc,
-	tops []snapshot.VertChanPair,
-	neighbors [][]snapshot.HorizChanPair) {
+func startProcs(procs []Proc,
+	tops []VertChanPair,
+	neighbors [][]HorizChanPair) {
 
 	nProc := ProcIdx(len(procs))
 	for i := ProcIdx(0); i < nProc; i++ {
@@ -93,15 +86,15 @@ func startProcs(procs []snapshot.Proc,
 /*************************************************************
 *************************************************************/
 func sendDataDown(
-	driverTops []snapshot.VertChanPair,
+	driverTops []VertChanPair,
 	root ProcIdx,
-	bias int) snapshot.Data {
+	bias int) Data {
 
 	nProc := ProcIdx(len(driverTops))
-	var localSum snapshot.Data = 0
+	var localSum Data = 0
 	for i := ProcIdx(0); i < nProc; i++ {
-		var sendv snapshot.Data
-		v := snapshot.Data(int(i) + bias)
+		var sendv Data
+		v := Data(int(i) + bias)
 		if i != root {
 			v += 10
 			sendv = v
@@ -121,7 +114,7 @@ func sendDataDown(
 /*************************************************************
 *************************************************************/
 func receiveFromNonRoots(
-	driverTops []snapshot.VertChanPair,
+	driverTops []VertChanPair,
 	root ProcIdx) {
 
 	nProc := ProcIdx(len(driverTops))
@@ -137,7 +130,7 @@ func receiveFromNonRoots(
 
 /*************************************************************
 *************************************************************/
-func receiveFromRoot(fromRoot snapshot.VertInChan) snapshot.Data {
+func receiveFromRoot(fromRoot VertInChan) Data {
 	val, ok := <-fromRoot
 	if !ok {
 		panic("Bad receive 1")
@@ -152,12 +145,12 @@ func Driver(nProc ProcIdx, root ProcIdx, bias int) {
 
 	neighbors := makeNeighborChans(nProc)
 
-	tops := make([]snapshot.VertChanPair, nProc)
-	driverTops := make([]snapshot.VertChanPair, nProc)
+	tops := make([]VertChanPair, nProc)
+	driverTops := make([]VertChanPair, nProc)
 
 	makeVertChans(tops, driverTops)
 
-	procs := make([]snapshot.Proc, nProc)
+	procs := make([]Proc, nProc)
 	startProcs(procs, tops, neighbors)
 
 	localSum := sendDataDown(driverTops, root, bias)
@@ -171,17 +164,3 @@ func Driver(nProc ProcIdx, root ProcIdx, bias int) {
 	receiveFromNonRoots(driverTops, root)
 }
 
-/*************************************************************
-*************************************************************/
-func main() {
-
-	r0 := time.Now().UnixNano()
-	RNG := rand.New(rand.NewSource(r0))
-
-	bias := RNG.Intn(5)
-	nProc := ProcIdx(100 + RNG.Intn(20))
-	root := ProcIdx(RNG.Intn(int(nProc)))
-	fmt.Println("Num proc ", nProc, ", Bias is ", bias, ", root is ", root)
-
-	Driver(nProc, root, bias)
-}

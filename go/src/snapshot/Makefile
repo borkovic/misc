@@ -1,6 +1,6 @@
 
 b:
-	go build types.go proc.go driver.go
+	go build types.go child.go root.go proc.go driver.go
 
 fmt:
 	for f in *.go; do go fmt $$f; done
