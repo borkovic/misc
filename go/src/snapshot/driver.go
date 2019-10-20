@@ -142,7 +142,6 @@ func makeNeighborChans(nProc ProcIdx, percChans int) [][]HorizChanPair {
 		}
 	}
 	if ! verifyConnectivity(neighbors) {
-		fmt.Println("Not connected, connecting p->p+1")
 		addConnections(&neighbors)
 	}
 	return neighbors
