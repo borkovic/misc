@@ -29,6 +29,7 @@ type VertChanPair struct {
 type NeighborChans []HorizChanPair
 
 type Proc struct {
+	Id      ProcIdx
 	m_MyVal Data
 	RNG     *rand.Rand
 }
@@ -54,10 +55,9 @@ func VertBidir2OutChan(c VertBidirChan) VertOutChan {
 
 type Graph struct {
 	NumberProcs ProcIdx
-	Root		ProcIdx
-	Procs 		[]Proc
-	Neighbors 	[][]HorizChanPair
-	Tops 		[]VertChanPair
-	DriverTops 	[]VertChanPair
+	Root        ProcIdx
+	Procs       []Proc
+	Neighbors   [][]HorizChanPair
+	Tops        []VertChanPair
+	DriverTops  []VertChanPair
 }
-

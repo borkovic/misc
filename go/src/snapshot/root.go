@@ -1,5 +1,9 @@
 package snapshot
 
+import (
+	"fmt"
+)
+
 /*********************************************************
  * This process is root.
  * It sends its neg. value to all children.
@@ -17,7 +21,8 @@ func (proc *Proc) runRoot(neighbors NeighborChans) Data {
 	for _, n := range neighbors {
 		x, ok := <-n.In
 		if !ok {
-			panic("Root recv from closed neighbor chan 4")
+			s := fmt.Sprintf("ERROR: Root %d - bad receive from neighbor", proc.Id)
+			panic(s)
 		}
 		proc.SLEEP(8)
 		if x > 0 {

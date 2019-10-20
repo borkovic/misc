@@ -34,42 +34,50 @@ func (graph *Graph) verifyConnectivity() bool {
 		fmt.Println()
 	}
 
-	visited := make(map[ProcIdx] bool)
+	visited := make(map[ProcIdx]bool)
 
 	stack := make([]ProcIdx, nProc)
 	stackSize := 0
 
 	// push v
 	v := ProcIdx(1)
-	stack[stackSize] = 1;
+	stack[stackSize] = 1
 	stackSize++
 	visited[v] = true
 
 	for stackSize > 0 {
-		stackSize--;
+		stackSize--
 		v = stack[stackSize]
 
-		if dbg { fmt.Print("Popping ", v, " sz ", stackSize, ": ") }
-		if ! visited[v] {
-			fmt.Println("Not Visited proc ", v, "popped from stack")
-			panic("Panic")
+		if dbg {
+			fmt.Print("Popping ", v, " sz ", stackSize, ": ")
+		}
+		if !visited[v] {
+			s := fmt.Sprintf("ERROR: Popped non-visited proc %d from stack\n", v)
+			panic(s)
 		}
 
 		myNeigh := graph.Neighbors[v]
 		numNeigh := len(myNeigh)
-		if dbg { fmt.Print("  Pushing out of ", numNeigh, " neighbors:") }
+		if dbg {
+			fmt.Print("  Pushing out of ", numNeigh, " neighbors:")
+		}
 		for n := 0; n < numNeigh; n++ {
 			neigh := myNeigh[n].To
 			if visited[neigh] {
 				continue
 			}
-			if dbg { fmt.Print(" [", stackSize, "]", neigh) }
+			if dbg {
+				fmt.Print(" [", stackSize, "]", neigh)
+			}
 
 			stack[stackSize] = neigh
 			stackSize++
 			visited[neigh] = true
 		}
-		if dbg { fmt.Println("(", stackSize, ")") }
+		if dbg {
+			fmt.Println("(", stackSize, ")")
+		}
 	}
 	return len(visited) == int(nProc)
 }
@@ -116,7 +124,7 @@ func (graph *Graph) addConnectionsToDisconnected() {
 				break
 			}
 		}
-		if ! found {
+		if !found {
 			graph.makeOneHorizChan(p, p+1)
 			numAdded++
 		}
@@ -151,7 +159,7 @@ func (graph *Graph) makeNeighborChans(percChans int) {
 			graph.makeOneHorizChan(i, j)
 		}
 	}
-	if ! graph.verifyConnectivity() {
+	if !graph.verifyConnectivity() {
 		graph.addConnectionsToDisconnected()
 	}
 }
@@ -183,6 +191,9 @@ func (graph *Graph) startProcs() {
 	nProcs := graph.NumberProcs
 	graph.Procs = make([]Proc, nProcs)
 	for i := ProcIdx(0); i < nProcs; i++ {
+		graph.Procs[i].Id = i
+	}
+	for i := ProcIdx(0); i < nProcs; i++ {
 		go graph.Procs[i].Run(&graph.Tops[i], graph.Neighbors[i])
 	}
 }
@@ -192,7 +203,7 @@ func (graph *Graph) startProcs() {
  * Calculate the sum of all positive values for comparison.
 *************************************************************/
 func (graph *Graph) sendDataDown(
-		bias int) Data {
+	bias int) Data {
 
 	nProc := graph.NumberProcs
 	root := graph.Root
@@ -225,7 +236,8 @@ func (graph *Graph) receiveFromNonRoots() {
 		if i != root {
 			_, ok := <-graph.DriverTops[i].In
 			if !ok {
-				panic("Bad receive 2")
+				s := fmt.Sprintf("ERROR: Graph - bad receive from non-root %d", i)
+				panic(s)
 			}
 		}
 	}
@@ -239,7 +251,8 @@ func (graph *Graph) receiveFromRoot() Data {
 	fromRoot := graph.DriverTops[graph.Root].In
 	val, ok := <-fromRoot
 	if !ok {
-		panic("Bad receive 1")
+		s := fmt.Sprintf("ERROR: Graph - bad receive from root %d", graph.Root)
+		panic(s)
 	}
 	fmt.Println("Root returns: ", val)
 	return val
@@ -274,7 +287,7 @@ func (graph *Graph) BuildAndCollectData(nProc ProcIdx, root ProcIdx, percChans i
 	// receive value from root first
 	val := graph.receiveFromRoot()
 	if val != localSum {
-		fmt.Println("Local sum (", localSum, ") != received sum (", val, ")")
+		fmt.Println("ERROR: Local sum (", localSum, ") != received sum (", val, ")")
 	}
 
 	graph.receiveFromNonRoots()
