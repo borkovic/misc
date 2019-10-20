@@ -19,7 +19,7 @@ func main() {
 	bias := RNG.Intn(10)
 	nProc := snapshot.ProcIdx(100 + RNG.Intn(40))
 	root := snapshot.ProcIdx(RNG.Intn(int(nProc)))
-	percChan := 2 + RNG.Intn(10)
+	percChan := 2 + RNG.Intn(20)
 
 	fmt.Println("Num proc ", nProc, ", %chan ", percChan,
 			", Bias is ", bias, ", root is ", root)
