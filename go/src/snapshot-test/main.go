@@ -19,10 +19,11 @@ func main() {
 	bias := RNG.Intn(10)
 	nProc := snapshot.ProcIdx(100 + RNG.Intn(40))
 	root := snapshot.ProcIdx(RNG.Intn(int(nProc)))
-	percChan := 5
+	percChan := 2 + RNG.Intn(10)
 
 	fmt.Println("Num proc ", nProc, ", %chan ", percChan,
 			", Bias is ", bias, ", root is ", root)
 
-	snapshot.Driver(nProc, root, bias, percChan)
+	graph := new (snapshot.Graph)
+	graph.Driver(nProc, root, bias, percChan)
 }

@@ -13,14 +13,14 @@ const (
 
 /*************************************************************
 *************************************************************/
-func verifyConnectivity(neighbors [][]HorizChanPair) bool {
+func (graph *Graph) verifyConnectivity() bool {
 	//dbg := true
 	dbg := false
-	nProc := ProcIdx(len(neighbors))
+	nProc := ProcIdx(len(graph.Neighbors))
 	if dbg {
 		for i := ProcIdx(0); i < nProc; i++ {
 			fmt.Print(i, " : ")
-			myNeigh := neighbors[i]
+			myNeigh := graph.Neighbors[i]
 			numNeigh := len(myNeigh)
 			for n := 0; n < numNeigh; n++ {
 				j := myNeigh[n].To
@@ -53,7 +53,7 @@ func verifyConnectivity(neighbors [][]HorizChanPair) bool {
 			panic("Panic")
 		}
 
-		myNeigh := neighbors[v]
+		myNeigh := graph.Neighbors[v]
 		numNeigh := len(myNeigh)
 		if dbg { fmt.Print("  Pushing out of ", numNeigh, " neighbors:") }
 		for n := 0; n < numNeigh; n++ {
@@ -74,7 +74,7 @@ func verifyConnectivity(neighbors [][]HorizChanPair) bool {
 
 /*************************************************************
 *************************************************************/
-func makeOneHorizChan(neighbors *[][]HorizChanPair, i, j ProcIdx) {
+func (graph *Graph) makeOneHorizChan(i, j ProcIdx) {
 
 	ijChan := make(HorizBidirChan, HorizChanCap)
 	jiChan := make(HorizBidirChan, HorizChanCap)
@@ -91,18 +91,18 @@ func makeOneHorizChan(neighbors *[][]HorizChanPair, i, j ProcIdx) {
 	jIoChan.From = j
 	jIoChan.To = i
 
-	(*neighbors)[i] = append((*neighbors)[i], iIoChan)
-	(*neighbors)[j] = append((*neighbors)[j], jIoChan)
+	graph.Neighbors[i] = append(graph.Neighbors[i], iIoChan)
+	graph.Neighbors[j] = append(graph.Neighbors[j], jIoChan)
 }
 
 /*************************************************************
  * Add connections i->i+1 if it does not exist
 *************************************************************/
-func addConnections(neighbors *[][]HorizChanPair) {
+func (graph *Graph) addConnections() {
 	var numAdded int = 0
-	nProc := ProcIdx(len(*neighbors))
+	nProc := ProcIdx(len(graph.Neighbors))
 	for p := ProcIdx(0); p < nProc-1; p++ {
-		myNeigh := (*neighbors)[p]
+		myNeigh := (graph.Neighbors)[p]
 		numNeigh := len(myNeigh)
 		found := false
 		for n := 0; n < numNeigh; n++ {
@@ -113,7 +113,7 @@ func addConnections(neighbors *[][]HorizChanPair) {
 			}
 		}
 		if ! found {
-			makeOneHorizChan(neighbors, p, p+1)
+			graph.makeOneHorizChan(p, p+1)
 			numAdded++
 		}
 	}
@@ -124,69 +124,65 @@ func addConnections(neighbors *[][]HorizChanPair) {
 
 /*************************************************************
 *************************************************************/
-func makeNeighborChans(nProc ProcIdx, percChans int) [][]HorizChanPair {
+func (graph *Graph) makeNeighborChans(percChans int) {
+	nProc := graph.NumberProcs
 
 	r0 := time.Now().UnixNano()
 	RNG := rand.New(rand.NewSource(r0))
 
-	neighbors := make([][]HorizChanPair, nProc)
+	graph.Neighbors = make([][]HorizChanPair, nProc)
+	percNoChan := 100 - percChans
 
 	for i := ProcIdx(0); i < nProc-1; i++ {
 		for j := i + 1; j < nProc; j++ {
 			n := RNG.Intn(100)
-			b := n < (100 - percChans)
-			if b {
+			if n < percNoChan {
 				continue
 			}
-			makeOneHorizChan(&neighbors, i, j)
+			graph.makeOneHorizChan(i, j)
 		}
 	}
-	if ! verifyConnectivity(neighbors) {
-		addConnections(&neighbors)
+	if ! graph.verifyConnectivity() {
+		graph.addConnections()
 	}
-	return neighbors
 }
 
 /*************************************************************
 *************************************************************/
-func makeVertChans(
-	tops []VertChanPair,
-	driverTops []VertChanPair) {
-
-	nProc := ProcIdx(len(tops))
+func (graph *Graph) makeVertChans() {
+	nProc := graph.NumberProcs
+	graph.Tops = make([]VertChanPair, nProc)
+	graph.DriverTops = make([]VertChanPair, nProc)
 
 	for i := ProcIdx(0); i < nProc; i++ {
 		topDown := make(VertBidirChan, VertChanCap)
 		botUp := make(VertBidirChan, VertChanCap)
 
-		tops[i].In = VertBidir2InChan(topDown)
-		tops[i].Out = VertBidir2OutChan(botUp)
+		graph.Tops[i].In = VertBidir2InChan(topDown)
+		graph.Tops[i].Out = VertBidir2OutChan(botUp)
 
-		driverTops[i].In = VertBidir2InChan(botUp)
-		driverTops[i].Out = VertBidir2OutChan(topDown)
+		graph.DriverTops[i].In = VertBidir2InChan(botUp)
+		graph.DriverTops[i].Out = VertBidir2OutChan(topDown)
 	}
 }
 
 /*************************************************************
 *************************************************************/
-func startProcs(procs []Proc,
-	tops []VertChanPair,
-	neighbors [][]HorizChanPair) {
-
-	nProc := ProcIdx(len(procs))
-	for i := ProcIdx(0); i < nProc; i++ {
-		go procs[i].Run(&tops[i], neighbors[i])
+func (graph *Graph) startProcs() {
+	nProcs := graph.NumberProcs
+	graph.Procs = make([]Proc, nProcs)
+	for i := ProcIdx(0); i < nProcs; i++ {
+		go graph.Procs[i].Run(&graph.Tops[i], graph.Neighbors[i])
 	}
 }
 
 /*************************************************************
 *************************************************************/
-func sendDataDown(
-	driverTops []VertChanPair,
-	root ProcIdx,
-	bias int) Data {
+func (graph *Graph) sendDataDown(
+		bias int) Data {
 
-	nProc := ProcIdx(len(driverTops))
+	nProc := graph.NumberProcs
+	root := graph.Root
 	var localSum Data = 0
 	for i := ProcIdx(0); i < nProc; i++ {
 		var sendv Data
@@ -199,7 +195,7 @@ func sendDataDown(
 			sendv = -v
 		}
 		localSum += v
-		downChanOut := driverTops[i].Out
+		downChanOut := graph.DriverTops[i].Out
 		downChanOut <- sendv
 		close(downChanOut)
 	}
@@ -209,14 +205,12 @@ func sendDataDown(
 
 /*************************************************************
 *************************************************************/
-func receiveFromNonRoots(
-	driverTops []VertChanPair,
-	root ProcIdx) {
-
-	nProc := ProcIdx(len(driverTops))
+func (graph *Graph) receiveFromNonRoots() {
+	nProc := graph.NumberProcs
+	root := graph.Root
 	for i := ProcIdx(0); i < nProc; i++ {
 		if i != root {
-			_, ok := <-driverTops[i].In
+			_, ok := <-graph.DriverTops[i].In
 			if !ok {
 				panic("Bad receive 2")
 			}
@@ -226,7 +220,8 @@ func receiveFromNonRoots(
 
 /*************************************************************
 *************************************************************/
-func receiveFromRoot(fromRoot VertInChan) Data {
+func (graph *Graph) receiveFromRoot() Data {
+	fromRoot := graph.DriverTops[graph.Root].In
 	val, ok := <-fromRoot
 	if !ok {
 		panic("Bad receive 1")
@@ -237,25 +232,26 @@ func receiveFromRoot(fromRoot VertInChan) Data {
 
 /*************************************************************
 *************************************************************/
-func Driver(nProc ProcIdx, root ProcIdx, percChans int, bias int) {
+func (graph *Graph) buildGraph(nProc ProcIdx, root ProcIdx, percChans int) {
 
-	neighbors := makeNeighborChans(nProc, percChans)
+	graph.Root = root
+	graph.NumberProcs = nProc
+	graph.makeNeighborChans(percChans)
+	graph.makeVertChans()
+}
 
-	tops := make([]VertChanPair, nProc)
-	driverTops := make([]VertChanPair, nProc)
-
-	makeVertChans(tops, driverTops)
-
-	procs := make([]Proc, nProc)
-	startProcs(procs, tops, neighbors)
-
-	localSum := sendDataDown(driverTops, root, bias)
+/*************************************************************
+*************************************************************/
+func (graph *Graph) Driver(nProc ProcIdx, root ProcIdx, percChans int, bias int) {
+	graph.buildGraph(nProc, root, percChans)
+	graph.startProcs()
+	localSum := graph.sendDataDown(bias)
 
 	// receive value from root first
-	val := receiveFromRoot(driverTops[root].In)
+	val := graph.receiveFromRoot()
 	if val != localSum {
 		fmt.Println("Local sum (", localSum, ") != received sum (", val, ")")
 	}
 
-	receiveFromNonRoots(driverTops, root)
+	graph.receiveFromNonRoots()
 }

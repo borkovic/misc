@@ -51,3 +51,13 @@ func VertBidir2InChan(c VertBidirChan) VertInChan {
 func VertBidir2OutChan(c VertBidirChan) VertOutChan {
 	return (VertOutChan)((chan<- Data)((chan Data)(c)))
 }
+
+type Graph struct {
+	NumberProcs ProcIdx
+	Root		ProcIdx
+	Procs 		[]Proc
+	Neighbors 	[][]HorizChanPair
+	Tops 		[]VertChanPair
+	DriverTops 	[]VertChanPair
+}
+
