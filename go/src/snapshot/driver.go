@@ -13,39 +13,137 @@ const (
 
 /*************************************************************
 *************************************************************/
-func makeNeighborChans(nProc ProcIdx) [][]HorizChanPair {
+func verifyConnectivity(neighbors [][]HorizChanPair) bool {
+	//dbg := true
+	dbg := false
+	nProc := ProcIdx(len(neighbors))
+	if dbg {
+		for i := ProcIdx(0); i < nProc; i++ {
+			fmt.Print(i, " : ")
+			myNeigh := neighbors[i]
+			numNeigh := len(myNeigh)
+			for n := 0; n < numNeigh; n++ {
+				j := myNeigh[n].To
+				fmt.Print(" ", j)
+			}
+			fmt.Println()
+		}
+		fmt.Println()
+		fmt.Println()
+	}
+
+	visited := make(map[ProcIdx] bool)
+
+	stack := make([]ProcIdx, nProc)
+	stackSize := 0
+
+	// push v
+	v := ProcIdx(1)
+	stack[stackSize] = 1;
+	stackSize++
+	visited[v] = true
+
+	for stackSize > 0 {
+		stackSize--;
+		v = stack[stackSize]
+
+		if dbg { fmt.Print("Popping ", v, " sz ", stackSize, ": ") }
+		if ! visited[v] {
+			fmt.Println("Not Visited proc ", v, "popped from stack")
+			panic("Panic")
+		}
+
+		myNeigh := neighbors[v]
+		numNeigh := len(myNeigh)
+		if dbg { fmt.Print("  Pushing out of ", numNeigh, " neighbors:") }
+		for n := 0; n < numNeigh; n++ {
+			neigh := myNeigh[n].To
+			if visited[neigh] {
+				continue
+			}
+			if dbg { fmt.Print(" [", stackSize, "]", neigh) }
+
+			stack[stackSize] = neigh
+			stackSize++
+			visited[neigh] = true
+		}
+		if dbg { fmt.Println("(", stackSize, ")") }
+	}
+	return len(visited) == int(nProc)
+}
+
+/*************************************************************
+*************************************************************/
+func makeOneHorizChan(neighbors *[][]HorizChanPair, i, j ProcIdx) {
+
+	ijChan := make(HorizBidirChan, HorizChanCap)
+	jiChan := make(HorizBidirChan, HorizChanCap)
+
+	var iIoChan HorizChanPair
+	iIoChan.In = HorizBidir2InChan(jiChan)
+	iIoChan.Out = HorizBidir2OutChan(ijChan)
+	iIoChan.From = i
+	iIoChan.To = j
+
+	var jIoChan HorizChanPair
+	jIoChan.In = HorizBidir2InChan(ijChan)
+	jIoChan.Out = HorizBidir2OutChan(jiChan)
+	jIoChan.From = j
+	jIoChan.To = i
+
+	(*neighbors)[i] = append((*neighbors)[i], iIoChan)
+	(*neighbors)[j] = append((*neighbors)[j], jIoChan)
+}
+
+/*************************************************************
+ * Add connections i->i+1 if it does not exist
+*************************************************************/
+func addConnections(neighbors *[][]HorizChanPair) {
+	var numAdded int = 0
+	nProc := ProcIdx(len(*neighbors))
+	for p := ProcIdx(0); p < nProc-1; p++ {
+		myNeigh := (*neighbors)[p]
+		numNeigh := len(myNeigh)
+		found := false
+		for n := 0; n < numNeigh; n++ {
+			neigh := myNeigh[n].To
+			if neigh == p+1 {
+				found = true
+				break
+			}
+		}
+		if ! found {
+			makeOneHorizChan(neighbors, p, p+1)
+			numAdded++
+		}
+	}
+	if numAdded > 0 {
+		fmt.Println("Added", numAdded, "chans p->p+1")
+	}
+}
+
+/*************************************************************
+*************************************************************/
+func makeNeighborChans(nProc ProcIdx, percChans int) [][]HorizChanPair {
 
 	r0 := time.Now().UnixNano()
 	RNG := rand.New(rand.NewSource(r0))
 
 	neighbors := make([][]HorizChanPair, nProc)
+
 	for i := ProcIdx(0); i < nProc-1; i++ {
 		for j := i + 1; j < nProc; j++ {
-			if i+1 < j { // always connect (i -> j) with j==i+1 for full connectedness
-				n := RNG.Intn(11)
-				b := n < 6 // with 60% probability do not have a connection
-				if b {
-					continue
-				}
+			n := RNG.Intn(100)
+			b := n < (100 - percChans)
+			if b {
+				continue
 			}
-			ijChan := make(HorizBidirChan, HorizChanCap)
-			jiChan := make(HorizBidirChan, HorizChanCap)
-
-			var iIoChan HorizChanPair
-			iIoChan.In = HorizBidir2InChan(jiChan)
-			iIoChan.Out = HorizBidir2OutChan(ijChan)
-			iIoChan.From = i
-			iIoChan.To = j
-
-			var jIoChan HorizChanPair
-			jIoChan.In = HorizBidir2InChan(ijChan)
-			jIoChan.Out = HorizBidir2OutChan(jiChan)
-			jIoChan.From = j
-			jIoChan.To = i
-
-			neighbors[i] = append(neighbors[i], iIoChan)
-			neighbors[j] = append(neighbors[j], jIoChan)
+			makeOneHorizChan(&neighbors, i, j)
 		}
+	}
+	if ! verifyConnectivity(neighbors) {
+		fmt.Println("Not connected, connecting p->p+1")
+		addConnections(&neighbors)
 	}
 	return neighbors
 }
@@ -140,9 +238,9 @@ func receiveFromRoot(fromRoot VertInChan) Data {
 
 /*************************************************************
 *************************************************************/
-func Driver(nProc ProcIdx, root ProcIdx, bias int) {
+func Driver(nProc ProcIdx, root ProcIdx, percChans int, bias int) {
 
-	neighbors := makeNeighborChans(nProc)
+	neighbors := makeNeighborChans(nProc, percChans)
 
 	tops := make([]VertChanPair, nProc)
 	driverTops := make([]VertChanPair, nProc)

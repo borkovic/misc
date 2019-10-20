@@ -12,7 +12,11 @@ f:
 
 five:
 	rm -f $(PROG)
-	N=5; echo; n=0; while let "$$n < $$N"; do go run $(PROG).go; echo; echo; let "n=$$n+1"; done
+	N=5; echo; echo; n=0; while let "$$n < $$N"; do go run $(PROG).go; echo; let "n=$$n+1"; done
+
+ten:
+	rm -f $(PROG)
+	N=10; echo; echo; n=0; while let "$$n < $$N"; do go run $(PROG).go; echo; let "n=$$n+1"; done
 
 b:
 	time go build $(PROG).go
