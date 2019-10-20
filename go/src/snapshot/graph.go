@@ -12,10 +12,12 @@ const (
 )
 
 /*************************************************************
+ * 	Check whether the graph is connected
 *************************************************************/
 func (graph *Graph) verifyConnectivity() bool {
 	//dbg := true
 	dbg := false
+
 	nProc := ProcIdx(len(graph.Neighbors))
 	if dbg {
 		for i := ProcIdx(0); i < nProc; i++ {
@@ -73,9 +75,9 @@ func (graph *Graph) verifyConnectivity() bool {
 }
 
 /*************************************************************
+ * Make one horizontal (real graph) connection
 *************************************************************/
 func (graph *Graph) makeOneHorizChan(i, j ProcIdx) {
-
 	ijChan := make(HorizBidirChan, HorizChanCap)
 	jiChan := make(HorizBidirChan, HorizChanCap)
 
@@ -96,14 +98,16 @@ func (graph *Graph) makeOneHorizChan(i, j ProcIdx) {
 }
 
 /*************************************************************
- * Add connections i->i+1 if it does not exist
+ * For the graph that is not fully connected, add connections
+ * (i,i+1) that do not already exist
 *************************************************************/
-func (graph *Graph) addConnections() {
+func (graph *Graph) addConnectionsToDisconnected() {
 	var numAdded int = 0
 	nProc := ProcIdx(len(graph.Neighbors))
 	for p := ProcIdx(0); p < nProc-1; p++ {
 		myNeigh := (graph.Neighbors)[p]
 		numNeigh := len(myNeigh)
+
 		found := false
 		for n := 0; n < numNeigh; n++ {
 			neigh := myNeigh[n].To
@@ -123,6 +127,11 @@ func (graph *Graph) addConnections() {
 }
 
 /*************************************************************
+ * Make real graph channels (not top down)
+ * percChans is probability (as percentage) of channel being
+ * present.
+ * See: Erdős–Rényi model at
+ *      https://en.wikipedia.org/wiki/Erdős–Rényi_model
 *************************************************************/
 func (graph *Graph) makeNeighborChans(percChans int) {
 	nProc := graph.NumberProcs
@@ -143,11 +152,12 @@ func (graph *Graph) makeNeighborChans(percChans int) {
 		}
 	}
 	if ! graph.verifyConnectivity() {
-		graph.addConnections()
+		graph.addConnectionsToDisconnected()
 	}
 }
 
 /*************************************************************
+ * Make channels to communicate values to individual Procs
 *************************************************************/
 func (graph *Graph) makeVertChans() {
 	nProc := graph.NumberProcs
@@ -167,6 +177,7 @@ func (graph *Graph) makeVertChans() {
 }
 
 /*************************************************************
+ * Start proc goroutines
 *************************************************************/
 func (graph *Graph) startProcs() {
 	nProcs := graph.NumberProcs
@@ -177,6 +188,8 @@ func (graph *Graph) startProcs() {
 }
 
 /*************************************************************
+ * Send data to each proc. Root value is negative.
+ * Calculate the sum of all positive values for comparison.
 *************************************************************/
 func (graph *Graph) sendDataDown(
 		bias int) Data {
@@ -219,6 +232,8 @@ func (graph *Graph) receiveFromNonRoots() {
 }
 
 /*************************************************************
+ * Receive data from root (that is sum of all data sent in
+ * sendDataDown(), except positive root data is used
 *************************************************************/
 func (graph *Graph) receiveFromRoot() Data {
 	fromRoot := graph.DriverTops[graph.Root].In
@@ -231,8 +246,9 @@ func (graph *Graph) receiveFromRoot() Data {
 }
 
 /*************************************************************
+ * Build horizontal and vertical channels
 *************************************************************/
-func (graph *Graph) buildGraph(nProc ProcIdx, root ProcIdx, percChans int) {
+func (graph *Graph) buildChans(nProc ProcIdx, root ProcIdx, percChans int) {
 
 	graph.Root = root
 	graph.NumberProcs = nProc
@@ -241,10 +257,18 @@ func (graph *Graph) buildGraph(nProc ProcIdx, root ProcIdx, percChans int) {
 }
 
 /*************************************************************
+ * Build chans and procs
+*************************************************************/
+func (graph *Graph) buildGraph(nProc ProcIdx, root ProcIdx, percChans int) {
+	graph.buildChans(nProc, root, percChans)
+	graph.startProcs()
+}
+
+/*************************************************************
 *************************************************************/
 func (graph *Graph) BuildAndCollectData(nProc ProcIdx, root ProcIdx, percChans int, bias int) {
 	graph.buildGraph(nProc, root, percChans)
-	graph.startProcs()
+
 	localSum := graph.sendDataDown(bias)
 
 	// receive value from root first

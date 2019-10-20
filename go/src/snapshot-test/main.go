@@ -21,8 +21,11 @@ func main() {
 	root := snapshot.ProcIdx(RNG.Intn(int(nProc)))
 	percChan := 2 + RNG.Intn(20)
 
-	fmt.Println("Num proc ", nProc, ", %chan ", percChan,
-			", Bias is ", bias, ", root is ", root)
+	fmt.Print("Num proc: ", nProc, 
+			  ", Root: ", root,
+			  ", Chan prob: ", percChan, "/100",
+			  ", Bias: ", bias,
+			  "\n")
 
 	graph := new (snapshot.Graph)
 	graph.BuildAndCollectData(nProc, root, bias, percChan)
