@@ -25,5 +25,5 @@ func main() {
 			", Bias is ", bias, ", root is ", root)
 
 	graph := new (snapshot.Graph)
-	graph.Driver(nProc, root, bias, percChan)
+	graph.BuildAndCollectData(nProc, root, bias, percChan)
 }

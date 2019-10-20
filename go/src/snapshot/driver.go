@@ -242,7 +242,7 @@ func (graph *Graph) buildGraph(nProc ProcIdx, root ProcIdx, percChans int) {
 
 /*************************************************************
 *************************************************************/
-func (graph *Graph) Driver(nProc ProcIdx, root ProcIdx, percChans int, bias int) {
+func (graph *Graph) BuildAndCollectData(nProc ProcIdx, root ProcIdx, percChans int, bias int) {
 	graph.buildGraph(nProc, root, percChans)
 	graph.startProcs()
 	localSum := graph.sendDataDown(bias)
