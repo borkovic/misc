@@ -17,16 +17,16 @@ func (proc *Proc) runChild(neighbors NeighborChans) {
 	numNeighbors := len(neighbors)
 
 	proc.SLEEP(2)
-	// 1. read from parent In tree
+	// 1. read from parent in tree
 	/***************************************************
 	 * var parIdx int = -1
 	 * var parVal Data
 	 * select {
-	 * case parVal = <-neighbors[0].In:
+	 * case parVal = <-neighbors[0].in:
 	 *     parIdx = 0
-	 * case parVal <-neighbors[1].In:
+	 * case parVal <-neighbors[1].in:
 	 *     parIdx = 1
-	 * case parVal <-neighbors[2].In:
+	 * case parVal <-neighbors[2].in:
 	 *     parIdx = 2
 	 * }
 	 *
@@ -55,18 +55,18 @@ func (proc *Proc) runChild(neighbors NeighborChans) {
 	cases := make([]reflect.SelectCase, numNeighbors)
 	for i := 0; i < numNeighbors; i++ {
 		cases[i].Dir = reflect.SelectRecv
-		cases[i].Chan = reflect.ValueOf(neighbors[i].In)
+		cases[i].Chan = reflect.ValueOf(neighbors[i].in)
 		cases[i].Send = reflect.ValueOf(nil)
 	}
 	parIdx, parVal, recvOk := reflect.Select(cases)
 	if !recvOk {
-		s := fmt.Sprintf("ERROR: Child %d - bad select", proc.Id)
+		s := fmt.Sprintf("ERROR: Child %d - bad select", proc.id)
 		panic(s)
 	}
 
 	/*-------------------------------------------------*/
 	if Debug {
-		fmt.Println("Child with val ", proc.m_MyVal,
+		fmt.Println("Child with val ", proc.myVal,
 			", par idx ", parIdx,
 			", par value ", parVal)
 	}
@@ -81,21 +81,21 @@ func (proc *Proc) runChild(neighbors NeighborChans) {
 			continue
 		}
 		proc.SLEEP(2)
-		neighbors[i].Out <- (-proc.m_MyVal)
-		close(neighbors[i].Out)
+		neighbors[i].out <- (-proc.myVal)
+		close(neighbors[i].out)
 	}
 
 	// 3. receive from children (+) and siblings (-)
 	// 4. sum from children(+)
-	sum := (proc.m_MyVal)
+	sum := (proc.myVal)
 	for i := 0; i < numNeighbors; i++ {
 		if i == parIdx {
 			continue
 		}
 		proc.SLEEP(4)
-		v, ok := <-neighbors[i].In
+		v, ok := <-neighbors[i].in
 		if !ok {
-			s := fmt.Sprintf("ERROR: Child %d - bad receive from neighbor", proc.Id)
+			s := fmt.Sprintf("ERROR: Child %d - bad receive from neighbor", proc.id)
 			panic(s)
 		}
 		if v > 0 { // this is child, siblings negative
@@ -107,9 +107,9 @@ func (proc *Proc) runChild(neighbors NeighborChans) {
 	if Debug {
 		fmt.Println("Child back to parent:",
 			" my val ",
-			proc.m_MyVal,
+			proc.myVal,
 			", sum ", sum, ", par val ", parVal)
 	}
-	neighbors[parIdx].Out <- sum
-	close(neighbors[parIdx].Out)
+	neighbors[parIdx].out <- sum
+	close(neighbors[parIdx].out)
 }

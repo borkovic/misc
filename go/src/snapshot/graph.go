@@ -25,7 +25,7 @@ func (graph *Graph) verifyConnectivity() bool {
 			myNeigh := graph.Neighbors[i]
 			numNeigh := len(myNeigh)
 			for n := 0; n < numNeigh; n++ {
-				j := myNeigh[n].To
+				j := myNeigh[n].to
 				fmt.Print(" ", j)
 			}
 			fmt.Println()
@@ -63,7 +63,7 @@ func (graph *Graph) verifyConnectivity() bool {
 			fmt.Print("  Pushing out of ", numNeigh, " neighbors:")
 		}
 		for n := 0; n < numNeigh; n++ {
-			neigh := myNeigh[n].To
+			neigh := myNeigh[n].to
 			if visited[neigh] {
 				continue
 			}
@@ -90,16 +90,16 @@ func (graph *Graph) makeOneHorizChan(i, j ProcIdx) {
 	jiChan := make(HorizBidirChan, HorizChanCap)
 
 	var iIoChan HorizChanPair
-	iIoChan.In = HorizBidir2InChan(jiChan)
-	iIoChan.Out = HorizBidir2OutChan(ijChan)
-	iIoChan.From = i
-	iIoChan.To = j
+	iIoChan.in = HorizBidir2InChan(jiChan)
+	iIoChan.out = HorizBidir2OutChan(ijChan)
+	iIoChan.from = i
+	iIoChan.to = j
 
 	var jIoChan HorizChanPair
-	jIoChan.In = HorizBidir2InChan(ijChan)
-	jIoChan.Out = HorizBidir2OutChan(jiChan)
-	jIoChan.From = j
-	jIoChan.To = i
+	jIoChan.in = HorizBidir2InChan(ijChan)
+	jIoChan.out = HorizBidir2OutChan(jiChan)
+	jIoChan.from = j
+	jIoChan.to = i
 
 	graph.Neighbors[i] = append(graph.Neighbors[i], iIoChan)
 	graph.Neighbors[j] = append(graph.Neighbors[j], jIoChan)
@@ -118,7 +118,7 @@ func (graph *Graph) addConnectionsToDisconnected() {
 
 		found := false
 		for n := 0; n < numNeigh; n++ {
-			neigh := myNeigh[n].To
+			neigh := myNeigh[n].to
 			if neigh == p+1 {
 				found = true
 				break
@@ -169,18 +169,18 @@ func (graph *Graph) makeNeighborChans(percChans int) {
 *************************************************************/
 func (graph *Graph) makeVertChans() {
 	nProc := graph.NumberProcs
-	graph.Tops = make([]VertChanPair, nProc)
-	graph.DriverTops = make([]VertChanPair, nProc)
+	graph.tops = make([]VertChanPair, nProc)
+	graph.driverTops = make([]VertChanPair, nProc)
 
 	for i := ProcIdx(0); i < nProc; i++ {
 		topDown := make(VertBidirChan, VertChanCap)
 		botUp := make(VertBidirChan, VertChanCap)
 
-		graph.Tops[i].In = VertBidir2InChan(topDown)
-		graph.Tops[i].Out = VertBidir2OutChan(botUp)
+		graph.tops[i].in = VertBidir2InChan(topDown)
+		graph.tops[i].out = VertBidir2OutChan(botUp)
 
-		graph.DriverTops[i].In = VertBidir2InChan(botUp)
-		graph.DriverTops[i].Out = VertBidir2OutChan(topDown)
+		graph.driverTops[i].in = VertBidir2InChan(botUp)
+		graph.driverTops[i].out = VertBidir2OutChan(topDown)
 	}
 }
 
@@ -191,10 +191,10 @@ func (graph *Graph) startProcs() {
 	nProcs := graph.NumberProcs
 	graph.Procs = make([]Proc, nProcs)
 	for i := ProcIdx(0); i < nProcs; i++ {
-		graph.Procs[i].Id = i
+		graph.Procs[i].id = i
 	}
 	for i := ProcIdx(0); i < nProcs; i++ {
-		go graph.Procs[i].Run(&graph.Tops[i], graph.Neighbors[i])
+		go graph.Procs[i].Run(&graph.tops[i], graph.Neighbors[i])
 	}
 }
 
@@ -219,7 +219,7 @@ func (graph *Graph) sendDataDown(
 			sendv = -v
 		}
 		localSum += v
-		downChanOut := graph.DriverTops[i].Out
+		downChanOut := graph.driverTops[i].out
 		downChanOut <- sendv
 		close(downChanOut)
 	}
@@ -234,7 +234,7 @@ func (graph *Graph) receiveFromNonRoots() {
 	root := graph.Root
 	for i := ProcIdx(0); i < nProc; i++ {
 		if i != root {
-			_, ok := <-graph.DriverTops[i].In
+			_, ok := <-graph.driverTops[i].in
 			if !ok {
 				s := fmt.Sprintf("ERROR: Graph - bad receive from non-root %d", i)
 				panic(s)
@@ -248,7 +248,7 @@ func (graph *Graph) receiveFromNonRoots() {
  * sendDataDown(), except positive root data is used
 *************************************************************/
 func (graph *Graph) receiveFromRoot() Data {
-	fromRoot := graph.DriverTops[graph.Root].In
+	fromRoot := graph.driverTops[graph.Root].in
 	val, ok := <-fromRoot
 	if !ok {
 		s := fmt.Sprintf("ERROR: Graph - bad receive from root %d", graph.Root)

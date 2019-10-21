@@ -13,15 +13,15 @@ func (proc *Proc) runRoot(neighbors NeighborChans) Data {
 	//numNeighbors := len(neighbors)
 	for _, n := range neighbors {
 		proc.SLEEP(88)
-		n.Out <- (-proc.m_MyVal)
-		close(n.Out)
+		n.out <- (-proc.myVal)
+		close(n.out)
 	}
 	proc.SLEEP(4)
-	var sum Data = (proc.m_MyVal)
+	var sum Data = (proc.myVal)
 	for _, n := range neighbors {
-		x, ok := <-n.In
+		x, ok := <-n.in
 		if !ok {
-			s := fmt.Sprintf("ERROR: Root %d - bad receive from neighbor", proc.Id)
+			s := fmt.Sprintf("ERROR: Root %d - bad receive from neighbor", proc.id)
 			panic(s)
 		}
 		proc.SLEEP(8)

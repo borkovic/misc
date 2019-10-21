@@ -12,26 +12,35 @@ type HorizInChan <-chan Data
 type HorizOutChan chan<- Data
 
 type HorizChanPair struct {
-	In   HorizInChan
-	Out  HorizOutChan
-	From ProcIdx
-	To   ProcIdx
+	in   HorizInChan
+	out  HorizOutChan
+	from ProcIdx
+	to   ProcIdx
 }
 
 type VertBidirChan chan Data
 type VertInChan <-chan Data
 type VertOutChan chan<- Data
 type VertChanPair struct {
-	In  VertInChan
-	Out VertOutChan
+	in  VertInChan
+	out VertOutChan
 }
 
 type NeighborChans []HorizChanPair
 
 type Proc struct {
-	Id      ProcIdx
-	m_MyVal Data
+	id      ProcIdx
+	myVal Data
 	RNG     *rand.Rand
+}
+
+type Graph struct {
+	NumberProcs ProcIdx
+	Root        ProcIdx
+	Procs       []Proc
+	Neighbors   [][]HorizChanPair
+	tops        []VertChanPair
+	driverTops  []VertChanPair
 }
 
 func HorizBidir2InChan(c HorizBidirChan) HorizInChan {
@@ -51,13 +60,4 @@ func VertBidir2InChan(c VertBidirChan) VertInChan {
 
 func VertBidir2OutChan(c VertBidirChan) VertOutChan {
 	return (VertOutChan)((chan<- Data)((chan Data)(c)))
-}
-
-type Graph struct {
-	NumberProcs ProcIdx
-	Root        ProcIdx
-	Procs       []Proc
-	Neighbors   [][]HorizChanPair
-	Tops        []VertChanPair
-	DriverTops  []VertChanPair
 }

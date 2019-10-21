@@ -33,26 +33,26 @@ func (proc *Proc) Run(topChan *VertChanPair,
 	r0 := time.Now().UnixNano()
 	proc.RNG = rand.New(rand.NewSource(r0))
 
-	proc.m_MyVal, ok = <-topChan.In
+	proc.myVal, ok = <-topChan.in
 	if !ok {
-		s := fmt.Sprintf("ERROR: Proc %d - bad receive from top", proc.Id)
+		s := fmt.Sprintf("ERROR: Proc %d - bad receive from top", proc.id)
 		panic(s)
 	}
-	if proc.m_MyVal < 0 { // root
+	if proc.myVal < 0 { // root
 		if Debug {
-			fmt.Println("Run root, my val ", proc.m_MyVal)
+			fmt.Println("Run root, my val ", proc.myVal)
 		}
-		proc.m_MyVal = -proc.m_MyVal
+		proc.myVal = -proc.myVal
 		sum := proc.runRoot(neighbors)
-		topChan.Out <- sum
-		close(topChan.Out)
+		topChan.out <- sum
+		close(topChan.out)
 	} else { // slave
 		if Debug {
 			fmt.Println("Run child, my val ",
-				proc.m_MyVal)
+				proc.myVal)
 		}
 		proc.runChild(neighbors)
-		topChan.Out <- proc.m_MyVal
-		close(topChan.Out)
+		topChan.out <- proc.myVal
+		close(topChan.out)
 	}
 }
