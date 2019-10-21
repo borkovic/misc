@@ -143,6 +143,7 @@ func (graph *Graph) addConnectionsToDisconnected() {
 *************************************************************/
 func (graph *Graph) makeNeighborChans(percChans int) {
 	nProc := graph.NumberProcs
+	numChans := 0
 
 	r0 := time.Now().UnixNano()
 	RNG := rand.New(rand.NewSource(r0))
@@ -157,10 +158,14 @@ func (graph *Graph) makeNeighborChans(percChans int) {
 				continue
 			}
 			graph.makeOneHorizChan(i, j)
+			numChans++
 		}
 	}
+	fmt.Println("First created", numChans, "channels")
 	if !graph.verifyConnectivity() {
 		graph.addConnectionsToDisconnected()
+	} else {
+		fmt.Println("Added zero channels")
 	}
 }
 

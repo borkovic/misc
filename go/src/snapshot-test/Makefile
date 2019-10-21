@@ -12,7 +12,7 @@ f:
 
 five:
 	@rm -f $(PROG)
-	@N=5; echo; echo; n=0; while let "$$n < $$N"; do echo -n $$n:; go run --race $(PROG).go; echo; let "n=$$n+1"; done
+	@N=5; echo; echo; n=0; while let "$$n < $$N"; do echo  $$n': \c'; go run --race $(PROG).go; echo; let "n=$$n+1"; done
 
 ten:
 	@rm -f $(PROG)
