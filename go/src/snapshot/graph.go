@@ -111,7 +111,7 @@ func (graph *Graph) makeOneHorizChan(i, j ProcIdx) {
 *************************************************************/
 func (graph *Graph) addConnectionsToDisconnected() {
 	var numAdded int = 0
-	nProc := ProcIdx(len(graph.Neighbors))
+	nProc := graph.NumberProcs
 	for p := ProcIdx(0); p < nProc-1; p++ {
 		myNeigh := (graph.Neighbors)[p]
 		numNeigh := len(myNeigh)
@@ -130,7 +130,7 @@ func (graph *Graph) addConnectionsToDisconnected() {
 		}
 	}
 	if numAdded > 0 {
-		fmt.Println("Added", numAdded, "chans p->p+1")
+		fmt.Println("Added", numAdded, "new chans p->p+1")
 	}
 }
 

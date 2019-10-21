@@ -13,65 +13,6 @@ import (
  * 4. sums values from children (+)
  * 5. send sum to parent
 *********************************************************/
-func (proc *Proc) runChild1(neighbors NeighborChans) {
-	//numNeighbors := len(neighbors)
-	var parIdx int = -1
-	var parVal Data
-
-	proc.SLEEP(4)
-	// 1. read from parent In tree
-	select {
-	case parVal = <-neighbors[0].In:
-		parIdx = 0
-	case parVal = <-neighbors[1].In:
-		parIdx = 1
-	case parVal = <-neighbors[2].In:
-		parIdx = 2
-	}
-	if Debug {
-		fmt.Println("Child with val ", proc.m_MyVal,
-			", par idx ", parIdx,
-			", par value ", parVal)
-	}
-
-	// 2. send to all but parent (children and siblings)
-	for i, n := range neighbors {
-		if i == parIdx {
-			proc.SLEEP(4)
-			continue
-		}
-		proc.SLEEP(4)
-		n.Out <- (-proc.m_MyVal)
-		close(n.Out)
-	}
-
-	// 3. receive from children and siblings
-	// from children +, from siblings -
-	// 4. sum from children
-	sum := (proc.m_MyVal)
-	for i, n := range neighbors {
-		if i == parIdx {
-			continue
-		}
-		proc.SLEEP(4)
-		v := <-n.In
-		if v > 0 { // this is child, siblings send negative
-			sum += v
-		}
-	}
-
-	// 5. send sum to parent
-	neighbors[parIdx].Out <- sum
-}
-
-/*********************************************************
- * Child
- * 1. receive value from parent
- * 2. send its neg. value to others (children/siblings)
- * 3. receive values from children(+) and siblings(-)
- * 4. sums values from children (+)
- * 5. send sum to parent
-*********************************************************/
 func (proc *Proc) runChild2(neighbors NeighborChans) {
 	numNeighbors := len(neighbors)
 
@@ -89,7 +30,7 @@ func (proc *Proc) runChild2(neighbors NeighborChans) {
 	 *     parIdx = 2
 	 * }
 	 *
-	 *
+	 *=================================================
 	 * package reflect
 	 * type SelectCase struct {
 	 *     Dir  SelectDir // direction of case
@@ -117,10 +58,6 @@ func (proc *Proc) runChild2(neighbors NeighborChans) {
 		cases[i].Chan = reflect.ValueOf(neighbors[i].In)
 		cases[i].Send = reflect.ValueOf(nil)
 	}
-	//var parIdx int = -1
-	//var parVal reflect.Value
-	//var recvOk bool
-	//parIdx, parVal, recvOk = reflect.Select(cases)
 	parIdx, parVal, recvOk := reflect.Select(cases)
 	if !recvOk {
 		s := fmt.Sprintf("ERROR: Child %d - bad select", proc.Id)
