@@ -51,7 +51,7 @@ func (proc *Proc) Run(topChan *VertChanPair,
 			fmt.Println("Run child, my val ",
 				proc.m_MyVal)
 		}
-		proc.runChild2(neighbors)
+		proc.runChild(neighbors)
 		topChan.Out <- proc.m_MyVal
 		close(topChan.Out)
 	}

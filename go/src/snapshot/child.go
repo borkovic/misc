@@ -13,7 +13,7 @@ import (
  * 4. sums values from children (+)
  * 5. send sum to parent
 *********************************************************/
-func (proc *Proc) runChild2(neighbors NeighborChans) {
+func (proc *Proc) runChild(neighbors NeighborChans) {
 	numNeighbors := len(neighbors)
 
 	proc.SLEEP(2)
