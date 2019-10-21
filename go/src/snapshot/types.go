@@ -29,9 +29,9 @@ type VertChanPair struct {
 type NeighborChans []HorizChanPair
 
 type Proc struct {
-	id      ProcIdx
+	id    ProcIdx
 	myVal Data
-	RNG     *rand.Rand
+	RNG   *rand.Rand
 }
 
 type Graph struct {
