@@ -21,8 +21,6 @@ type VertChanPair struct {
 
 type NeighborChans []HorizChanPair
 
-
-
 func HorizBidir2InChan(c HorizBidirChan) HorizInChan {
 	var c2 chan Data = (chan Data)(c)
 	var c3 <-chan Data = (<-chan Data)(c2)
