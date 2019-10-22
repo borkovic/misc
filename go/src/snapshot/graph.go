@@ -130,7 +130,8 @@ func (graph *Graph) addConnectionsToDisconnected() {
 		}
 	}
 	if numAdded > 0 {
-		fmt.Println("Added", numAdded, "new chans p->p+1")
+		fmt.Println("Added", numAdded,
+			"new channels p->p+1 to make graph fully connected")
 	}
 }
 
@@ -165,7 +166,7 @@ func (graph *Graph) makeNeighborChans(percChans int) {
 	if !graph.verifyConnectivity() {
 		graph.addConnectionsToDisconnected()
 	} else {
-		fmt.Println("Added zero channels")
+		fmt.Println("Added 0 new channels to make graph fully connected")
 	}
 }
 
@@ -228,7 +229,7 @@ func (graph *Graph) sendDataDown(
 		downChanOut <- sendv
 		close(downChanOut)
 	}
-	fmt.Println("Local sum: ", localSum)
+	fmt.Println("Local sum:", localSum)
 	return localSum
 }
 
@@ -259,7 +260,7 @@ func (graph *Graph) receiveFromRoot() Data {
 		s := fmt.Sprintf("ERROR: Graph - bad receive from root %d", graph.root)
 		panic(s)
 	}
-	fmt.Println("Root returns: ", val)
+	fmt.Println("Root returns:", val)
 	return val
 }
 
