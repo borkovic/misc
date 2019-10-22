@@ -5,7 +5,7 @@ import (
 )
 
 type ProcIdx int
-type Data int32
+type Data int64
 
 type Proc struct {
 	id    ProcIdx
@@ -14,10 +14,10 @@ type Proc struct {
 }
 
 type Graph struct {
-	NumberProcs ProcIdx
-	Root        ProcIdx
-	Procs       []Proc
-	Neighbors   [][]HorizChanPair
+	numberProcs ProcIdx
+	root        ProcIdx
+	procs       []Proc
+	neighbors   [][]HorizChanPair
 	tops        []VertChanPair
 	driverTops  []VertChanPair
 }

@@ -18,11 +18,11 @@ func (graph *Graph) verifyConnectivity() bool {
 	//dbg := true
 	dbg := false
 
-	nProc := ProcIdx(len(graph.Neighbors))
+	nProc := ProcIdx(len(graph.neighbors))
 	if dbg {
 		for i := ProcIdx(0); i < nProc; i++ {
 			fmt.Print(i, " : ")
-			myNeigh := graph.Neighbors[i]
+			myNeigh := graph.neighbors[i]
 			numNeigh := len(myNeigh)
 			for n := 0; n < numNeigh; n++ {
 				j := myNeigh[n].to
@@ -57,7 +57,7 @@ func (graph *Graph) verifyConnectivity() bool {
 			panic(s)
 		}
 
-		myNeigh := graph.Neighbors[v]
+		myNeigh := graph.neighbors[v]
 		numNeigh := len(myNeigh)
 		if dbg {
 			fmt.Print("  Pushing out of ", numNeigh, " neighbors:")
@@ -101,8 +101,8 @@ func (graph *Graph) makeOneHorizChan(i, j ProcIdx) {
 	jIoChan.from = j
 	jIoChan.to = i
 
-	graph.Neighbors[i] = append(graph.Neighbors[i], iIoChan)
-	graph.Neighbors[j] = append(graph.Neighbors[j], jIoChan)
+	graph.neighbors[i] = append(graph.neighbors[i], iIoChan)
+	graph.neighbors[j] = append(graph.neighbors[j], jIoChan)
 }
 
 /*************************************************************
@@ -111,9 +111,9 @@ func (graph *Graph) makeOneHorizChan(i, j ProcIdx) {
 *************************************************************/
 func (graph *Graph) addConnectionsToDisconnected() {
 	var numAdded int = 0
-	nProc := graph.NumberProcs
+	nProc := graph.numberProcs
 	for p := ProcIdx(0); p < nProc-1; p++ {
-		myNeigh := (graph.Neighbors)[p]
+		myNeigh := (graph.neighbors)[p]
 		numNeigh := len(myNeigh)
 
 		found := false
@@ -142,13 +142,13 @@ func (graph *Graph) addConnectionsToDisconnected() {
  *      https://en.wikipedia.org/wiki/Erdős–Rényi_model
 *************************************************************/
 func (graph *Graph) makeNeighborChans(percChans int) {
-	nProc := graph.NumberProcs
+	nProc := graph.numberProcs
 	numChans := 0
 
 	r0 := time.Now().UnixNano()
 	RNG := rand.New(rand.NewSource(r0))
 
-	graph.Neighbors = make([][]HorizChanPair, nProc)
+	graph.neighbors = make([][]HorizChanPair, nProc)
 	percNoChan := 100 - percChans
 
 	for i := ProcIdx(0); i < nProc-1; i++ {
@@ -173,7 +173,7 @@ func (graph *Graph) makeNeighborChans(percChans int) {
  * Make channels to communicate values to individual Procs
 *************************************************************/
 func (graph *Graph) makeVertChans() {
-	nProc := graph.NumberProcs
+	nProc := graph.numberProcs
 	graph.tops = make([]VertChanPair, nProc)
 	graph.driverTops = make([]VertChanPair, nProc)
 
@@ -193,13 +193,13 @@ func (graph *Graph) makeVertChans() {
  * Start proc goroutines
 *************************************************************/
 func (graph *Graph) startProcs() {
-	nProcs := graph.NumberProcs
-	graph.Procs = make([]Proc, nProcs)
+	nProcs := graph.numberProcs
+	graph.procs = make([]Proc, nProcs)
 	for i := ProcIdx(0); i < nProcs; i++ {
-		graph.Procs[i].id = i
+		graph.procs[i].id = i
 	}
 	for i := ProcIdx(0); i < nProcs; i++ {
-		go graph.Procs[i].Run(&graph.tops[i], graph.Neighbors[i])
+		go graph.procs[i].Run(&graph.tops[i], graph.neighbors[i])
 	}
 }
 
@@ -210,8 +210,8 @@ func (graph *Graph) startProcs() {
 func (graph *Graph) sendDataDown(
 	bias int) Data {
 
-	nProc := graph.NumberProcs
-	root := graph.Root
+	nProc := graph.numberProcs
+	root := graph.root
 	var localSum Data = 0
 	for i := ProcIdx(0); i < nProc; i++ {
 		var sendv Data
@@ -235,8 +235,8 @@ func (graph *Graph) sendDataDown(
 /*************************************************************
 *************************************************************/
 func (graph *Graph) receiveFromNonRoots() {
-	nProc := graph.NumberProcs
-	root := graph.Root
+	nProc := graph.numberProcs
+	root := graph.root
 	for i := ProcIdx(0); i < nProc; i++ {
 		if i != root {
 			_, ok := <-graph.driverTops[i].in
@@ -253,10 +253,10 @@ func (graph *Graph) receiveFromNonRoots() {
  * sendDataDown(), except positive root data is used
 *************************************************************/
 func (graph *Graph) receiveFromRoot() Data {
-	fromRoot := graph.driverTops[graph.Root].in
+	fromRoot := graph.driverTops[graph.root].in
 	val, ok := <-fromRoot
 	if !ok {
-		s := fmt.Sprintf("ERROR: Graph - bad receive from root %d", graph.Root)
+		s := fmt.Sprintf("ERROR: Graph - bad receive from root %d", graph.root)
 		panic(s)
 	}
 	fmt.Println("Root returns: ", val)
@@ -268,8 +268,8 @@ func (graph *Graph) receiveFromRoot() Data {
 *************************************************************/
 func (graph *Graph) buildChans(nProc ProcIdx, root ProcIdx, percChans int) {
 
-	graph.Root = root
-	graph.NumberProcs = nProc
+	graph.root = root
+	graph.numberProcs = nProc
 	graph.makeNeighborChans(percChans)
 	graph.makeVertChans()
 }
