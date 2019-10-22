@@ -8,11 +8,6 @@ import (
 	"time"
 )
 
-const (
-	//Debug bool = true
-	Debug bool = false
-)
-
 /*********************************************************
 *********************************************************/
 func (proc *Proc) SLEEP(nn int) {
@@ -39,7 +34,7 @@ func (proc *Proc) Run(topChan *VertChanPair,
 		panic(s)
 	}
 	if proc.myVal < 0 { // root
-		if Debug {
+		if dbg() {
 			fmt.Println("Run root, my val ", proc.myVal)
 		}
 		proc.myVal = -proc.myVal
@@ -47,7 +42,7 @@ func (proc *Proc) Run(topChan *VertChanPair,
 		topChan.out <- sum
 		close(topChan.out)
 	} else { // slave
-		if Debug {
+		if dbg() {
 			fmt.Println("Run child, my val ",
 				proc.myVal)
 		}

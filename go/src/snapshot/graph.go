@@ -15,11 +15,9 @@ const (
  * 	Check whether the graph is connected
 *************************************************************/
 func (graph *Graph) verifyConnectivity() bool {
-	//dbg := true
-	dbg := false
 
 	nProc := ProcIdx(len(graph.neighbors))
-	if dbg {
+	if dbg() {
 		for i := ProcIdx(0); i < nProc; i++ {
 			fmt.Print(i, " : ")
 			myNeigh := graph.neighbors[i]
@@ -49,7 +47,7 @@ func (graph *Graph) verifyConnectivity() bool {
 		stackSize--
 		v = stack[stackSize]
 
-		if dbg {
+		if dbg() {
 			fmt.Print("Popping ", v, " sz ", stackSize, ": ")
 		}
 		if !visited[v] {
@@ -59,7 +57,7 @@ func (graph *Graph) verifyConnectivity() bool {
 
 		myNeigh := graph.neighbors[v]
 		numNeigh := len(myNeigh)
-		if dbg {
+		if dbg() {
 			fmt.Print("  Pushing out of ", numNeigh, " neighbors:")
 		}
 		for n := 0; n < numNeigh; n++ {
@@ -67,7 +65,7 @@ func (graph *Graph) verifyConnectivity() bool {
 			if visited[neigh] {
 				continue
 			}
-			if dbg {
+			if dbg() {
 				fmt.Print(" [", stackSize, "]", neigh)
 			}
 
@@ -75,7 +73,7 @@ func (graph *Graph) verifyConnectivity() bool {
 			stackSize++
 			visited[neigh] = true
 		}
-		if dbg {
+		if dbg() {
 			fmt.Println("(", stackSize, ")")
 		}
 	}
@@ -109,7 +107,7 @@ func (graph *Graph) makeOneHorizChan(i, j ProcIdx) {
  * For the graph that is not fully connected, add connections
  * (i,i+1) that do not already exist
 *************************************************************/
-func (graph *Graph) addConnectionsToDisconnected() {
+func (graph *Graph) makeFullyConnected() int {
 	var numAdded int = 0
 	nProc := graph.numberProcs
 	for p := ProcIdx(0); p < nProc-1; p++ {
@@ -131,8 +129,9 @@ func (graph *Graph) addConnectionsToDisconnected() {
 	}
 	if numAdded > 0 {
 		fmt.Println("Added", numAdded,
-			"new channels p->p+1 to make graph fully connected")
+			"new channel(s) p->p+1 to make graph fully connected")
 	}
+	return numAdded
 }
 
 /*************************************************************
@@ -142,7 +141,7 @@ func (graph *Graph) addConnectionsToDisconnected() {
  * See: Erdős–Rényi model at
  *      https://en.wikipedia.org/wiki/Erdős–Rényi_model
 *************************************************************/
-func (graph *Graph) makeNeighborChans(percChans int) {
+func (graph *Graph) makeNeighborChans(percChans int) int {
 	nProc := graph.numberProcs
 	numChans := 0
 
@@ -162,12 +161,13 @@ func (graph *Graph) makeNeighborChans(percChans int) {
 			numChans++
 		}
 	}
-	fmt.Println("First created", numChans, "channels")
+	fmt.Println("First created", numChans, "channel(s)")
 	if !graph.verifyConnectivity() {
-		graph.addConnectionsToDisconnected()
+		graph.makeFullyConnected()
 	} else {
 		fmt.Println("Added 0 new channels to make graph fully connected")
 	}
+	return numChans
 }
 
 /*************************************************************

@@ -13,45 +13,45 @@ import (
  * 4. sums values from children (+)
  * 5. send sum to parent
 *********************************************************/
+/***************************************************
+ * var parIdx int = -1
+ * var parVal Data
+ * select {
+ * case parVal = <-neighbors[0].in:
+ *     parIdx = 0
+ * case parVal <-neighbors[1].in:
+ *     parIdx = 1
+ * case parVal <-neighbors[2].in:
+ *     parIdx = 2
+ * }
+ *
+ *=================================================
+ * package reflect
+ * type SelectCase struct {
+ *     Dir  SelectDir // direction of case
+ *     Chan Value     // chan type (send or receive)
+ *     Send Value     // value to send (for send)
+ * }
+ * type SelectDir 1.1
+ * A SelectDir describes the communication direction
+ * of a select case.
+ *
+ * type SelectDir int
+ * const (
+ *     SelectSend    SelectDir // case Chan<- Send
+ *     SelectRecv              // case <-Chan:
+ *     SelectDefault           // default
+ * )
+ *
+ * func Select(cases []SelectCase) (chosen int,
+ * 			   recv Value, recvOK bool)
+ *
+***************************************************/
 func (proc *Proc) runChild(neighbors NeighborChans) {
 	numNeighbors := len(neighbors)
 
 	proc.SLEEP(2)
 	// 1. read from parent in tree
-	/***************************************************
-	 * var parIdx int = -1
-	 * var parVal Data
-	 * select {
-	 * case parVal = <-neighbors[0].in:
-	 *     parIdx = 0
-	 * case parVal <-neighbors[1].in:
-	 *     parIdx = 1
-	 * case parVal <-neighbors[2].in:
-	 *     parIdx = 2
-	 * }
-	 *
-	 *=================================================
-	 * package reflect
-	 * type SelectCase struct {
-	 *     Dir  SelectDir // direction of case
-	 *     Chan Value     // chan type (send or receive)
-	 *     Send Value     // value to send (for send)
-	 * }
-	 * type SelectDir 1.1
-	 * A SelectDir describes the communication direction
-	 * of a select case.
-	 *
-	 * type SelectDir int
-	 * const (
-	 *     SelectSend    SelectDir // case Chan<- Send
-	 *     SelectRecv              // case <-Chan:
-	 *     SelectDefault           // default
-	 * )
-	 *
-	 * func Select(cases []SelectCase) (chosen int,
-	 * 			   recv Value, recvOK bool)
-	 *
-	***************************************************/
 	cases := make([]reflect.SelectCase, numNeighbors)
 	for i := 0; i < numNeighbors; i++ {
 		cases[i].Dir = reflect.SelectRecv
@@ -65,7 +65,7 @@ func (proc *Proc) runChild(neighbors NeighborChans) {
 	}
 
 	/*-------------------------------------------------*/
-	if Debug {
+	if dbg() {
 		fmt.Println("Child with val ", proc.myVal,
 			", par idx ", parIdx,
 			", par value ", parVal)
@@ -104,7 +104,7 @@ func (proc *Proc) runChild(neighbors NeighborChans) {
 	}
 
 	// 5. send sum to parent
-	if Debug {
+	if dbg() {
 		fmt.Println("Child back to parent:",
 			" my val ",
 			proc.myVal,

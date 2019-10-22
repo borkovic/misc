@@ -21,3 +21,9 @@ type Graph struct {
 	tops        []VertChanPair
 	driverTops  []VertChanPair
 }
+
+func dbg() bool {
+	return false
+	//return true
+}
+
