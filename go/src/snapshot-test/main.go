@@ -25,8 +25,9 @@ func main() {
 		", Root: ", root,
 		", Chan prob: ", percChan, "/100",
 		", Bias: ", bias,
+		", Seed: ", r0,
 		"\n")
 
 	graph := new(snapshot.Graph)
-	graph.BuildAndCollectData(nProc, root, bias, percChan)
+	graph.BuildAndCollectData(nProc, root, bias, percChan, RNG.Int63())
 }

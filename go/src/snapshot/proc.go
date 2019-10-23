@@ -4,7 +4,7 @@ package snapshot
 *********************************************************/
 import (
 	"fmt"
-	"math/rand"
+	//"math/rand"
 	"time"
 )
 
@@ -25,8 +25,6 @@ func (proc *Proc) SLEEP(nn int) {
 func (proc *Proc) Run(topChan *VertChanPair,
 	neighbors NeighborChans) {
 	var ok bool
-	r0 := time.Now().UnixNano()
-	proc.RNG = rand.New(rand.NewSource(r0))
 
 	proc.myVal, ok = <-topChan.in
 	if !ok {

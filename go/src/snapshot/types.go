@@ -20,6 +20,7 @@ type Graph struct {
 	neighbors   [][]HorizChanPair
 	tops        []VertChanPair
 	driverTops  []VertChanPair
+	RNG   		*rand.Rand
 }
 
 func dbg() bool {

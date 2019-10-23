@@ -3,7 +3,7 @@ package snapshot
 import (
 	"fmt"
 	"math/rand"
-	"time"
+	//"time"
 )
 
 const (
@@ -145,15 +145,13 @@ func (graph *Graph) makeNeighborChans(percChans int) int {
 	nProc := graph.numberProcs
 	numChans := 0
 
-	r0 := time.Now().UnixNano()
-	RNG := rand.New(rand.NewSource(r0))
 
 	graph.neighbors = make([][]HorizChanPair, nProc)
 	percNoChan := 100 - percChans
 
 	for i := ProcIdx(0); i < nProc-1; i++ {
 		for j := i + 1; j < nProc; j++ {
-			n := RNG.Intn(100)
+			n := graph.RNG.Intn(100)
 			if n < percNoChan {
 				continue
 			}
@@ -198,6 +196,7 @@ func (graph *Graph) startProcs() {
 	graph.procs = make([]Proc, nProcs)
 	for i := ProcIdx(0); i < nProcs; i++ {
 		graph.procs[i].id = i
+		graph.procs[i].RNG = rand.New(rand.NewSource(graph.RNG.Int63()))
 	}
 	for i := ProcIdx(0); i < nProcs; i++ {
 		go graph.procs[i].Run(&graph.tops[i], graph.neighbors[i])
@@ -285,7 +284,9 @@ func (graph *Graph) buildGraph(nProc ProcIdx, root ProcIdx, percChans int) {
 
 /*************************************************************
 *************************************************************/
-func (graph *Graph) BuildAndCollectData(nProc ProcIdx, root ProcIdx, percChans int, bias int) {
+func (graph *Graph) BuildAndCollectData(nProc ProcIdx, root ProcIdx, percChans int, bias int,
+		seed int64) {
+	graph.RNG = rand.New(rand.NewSource(seed))
 	graph.buildGraph(nProc, root, percChans)
 
 	localSum := graph.sendDataDown(bias)
