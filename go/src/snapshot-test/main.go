@@ -15,7 +15,7 @@ func main() {
 
 	seed := time.Now().UnixNano()
 	if seed < 0 {
-		seed = -seed  // always positive seed
+		seed = -seed // always positive seed
 	}
 	rng := rand.New(rand.NewSource(seed))
 

@@ -145,7 +145,6 @@ func (graph *Graph) makeNeighborChans(percChans int) int {
 	nProc := graph.numberProcs
 	numChans := 0
 
-
 	graph.neighbors = make([][]HorizChanPair, nProc)
 	percNoChan := 100 - percChans
 
@@ -285,7 +284,7 @@ func (graph *Graph) buildGraph(nProc ProcIdx, root ProcIdx, percChans int) {
 /*************************************************************
 *************************************************************/
 func (graph *Graph) BuildAndCollectData(nProc ProcIdx, root ProcIdx, percChans int, bias int,
-		seed int64) {
+	seed int64) {
 	graph.rng = rand.New(rand.NewSource(seed))
 	graph.buildGraph(nProc, root, percChans)
 

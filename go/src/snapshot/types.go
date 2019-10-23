@@ -20,11 +20,10 @@ type Graph struct {
 	neighbors   [][]HorizChanPair
 	tops        []VertChanPair
 	driverTops  []VertChanPair
-	rng   		*rand.Rand
+	rng         *rand.Rand
 }
 
 func dbg() bool {
 	return false
 	//return true
 }
-
