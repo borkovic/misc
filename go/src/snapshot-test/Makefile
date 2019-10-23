@@ -10,17 +10,25 @@ f:
 	@rm -f $(PROG)
 	@time go run $(PROG).go 2>&1 | tee f.log
 
+5: five
+
 five:
 	@rm -f $(PROG)
-	@N=5; echo; echo; n=0; while let "$$n < $$N"; do echo $$n': '; go run --race $(PROG).go; echo; let "n=$$n+1"; done
+	@go build --race $(PROG).go
+	@N=5; echo; echo; n=0; while let "$$n < $$N"; do echo $$n': '; go ./$(PROG).go; echo; let "n=$$n+1"; done
+
+
+10: ten
 
 ten:
 	@rm -f $(PROG)
-	@N=10; echo; echo; n=0; while let "$$n < $$N"; do echo $$n': '; go run --race $(PROG).go; echo; let "n=$$n+1"; done
+	@go build --race $(PROG).go
+	@N=10; echo; echo; n=0; while let "$$n < $$N"; do echo $$n': '; ./$(PROG).go; echo; let "n=$$n+1"; done
 
 100:
 	@rm -f $(PROG)
-	@N=100; echo; echo; n=0; while let "$$n < $$N"; do echo $$n': '; go run --race $(PROG).go; echo; let "n=$$n+1"; done | tee log100
+	@go build --race $(PROG).go
+	@N=100; echo; echo; n=0; while let "$$n < $$N"; do echo $$n': '; ./$(PROG); echo; let "n=$$n+1"; done | tee log100
 
 b:
 	time go build $(PROG).go
