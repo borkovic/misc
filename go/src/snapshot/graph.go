@@ -151,7 +151,7 @@ func (graph *Graph) makeNeighborChans(percChans int) int {
 
 	for i := ProcIdx(0); i < nProc-1; i++ {
 		for j := i + 1; j < nProc; j++ {
-			n := graph.RNG.Intn(100)
+			n := graph.rng.Intn(100)
 			if n < percNoChan {
 				continue
 			}
@@ -196,7 +196,7 @@ func (graph *Graph) startProcs() {
 	graph.procs = make([]Proc, nProcs)
 	for i := ProcIdx(0); i < nProcs; i++ {
 		graph.procs[i].id = i
-		graph.procs[i].RNG = rand.New(rand.NewSource(graph.RNG.Int63()))
+		graph.procs[i].rng = rand.New(rand.NewSource(graph.rng.Int63()))
 	}
 	for i := ProcIdx(0); i < nProcs; i++ {
 		go graph.procs[i].Run(&graph.tops[i], graph.neighbors[i])
@@ -286,7 +286,7 @@ func (graph *Graph) buildGraph(nProc ProcIdx, root ProcIdx, percChans int) {
 *************************************************************/
 func (graph *Graph) BuildAndCollectData(nProc ProcIdx, root ProcIdx, percChans int, bias int,
 		seed int64) {
-	graph.RNG = rand.New(rand.NewSource(seed))
+	graph.rng = rand.New(rand.NewSource(seed))
 	graph.buildGraph(nProc, root, percChans)
 
 	localSum := graph.sendDataDown(bias)

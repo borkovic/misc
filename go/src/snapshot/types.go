@@ -10,7 +10,7 @@ type Data int64
 type Proc struct {
 	id    ProcIdx
 	myVal Data
-	RNG   *rand.Rand
+	rng   *rand.Rand
 }
 
 type Graph struct {
@@ -20,7 +20,7 @@ type Graph struct {
 	neighbors   [][]HorizChanPair
 	tops        []VertChanPair
 	driverTops  []VertChanPair
-	RNG   		*rand.Rand
+	rng   		*rand.Rand
 }
 
 func dbg() bool {
