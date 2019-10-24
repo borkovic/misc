@@ -11,8 +11,9 @@ import (
 /*********************************************************
 *********************************************************/
 func (proc *Proc) SLEEP(nn int) {
+<<<<<<< HEAD
 	var n int = proc.rng.Intn(nn)
-	m := 1000 * n
+	m := 10 * n
 	//t := time.Duration(m) * time.Millisecond
 	t := time.Duration(m) * time.Microsecond
 	time.Sleep(t)

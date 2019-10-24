@@ -33,4 +33,5 @@ func main() {
 
 	graph := new(snapshot.Graph)
 	graph.BuildAndCollectData(nProc, root, bias, percChan, rng.Int63())
+	fmt.Println("Done")
 }
