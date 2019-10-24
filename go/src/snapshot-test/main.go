@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"math/rand"
 	"time"
+	"os"
+	"strconv"
 )
 import (
 	"snapshot"
@@ -12,8 +14,16 @@ import (
 /*************************************************************
 *************************************************************/
 func main() {
-
-	seed := time.Now().UnixNano()
+	var seed int64
+	if len(os.Args) > 2 && os.Args[1] == "--seed" {
+		var err error
+		seed,err = strconv.ParseInt(os.Args[2], 10, 64)
+		if err != nil {
+			panic("Bad argument " + os.Args[2])
+		}
+	} else {
+		seed = time.Now().UnixNano()
+	}
 	if seed < 0 {
 		seed = -seed // always positive seed
 	}
