@@ -150,7 +150,7 @@ func (graph *Graph) makeNeighborChans(percChans int) int {
 
 	for i := ProcIdx(0); i < nProc-1; i++ {
 		for j := i + 1; j < nProc; j++ {
-			n := graph.rng.Intn(100)
+			n := 1 + graph.rng.Intn(100)
 			if n < percNoChan {
 				continue
 			}

@@ -108,6 +108,8 @@ func main() {
 
 	if nProc <= 0 {
 		nProc = snapshot.ProcIdx(300 + rng.Intn(40))
+	} else {
+		nProc = snapshot.ProcIdx(int(nProc) + rng.Intn(40))
 	}
 	if root < 0 {
 		root = snapshot.ProcIdx(rng.Intn(int(nProc)))
@@ -116,7 +118,7 @@ func main() {
 		percChan = 2 + rng.Intn(20)
 	}
 	if bias < 1 {
-		bias = rng.Intn(10)
+		bias = rng.Intn(2)
 	}
 
 	fmt.Print("Num proc: ", nProc,
