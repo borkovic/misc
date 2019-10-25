@@ -32,7 +32,7 @@ func main() {
 			}
 			seed, err = strconv.ParseInt(os.Args[i+1], 10, 64)
 			if err != nil {
-				panic("Processing --seed argument")
+				panic("Error processing --seed argument")
 			}
 			if seed < 0 {
 				seed = -seed // always positive seed
@@ -44,7 +44,7 @@ func main() {
 			}
 			n, err = strconv.ParseInt(os.Args[i+1], 10, 32)
 			if err != nil {
-				panic("Processing --nproc argument")
+				panic("Error processing --nproc argument")
 			}
 			nProc = snapshot.ProcIdx(n)
 			if nProc <= 0 {
@@ -60,7 +60,7 @@ func main() {
 			}
 			n, err = strconv.ParseInt(os.Args[i+1], 10, 32)
 			if err != nil {
-				panic("Processing --root argument")
+				panic("Error processing --root argument")
 			}
 			root = snapshot.ProcIdx(n)
 			if root < 0 || root >= nProc {
@@ -73,10 +73,23 @@ func main() {
 			}
 			n, err = strconv.ParseInt(os.Args[i+1], 10, 32)
 			if err != nil {
-				panic("Processing --bias argument")
+				panic("Error processing --bias argument")
 			}
 			bias = int(n)
-			if bias < 1 || bias >= 99 {
+			if bias < 1 || bias >= 29 {
+				panic("Bias must be in [1,29]")
+			}
+			i++
+		case "--chan-prob":
+			if i+1 >= N {
+				panic("Not enough args for --chan-prob")
+			}
+			n, err = strconv.ParseInt(os.Args[i+1], 10, 32)
+			if err != nil {
+				panic("Error processing --chan-prob argument")
+			}
+			percChan = int(n)
+			if percChan < 1 || percChan > 99 {
 				panic("Bias must be in [1,99]")
 			}
 			i++
@@ -99,10 +112,9 @@ func main() {
 	if root < 0 {
 		root = snapshot.ProcIdx(rng.Intn(int(nProc)))
 	}
-	if percChan <= 0 {
+	if percChan <= 0 || percChan > 99 {
 		percChan = 2 + rng.Intn(20)
 	}
-
 	if bias < 1 {
 		bias = rng.Intn(10)
 	}
