@@ -5,6 +5,7 @@ import (
 )
 
 type ProcIdx int
+type ProbInt int
 type Data int64
 
 type Proc struct {

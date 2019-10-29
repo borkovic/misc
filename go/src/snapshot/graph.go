@@ -141,17 +141,17 @@ func (graph *Graph) makeFullyConnected() int {
  * See: Erdős–Rényi model at
  *      https://en.wikipedia.org/wiki/Erdős–Rényi_model
 *************************************************************/
-func (graph *Graph) makeNeighborChans(percChans int) int {
+func (graph *Graph) makeNeighborChans(mm, nn ProbInt) int {
 	nProc := graph.numberProcs
 	numChans := 0
 
 	graph.neighbors = make([][]HorizChanPair, nProc)
-	percNoChan := 100 - percChans
+	mm2 := nn - mm
 
 	for i := ProcIdx(0); i < nProc-1; i++ {
 		for j := i + 1; j < nProc; j++ {
-			n := 1 + graph.rng.Intn(100)
-			if n < percNoChan {
+			n := 1 + ProbInt(graph.rng.Intn(int(nn)))
+			if n < mm2 {
 				continue
 			}
 			graph.makeOneHorizChan(i, j)
@@ -265,28 +265,28 @@ func (graph *Graph) receiveFromRoot() Data {
 /*************************************************************
  * Build horizontal and vertical channels
 *************************************************************/
-func (graph *Graph) buildChans(nProc ProcIdx, root ProcIdx, percChans int) {
+func (graph *Graph) buildChans(nProc ProcIdx, root ProcIdx, mm, nn ProbInt) {
 
 	graph.root = root
 	graph.numberProcs = nProc
-	graph.makeNeighborChans(percChans)
+	graph.makeNeighborChans(mm, nn)
 	graph.makeVertChans()
 }
 
 /*************************************************************
  * Build chans and procs
 *************************************************************/
-func (graph *Graph) buildGraph(nProc ProcIdx, root ProcIdx, percChans int) {
-	graph.buildChans(nProc, root, percChans)
+func (graph *Graph) buildGraph(nProc ProcIdx, root ProcIdx, mm, nn ProbInt) {
+	graph.buildChans(nProc, root, mm, nn)
 	graph.startProcs()
 }
 
 /*************************************************************
 *************************************************************/
-func (graph *Graph) BuildAndCollectData(nProc ProcIdx, root ProcIdx, percChans int, bias int,
+func (graph *Graph) BuildAndCollectData(nProc ProcIdx, root ProcIdx, mm, nn ProbInt, bias int,
 	seed int64) {
 	graph.rng = rand.New(rand.NewSource(seed))
-	graph.buildGraph(nProc, root, percChans)
+	graph.buildGraph(nProc, root, mm, nn)
 
 	localSum := graph.sendDataDown(bias)
 
