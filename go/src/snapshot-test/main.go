@@ -138,6 +138,7 @@ func main() {
 		"\n")
 
 	graph := new(snapshot.Graph)
-	graph.BuildAndCollectData(nProc, root, mm, nn, bias, rng.Int63())
+	retCode := graph.BuildAndCollectData(nProc, root, mm, nn, bias, rng.Int63())
 	fmt.Println("Done")
+	os.Exit(retCode)
 }

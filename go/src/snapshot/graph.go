@@ -284,7 +284,7 @@ func (graph *Graph) buildGraph(nProc ProcIdx, root ProcIdx, mm, nn ProbInt) {
 /*************************************************************
 *************************************************************/
 func (graph *Graph) BuildAndCollectData(nProc ProcIdx, root ProcIdx, mm, nn ProbInt, bias int,
-	seed int64) {
+	seed int64) int {
 	graph.rng = rand.New(rand.NewSource(seed))
 	graph.buildGraph(nProc, root, mm, nn)
 
@@ -294,7 +294,9 @@ func (graph *Graph) BuildAndCollectData(nProc ProcIdx, root ProcIdx, mm, nn Prob
 	val := graph.receiveFromRoot()
 	if val != localSum {
 		fmt.Println("ERROR: Local sum (", localSum, ") != received sum (", val, ")")
+		return 1
 	}
 
 	graph.receiveFromNonRoots()
+	return 0
 }
