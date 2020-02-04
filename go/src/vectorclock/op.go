@@ -1,9 +1,9 @@
 package vc
 
 type Op struct {
-	engIdx EngineIdx
-	idxOnEng IndexOnEng
-	ts VC
+	engIdx   EngineIdx
+	idxOnEng OpIndexOnEng
+	ts       VC
 }
 
 func (op1 *Op) before(op2 *Op) bool {
@@ -13,6 +13,3 @@ func (op1 *Op) before(op2 *Op) bool {
 func (op1 *Op) after(op2 *Op) bool {
 	return op2.before(op1)
 }
-
-
-

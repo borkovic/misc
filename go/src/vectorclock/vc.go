@@ -85,9 +85,9 @@ func (vc1 *VC) Concurrent(vc2 *VC) bool {
 func (vc *VC) String() string {
 	s := "["
 	first := true
-	for _,ts := range vc.timestamps {
+	for _, ts := range vc.timestamps {
 		ns := strconv.FormatInt(int64(ts), 10)
-		if (first) {
+		if first {
 			first = false
 			s += ns
 		} else {
@@ -97,11 +97,6 @@ func (vc *VC) String() string {
 	return s + "]"
 }
 
-
-
-
-
 func (vc1 *VC) val(idx EngineIdx) VcVal {
 	return vc1.timestamps[idx]
 }
-

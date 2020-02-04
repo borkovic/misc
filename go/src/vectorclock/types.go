@@ -1,5 +1,4 @@
 package vc
 
 type EngineIdx int16
-type IndexOnEng int32
-
+type OpIndexOnEng int32
