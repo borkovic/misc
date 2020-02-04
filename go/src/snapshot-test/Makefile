@@ -43,9 +43,19 @@ ten:
 	@go build --race $(PROG).go
 	@N=100; echo; echo; n=0; while let "$$n < $$N"; do \
 		echo $$n': '; \
-		./$(PROG) --nproc 3000 --chan-prob 1 ; \
+		./$(PROG) --nproc 3000 --chan-prob 2 1000 ; \
 		echo; let "n=$$n+1"; \
-		done | tee log100
+		done | tee log100r
+
+20k:
+	@rm -f $(PROG)
+	@go build  $(PROG).go
+	@N=100; echo; echo; n=0; while let "$$n < $$N"; do \
+		echo $$n': '; \
+		./$(PROG) --nproc 20000 --chan-prob 1 1000 ; \
+		echo; let "n=$$n+1"; \
+		done | tee log100r
+
 
 b:
 	time go build $(PROG).go
