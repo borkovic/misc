@@ -7,7 +7,7 @@ import (
 
 // compile const for size of VC, could be runtime, but less efficient
 const (
-	vcSize int32 = 12
+	VcSize int32 = 12
 )
 
 // range of VC
@@ -15,7 +15,7 @@ type VcVal int32
 
 // VC, hides individual values
 type VC struct {
-	timestamps [vcSize]VcVal
+	timestamps [VcSize]VcVal
 }
 
 // increment one dimension of VC
