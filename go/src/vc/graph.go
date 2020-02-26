@@ -5,7 +5,7 @@ type Graph struct {
 	ops []Op
 }
 
-func (Graph *graph) MkEngines {
+func (graph *Graph) MkEngines() {
 	var maxEngIdx EngineIdx = -1
 	for _, op := range graph.ops {
 		engIdx := op.engIdx
@@ -16,17 +16,17 @@ func (Graph *graph) MkEngines {
 	numEngines := maxEngIdx + 1
 	graph.engines = make([]SeqEng, numEngines)
 
-	N := len(graph.op)
+	N := len(graph.ops)
 
 	i := 0
 	for i < N {
 		s := i
-		engIdx := graph.op[s].engIdx
-		for i < N && graph.op[i].engIdx == engIdx {
+		engIdx := graph.ops[s].engIdx
+		for i < N && graph.ops[i].engIdx == engIdx {
 			i++
 		}
 		if s < i {
-			graph.engines[engIdx].ops = graph.op[s:i]
+			graph.engines[engIdx].ops = graph.ops[s:i]
 		}
 	}
 }
