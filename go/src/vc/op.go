@@ -3,7 +3,7 @@ package vc
 type Op struct {
 	engIdx   EngineIdx
 	idxOnEng OpIndexOnEng
-	glbIdx 	 OpIndexGlobal
+	glbIdx   OpIndexGlobal
 	ts       VC
 }
 
