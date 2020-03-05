@@ -1,5 +1,10 @@
 package vc
 
+type ExtGraph interface {
+	NumOps() int
+	Op(n int) ExtOp
+}
+
 type Graph struct {
 	engines []SeqEng
 	ops []Op
@@ -27,6 +32,18 @@ func (graph *Graph) MkEngines() {
 		}
 		if s < i {
 			graph.engines[engIdx].ops = graph.ops[s:i]
+		}
+	}
+}
+
+func (graph *Graph) MkGraph(extGraph ExtGraph) {
+	var maxEngIdx EngineIdx = -1
+	numExtOps := extGraph.NumOps()
+	for i := 0; i < numExtOps; i++ {
+		extOp := extGraph.Op(i)
+		engIdx := extOp.Engine()
+		if engIdx > maxEngIdx {
+			maxEngIdx = engIdx 
 		}
 	}
 }

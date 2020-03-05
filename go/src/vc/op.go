@@ -1,9 +1,19 @@
 package vc
 
+
+type ExtOp interface {
+	NumPreds() int
+	NumSuccs() int
+	Pred(n int) ExtOp
+	Succ(n int) ExtOp
+	Engine() EngineIdx
+}
+
 type Op struct {
 	engIdx   EngineIdx
 	idxOnEng OpIndexOnEng
 	glbIdx   OpIndexGlobal
+	extOp    ExtOp
 	ts       VC
 }
 
