@@ -2,7 +2,8 @@ package vc
 
 //**********************************************
 func (op1 *Op) Before(op2 *Op) bool {
-	return op1.ts.val(op1.engIdx) <= op2.ts.val(op1.engIdx)
+	engIdx := op1.engIdx
+	return op1.vc.val(engIdx) <= op2.vc.val(engIdx)
 }
 
 //**********************************************
@@ -34,11 +35,12 @@ func (op *Op) makeCrossEdges(extOp2Op map[ExtOp]*Op) {
 	}
 }
 
+//**********************************************
 func (op *Op) updateVc() {
-	vc := &op.ts
+	vc := &op.vc
 	for _, pred := range op.crossPreds {
-		vc2 := &pred.ts
+		vc2 := &pred.vc
 		vc.Maximize(vc2)
 	}
-	vc.timestamps[op.engIdx]++
+	vc.Incr(op.engIdx, 1)
 }

@@ -14,7 +14,7 @@ type Op struct {
 	sameEngSucc *Op
 	crossPreds  []*Op
 	crossSuccs  []*Op
-	ts          VC
+	vc          VC
 }
 
 //**********************************************
