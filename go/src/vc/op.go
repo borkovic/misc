@@ -1,6 +1,5 @@
 package vc
 
-
 //**********************************************
 func (op1 *Op) before(op2 *Op) bool {
 	return op1.ts.val(op1.engIdx) <= op2.ts.val(op1.engIdx)

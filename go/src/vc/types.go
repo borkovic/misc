@@ -6,27 +6,26 @@ type OpIndexExternal int32
 
 //**********************************************
 type Op struct {
-	engIdx   EngineIdx
-	idxOnEng OpIndexOnEng
-	extIdx   OpIndexExternal
-	extOp    ExtOp
+	engIdx      EngineIdx
+	idxOnEng    OpIndexOnEng
+	extIdx      OpIndexExternal
+	extOp       ExtOp
 	sameEngPred *Op
 	sameEngSucc *Op
-	crossPreds	[]*Op
+	crossPreds  []*Op
 	crossSuccs  []*Op
-	ts       VC
+	ts          VC
 }
 
 //**********************************************
 type SeqEng struct {
 	engIdx EngineIdx
 	numOps OpIndexOnEng
-	ops []Op
+	ops    []Op
 }
 
 //**********************************************
 type Graph struct {
 	engines []SeqEng
-	ops []Op
+	ops     []Op
 }
-

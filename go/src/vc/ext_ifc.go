@@ -17,5 +17,3 @@ type ExtGraph interface {
 	NumOps() int32
 	Op(n int32) ExtOp
 }
-
-
