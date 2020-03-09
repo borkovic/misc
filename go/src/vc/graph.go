@@ -3,48 +3,44 @@ package vc
 //**********************************************
 func (graph *Graph) MkGraph(extGraph ExtGraph) {
 	extOp2Op := make(map[ExtOp]*Op)
-	graph.MakeEngines(extGraph, extOp2Op)
+	graph.makeEngines(extGraph, extOp2Op)
 	numEngines := EngineIdx(len(graph.engines))
 	for engIdx := EngineIdx(0); engIdx < numEngines; engIdx++ {
 		eng := &graph.engines[engIdx]
-		eng.MakeEdgesOnEng()
+		eng.makeEdgesOnEng()
 	}
-	graph.MakeCrossEdges(extOp2Op)
+	graph.makeCrossEdges(extOp2Op)
+	graph.updateVcs()
 }
 
-//**********************************************
-func (graph *Graph) MakeCrossEdges(extOp2Op map[ExtOp]*Op) {
+func (graph *Graph) updateVcs() {
 	numEngines := EngineIdx(len(graph.engines))
 	for engIdx := numEngines*0; engIdx < numEngines; engIdx++ {
 		eng := &graph.engines[engIdx]
 		numOps := OpIndexOnEng(len(eng.ops))
 		for opIdx := numOps*0; opIdx < numOps; opIdx++ {
 			op := &eng.ops[opIdx]
-			extOp := op.extOp
-			numPreds := extOp.NumPreds()
-			for p := numPreds*0; p < numPreds; p++ {
-				extPred := extOp.Pred(p)
-				if extPred.EngineIdx() == engIdx {
-					continue
-				}
-				pred := extOp2Op[extPred]
-				op.crossPreds = append(op.crossPreds, pred)
-			}
-			numSuccs := extOp.NumSuccs()
-			for s := numSuccs*0; s < numSuccs; s++ {
-				extSucc := extOp.Succ(s)
-				if extSucc.EngineIdx() == engIdx {
-					continue
-				}
-				succ := extOp2Op[extSucc]
-				op.crossSuccs = append(op.crossSuccs, succ)
-			}
+			op.updateVc()
 		}
 	}
 }
 
 //**********************************************
-func (graph *Graph)MakeEngines(extGraph ExtGraph,
+func (graph *Graph) makeCrossEdges(extOp2Op map[ExtOp]*Op) {
+	numEngines := EngineIdx(len(graph.engines))
+	for engIdx := numEngines*0; engIdx < numEngines; engIdx++ {
+		eng := &graph.engines[engIdx]
+		numOps := OpIndexOnEng(len(eng.ops))
+		for opIdx := numOps*0; opIdx < numOps; opIdx++ {
+			op := &eng.ops[opIdx]
+			op.makeCrossEdges(extOp2Op)
+
+		}
+	}
+}
+
+//**********************************************
+func (graph *Graph)makeEngines(extGraph ExtGraph,
 		extOp2Op map[ExtOp]*Op) {
 	numOps := extGraph.NumOps()
 	var maxEngIdx EngineIdx = -1
@@ -70,7 +66,6 @@ func (graph *Graph)MakeEngines(extGraph ExtGraph,
 		eng.numOps = 0
 		eng.ops = make([]Op, numOpsPerEngine[engIdx])
 	}
-	ExtOp2Op := make(map[ExtOp]*Op)
 	// intialize ops on engines
 	for i := numOps*0; i < numOps; i++ {
 		extOp := extGraph.Op(i)
@@ -81,7 +76,7 @@ func (graph *Graph)MakeEngines(extGraph ExtGraph,
 		op.idxOnEng = eng.numOps
 		op.extIdx = OpIndexExternal(i)
 		op.extOp = extOp
-		ExtOp2Op[extOp] = op
+		extOp2Op[extOp] = op
 		eng.numOps++
 	}
 	// check num ops per engine

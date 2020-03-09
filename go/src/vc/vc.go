@@ -81,6 +81,18 @@ func (vc1 *VC) Concurrent(vc2 *VC) bool {
 	return less && greater
 }
 
+func (vc1 *VC) Maximize(vc2 *VC) {
+	if len(vc1.timestamps) != len(vc2.timestamps) {
+		panic("VCsw with different lenghts")
+	}
+	numEngs := EngineIdx(len(vc1.timestamps))
+	for engIdx := numEngs * 0; engIdx < numEngs; engIdx++ {
+		if vc1.val(engIdx) < vc2.val(engIdx) {
+			vc1.timestamps[engIdx] = vc2.val(engIdx)
+		}
+	}
+}
+
 // string representation of VC
 func (vc *VC) String() string {
 	s := "["
