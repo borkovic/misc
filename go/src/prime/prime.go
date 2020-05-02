@@ -39,7 +39,14 @@ func sieve() <-chan int {
 
 func main() {
 	primes := sieve()
+	N := 10
+	i := 0
 	for {
-		fmt.Println(<-primes)
+		fmt.Print(<-primes, " ")
+		i++
+		if i == N {
+			i = 0
+			fmt.Println("")
+		}
 	}
 }
