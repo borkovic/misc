@@ -85,7 +85,7 @@ func main() {
 			if i+2 >= N {
 				panic("Not enough args for --chan-prob")
 			}
-			m, err := strconv.ParseInt(os.Args[i+1], 10, 32)
+			m, err = strconv.ParseInt(os.Args[i+1], 10, 32)
 			if err != nil {
 				panic("Error processing --chan-prob argument")
 			}
