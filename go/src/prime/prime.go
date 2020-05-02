@@ -3,17 +3,22 @@ package main
 import "fmt"
 
 func generate_integers() <-chan int {
-	ch := make(chan int)
+	c := make(chan int)
+
+	var ch chan<- int = c
 	go func() {
 		for i := 2; ; i++ {
 			ch <- i
 		}
 	}()
-	return ch
+
+	return c
 }
 
 func filter_multiples(in <-chan int, prime int) <-chan int {
-	out := make(chan int)
+	o := make(chan int)
+
+	var out chan<- int = o
 	go func() {
 		for {
 			if i := <-in; i%prime != 0 {
@@ -21,11 +26,14 @@ func filter_multiples(in <-chan int, prime int) <-chan int {
 			}
 		}
 	}()
-	return out
+
+	return o
 }
 
 func sieve() <-chan int {
-	out := make(chan int)
+	o := make(chan int)
+
+	var out chan<- int = o
 	go func() {
 		ch := generate_integers()
 		for {
@@ -34,7 +42,8 @@ func sieve() <-chan int {
 			ch = filter_multiples(ch, prime)
 		}
 	}()
-	return out
+
+	return o
 }
 
 func main() {
