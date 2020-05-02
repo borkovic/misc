@@ -2,7 +2,13 @@ package main
 
 import "fmt"
 
-var MAX int = 1000
+//var MAX int = 1000
+var MAX int = 941
+
+var END_MARKER int = -1
+func is_end(k int) bool {
+	return k <= END_MARKER
+}
 
 func generate_integers() <-chan int {
 	c := make(chan int)
@@ -15,7 +21,7 @@ func generate_integers() <-chan int {
 				break
 			}
 		}
-		ch <- -1  // end marker
+		ch <- END_MARKER  // end marker
 	}()
 
 	return c
@@ -28,7 +34,7 @@ func filter_multiples(in <-chan int, prime int) <-chan int {
 	go func() {
 		for {
 			i := <-in
-			if i < 0 {
+			if is_end(i) {
 				out <- i
 				break
 			}
@@ -50,7 +56,7 @@ func sieve() <-chan int {
 		for {
 			prime := <-ch
 			out <- prime
-			if prime < 0 {
+			if is_end(prime) {
 				break
 			}
 			ch = filter_multiples(ch, prime)
@@ -64,17 +70,22 @@ func main() {
 	primes := sieve()
 	N := 10
 	i := 0
+	need_nl := true
 	for {
 		p := <-primes
-		if p < 0 {
+		if is_end(p) {
 			break
 		}
 		fmt.Print(p, " ")
 		i++
+		need_nl = true
 		if i == N {
 			i = 0
 			fmt.Println("")
+			need_nl = false
 		}
 	}
-	fmt.Println("")
+	if need_nl {
+		fmt.Println("")
+	}
 }
