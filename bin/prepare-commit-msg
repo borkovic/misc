@@ -1,0 +1,22 @@
+#!/usr/bin/env rc
+
+#File   .git/hooks/prepare-commit-msg
+
+commit_file = $1
+TMP=/tmp/git-precommit-$pid
+
+modifieds = ${ git diff-index  --cached HEAD --name-only | egrep  compiler/be }
+whatis modifieds
+
+if (calc $#modifieds'>0') {
+	msg = ${head -n 1 $commit_file}
+	if (! ~ $msg '[Stargazer]'*) { ## to avoid repeating [Stargazer]
+		tail -n +2 $commit_file > $TMP
+		{
+			echo '[Stargazer]' $msg 
+			cat $TMP
+		} > $commit_file
+		rm -f $TMP
+	}
+}
+
