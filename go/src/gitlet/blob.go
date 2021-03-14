@@ -14,9 +14,13 @@ type Blob struct {
 	FileId ShaId
 }
 
+type Tree struct {
+	Files        map[string]ShaId // file-name to blob-sha (and subtree shas later)
+}
+
 type Commit struct {
-	Files        map[string]Blob // file-name to sha
-	ParentCommit ShaId
+	ParentCommit ShaId  // parent commit's sha
+	RootTree ShaId		// root tree sha
 }
 
 func (sha *ShaId) Bytes() []byte {
