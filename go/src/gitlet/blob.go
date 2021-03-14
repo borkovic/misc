@@ -15,10 +15,9 @@ type Blob struct {
 }
 
 type Commit struct {
-	Files map[string]Blob // file-name to sha
+	Files        map[string]Blob // file-name to sha
 	ParentCommit ShaId
 }
-
 
 func (sha *ShaId) Bytes() []byte {
 	return sha.Data[:]

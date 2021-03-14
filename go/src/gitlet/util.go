@@ -10,10 +10,14 @@ import "encoding/hex"
  *
 ***********************************************************************/
 func exists(path string) (bool, error) {
-    _, err := os.Stat(path)
-    if err == nil { return true, nil }
-    if os.IsNotExist(err) { return false, nil }
-    return false, err
+	_, err := os.Stat(path)
+	if err == nil {
+		return true, nil
+	}
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	return false, err
 }
 
 /***********************************************************************
@@ -40,7 +44,7 @@ func RepoRootPath() (string, bool) {
 			break
 		}
 	}
-	if ! found {
+	if !found {
 		return "", false
 	}
 
@@ -101,5 +105,3 @@ func FileSha(filePath string) (string, error) {
 	}
 	return hex.EncodeToString(hasher.Sum(nil)), nil
 }
-
-
