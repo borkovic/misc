@@ -1,0 +1,47 @@
+#! /usr/bin/env py
+
+import zlib
+
+################################
+# process/print git object
+################################
+def process_obj(fn):
+	d=fn[0:2]
+	f=fn[2:]
+	filename = ".git/objects/" + d + "/" + f
+	print(filename, len(filename), len(fn))
+	compressed_contents = open(filename, 'rb').read()
+	d = decompressed_contents = zlib.decompress(compressed_contents) ## bytes
+	x = str(decompressed_contents[0:2])
+	x = x[2]
+	if x == 'b':
+		print("blob:", decompressed_contents[0:120], len(decompressed_contents))
+	elif x == 'c':
+		print("commit:", decompressed_contents, len(decompressed_contents))
+	elif x == 't':
+		print("tree:", decompressed_contents, len(decompressed_contents))
+	else:
+		print(decompressed_contents[0:120], len(decompressed_contents))
+
+
+################################
+import os
+import sys
+
+
+################################
+## Find top of git repo (has .git subdir)
+################################
+while not os.path.isdir(".git"):
+	if os.getcwd() == "/":
+		print("Not found .git subdirectory")
+		sys.exit(1)
+	os.chdir("..")
+
+################################
+## process objs
+################################
+for fn in sys.argv[1:]:
+	process_obj(fn)
+
+
