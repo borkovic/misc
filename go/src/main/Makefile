@@ -1,12 +1,14 @@
 
 
 build:
-	GOPATH=/Users/dborkov/repos/github/borkovic/misc:$$GOPATH; \
-	echo $$GOPATH; \
-	go build
+	echo $$GOPATH; go build
 
-run:
+run: build
 	env ./main
+
+only_run:
+	env ./main
+
 
 fmt:
 	go fmt *.go

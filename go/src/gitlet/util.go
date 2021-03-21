@@ -1,10 +1,11 @@
 package gitlet
 
 import "os"
-import "io"
 import "path/filepath"
-import "crypto/sha1"
-import "encoding/hex"
+
+/***********************************************************************
+ *
+***********************************************************************/
 
 /***********************************************************************
  *
@@ -77,31 +78,5 @@ func RepoRefsPath() (string, bool) {
 	}
 }
 
-/***********************************************************************
- *
-***********************************************************************/
-func BytesSha(bytes []byte) string {
-	signature := sha1.Sum(bytes)
-	return hex.EncodeToString(signature[:])
-}
 
-/***********************************************************************
- *
-***********************************************************************/
-func StringSha(s string) string {
-	bytes := []byte(s)
-	return BytesSha(bytes)
-}
 
-/***********************************************************************
- *
-***********************************************************************/
-func FileSha(filePath string) (string, error) {
-	file, _ := os.Open(filePath)
-	defer file.Close()
-	hasher := sha1.New()
-	if _, err := io.Copy(hasher, file); err != nil {
-		return "", err
-	}
-	return hex.EncodeToString(hasher.Sum(nil)), nil
-}
