@@ -2,6 +2,8 @@ package main
 
 import "io"
 import "fmt"
+import "strings"
+import "bytes"
 import "encoding/hex"
 import "crypto/sha1"
 
@@ -46,7 +48,28 @@ func main() {
 		io.WriteString(hasher, "F")
 		io.WriteString(hasher, "o")
 		io.WriteString(hasher, "o")
-		fmt.Println("Sha1 of chars <F,o,o>", "", "is")
+		fmt.Println("Sha1 of chars <F,o,o> is")
+		fmt.Println("\t", hex.EncodeToString(hasher.Sum(nil)))
+		fmt.Println("Expected:", expected, "\n")
+	}
+	{
+		s := "His money is twice tainted: 'taint yours and 'taint mine."
+		expected := "597f6a540010f94c15d71806a99a2c8710e747bd"
+		src := strings.NewReader(s)
+		hasher := sha1.New()
+		io.Copy(hasher, src)
+		fmt.Println("Sha1 of copy string", ("<"+s+">"), "is")
+		fmt.Println("\t", hex.EncodeToString(hasher.Sum(nil)))
+		fmt.Println("Expected:", expected, "\n")
+	}
+	{
+		s := "His money is twice tainted: 'taint yours and 'taint mine."
+		expected := "597f6a540010f94c15d71806a99a2c8710e747bd"
+		bs := []byte(s)
+		src := bytes.NewReader(bs)
+		hasher := sha1.New()
+		io.Copy(hasher, src)
+		fmt.Println("Sha1 of copy bytes", ("<"+s+">"), "is")
 		fmt.Println("\t", hex.EncodeToString(hasher.Sum(nil)))
 		fmt.Println("Expected:", expected, "\n")
 	}
