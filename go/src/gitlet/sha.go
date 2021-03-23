@@ -5,7 +5,6 @@ import "io"
 import "crypto/sha1"
 import "encoding/hex"
 
-
 /***********************************************************************
  *
 ***********************************************************************/
@@ -13,8 +12,6 @@ type ShaId struct {
 	Data string
 	//Data [sha1.Size]byte
 }
-
-
 
 /***********************************************************************
  *
@@ -30,12 +27,11 @@ func (sha *ShaId) AsString() string {
 	return sha.Data
 }
 
-
 /***********************************************************************
  *
 ***********************************************************************/
 func (sha *ShaId) ShaOfString(s string) {
-	bytes := []byte(s);
+	bytes := []byte(s)
 	sha.ShaOfBytes(bytes)
 }
 
@@ -59,5 +55,3 @@ func (sha *ShaId) ShaOfFile(filePath string) {
 	}
 	sha.Data = hex.EncodeToString(hasher.Sum(nil))
 }
-
-

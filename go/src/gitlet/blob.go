@@ -17,13 +17,13 @@ type Blob struct {
  *
 ***********************************************************************/
 type Tree struct {
-	Files        map[string]ShaId // file-name to blob-sha (and subtree shas later)
+	Files map[string]ShaId // file-name to blob-sha (and subtree shas later)
 }
 
 /***********************************************************************
  *
 ***********************************************************************/
 type Commit struct {
-	ParentCommit ShaId  // parent commit's sha
-	RootTree ShaId		// root tree sha
+	ParentCommit ShaId // parent commit's sha
+	RootTree     ShaId // root tree sha
 }

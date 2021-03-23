@@ -77,6 +77,3 @@ func RepoRefsPath() (string, bool) {
 		return "", false
 	}
 }
-
-
-
