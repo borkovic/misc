@@ -1,0 +1,9 @@
+#! /usr/bin/env rc
+#!/bin/rc
+
+N=3
+switch (x$1) {
+case x-n; N=$2; shift 2 
+}
+
+exec shred -n $N -v -u -z  $*
