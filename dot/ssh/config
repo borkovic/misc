@@ -3,10 +3,11 @@ Host github
     User borkovic
     IdentityFile ~/.ssh/github_rsa
 
-Host github
+## Seems not to work for "git push" with ssh key. Debugging
+Host bitbucket
     Hostname bitbucket.org
     User dborkov
-    IdentityFile ~/.ssh/bitbucket_rsa
+    IdentityFile ~/.ssh/bitbucket_org
 
 Host venus
     Hostname localhost
