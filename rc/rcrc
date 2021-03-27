@@ -103,5 +103,5 @@ fn dirs { f=() i=() {
 ######################################################
 fn c { clear }
 fn d { date $* }
-fn l { ls -FC * }
-fn ll { l -l * }
+fn l { ls -FC $* }
+fn ll { l -l $* }
