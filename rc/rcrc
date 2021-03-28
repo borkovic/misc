@@ -105,3 +105,4 @@ fn c { clear }
 fn d { date $* }
 fn l { ls -FC $* }
 fn ll { l -l $* }
+fn m { less --tabs=4 $* }
