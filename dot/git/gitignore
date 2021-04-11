@@ -1,0 +1,12 @@
+.gitignore
+.gitignore_global
+*.o
+*.so
+*.gch
+*.pyc
+*.class
+.*.sw*
+*.aux
+*.dvi
+*.eps
+.directory
