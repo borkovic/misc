@@ -24,6 +24,7 @@ for d in $HOME/bin $HOME/usr/bin; do
     fi
 done
 cleanPath PATH
+appendDirToPath /usr/local/go/bin
 ########################################################
 ##echo Path after cleaning $PATH
 umask 022
