@@ -1,4 +1,4 @@
-PATH=$PATH:/usr/local/go/bin
+##PATH=$PATH:/usr/local/go/bin
 files="
 func
 path
