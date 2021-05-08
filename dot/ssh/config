@@ -1,0 +1,15 @@
+Host github
+    Hostname github.com
+    User borkovic
+    IdentityFile ~/.ssh/github_rsa
+
+## Seems not to work for "git push" with ssh key. Debugging
+Host bitbucket
+    Hostname bitbucket.org
+    User dborkov
+    IdentityFile ~/.ssh/bitbucket_org
+
+Host venus
+    Hostname localhost
+    User drazen
+    IdentityFile ~/.ssh/id_rsa

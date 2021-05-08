@@ -25,7 +25,7 @@ alias lr='l -R'
 alias ln-s='ln -s'
 alias lns='ln-s'
 
-alias m=less
+alias m='less --tabs=4'
 
 alias c=clear
 

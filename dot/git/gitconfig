@@ -1,0 +1,34 @@
+[user]
+	name = Drazen Borkovic
+	email = borkovic@nomail
+[core]
+	editor = vim
+	excludesfile = ~/.gitignore_global
+[alias]
+	st = status -uno
+	submit = commit
+	ci = commit
+	co = checkout
+    dif = difftool -y
+	unco = checkout --
+	tree = log --oneline --graph --decorate --all
+	dag = log --oneline --graph --decorate --all --date-order
+	br = branch -vv
+	mrg = merge --no-commit
+	switch = checkout
+	sw = checkout
+    man = help
+[push]
+	default = simple
+	followTags = true
+[credential]
+	helper = cache
+[credential "ssh://gitserver"]
+	helper = cache
+	username = git
+[branch]
+	autosetuprebase = never
+[diff]
+    tool = tkdiff
+[merge]
+	conflictStyle = diff3

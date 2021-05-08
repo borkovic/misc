@@ -1,0 +1,53 @@
+#! /home/drazen/bin/rc
+#########################################################
+fn Error { echo >[1=2] $* }
+fn Fatal { Error $*; exit 1 }
+
+#########################################################
+## Variables set by crontab: SHELL, HOME, LOGNAME
+#########################################################
+
+fn PrintSalientVars {
+    for (v in SHELL HOME LOGNAME   USER)  {
+        echo $v: $$v
+    }
+}
+
+
+#########################################################
+fn ProtectDirs {
+    #####################################################
+    ## Find dirs to protect
+    #####################################################
+    readProtectedDirs=(
+        $HOME/^(
+            .vnc
+            .ssh
+            files/private
+        )
+    )
+
+    Dirs=()
+
+    for (d in $readProtectedDirs) {
+        if (test -d $d) {   ## -e = exists, -d = directory
+            Dirs = ($Dirs $d)
+        } else {
+            Error Dir does not exist: $d 
+        }
+    }
+
+    #########################################################
+    ## Protect dirs
+    #########################################################
+    cmd = (chmod go-rwx $Dirs)
+    ## echo cmd: $cmd
+    $cmd
+}
+
+#########################################################
+## Execute all
+#########################################################
+## PrintSalientVars
+ProtectDirs
+
