@@ -1,0 +1,6 @@
+f = game-links.txt
+if (~ $* ()) {
+    cat >> $f
+} else {
+    echo $* >> $f
+}
