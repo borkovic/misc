@@ -27,7 +27,7 @@ func main() {
 		go loopfunc(cb)
 	}
 	var sum int = 0
-	for i := nCpu - 1; i >= 0; i-- {
+	for i := int(0); i < nCpu; i++ {
 		a := <-cr
 		sum += a
 	}
