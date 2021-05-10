@@ -9,10 +9,10 @@ type bidirChan = chan int
 type readChan = <-chan int
 type writeChan = chan<- int
 
-func loopfunc(c writeChan) { // func loopfunc(c chan<- int)
+func loopfunc(c writeChan, i int) { // func loopfunc(c chan<- int, i int)
 	for { // forever
 	}
-	c <- 0
+	c <- i
 }
 
 func main() {
@@ -24,7 +24,7 @@ func main() {
 	cr := readChan(cb) //cr := <-chan int(cb)
 
 	for i := int(0); i < nCpu; i++ {
-		go loopfunc(cb)
+		go loopfunc(cb, i)
 	}
 	var sum int = 0
 	for i := int(0); i < nCpu; i++ {

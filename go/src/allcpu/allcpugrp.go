@@ -6,7 +6,7 @@ import (
 	"sync"
 )
 
-func loopfunc(grp *sync.WaitGroup) {
+func loopfunc(grp *sync.WaitGroup, i int) {
 	for { // forever
 	}
 	grp.Done()
@@ -20,7 +20,7 @@ func main() {
 
 	grp.Add(nCpu)
 	for i := int(0); i < nCpu; i++ {
-		go loopfunc(&grp)
+		go loopfunc(&grp, i)
 	}
 	grp.Wait()
 }
