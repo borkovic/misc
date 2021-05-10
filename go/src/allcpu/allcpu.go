@@ -1,4 +1,3 @@
-
 package main
 
 import (
@@ -6,32 +5,29 @@ import (
 	"runtime"
 )
 
-type bidirchan = chan int
-type readchan = <-chan int
-type writechan = chan<- int
+type bidirChan = chan int
+type readChan = <-chan int
+type writeChan = chan<- int
 
-//func loopfunc(c writechan) {
-func loopfunc(c chan<- int) {
-	for {
+func loopfunc(c writeChan) { // func loopfunc(c chan<- int)
+	for { // forever
 	}
-	c<- 0
+	c <- 0
 }
 
 func main() {
-	var ncpu int = runtime.NumCPU()
-	fmt.Println("Num CPU:", ncpu)
+	var nCpu int = runtime.NumCPU()
+	fmt.Println("Num CPUs:", nCpu)
 
-	//cb := make(bidirchan, ncpu)
-	cb := make(chan int, ncpu)
+	cb := make(bidirChan, nCpu) //cb := make(chan int, nCpu)
 
-	//cr := readchan(cb)
-	cr := <-chan int(cb)
+	cr := readChan(cb) //cr := <-chan int(cb)
 
-	for i := ncpu-1; i >= 0; i-- {
+	for i := int(0); i < nCpu; i++ {
 		go loopfunc(cb)
 	}
 	var sum int = 0
-	for i := ncpu-1; i >= 0; i-- {
+	for i := nCpu - 1; i >= 0; i-- {
 		a := <-cr
 		sum += a
 	}
