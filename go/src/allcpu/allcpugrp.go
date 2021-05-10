@@ -18,7 +18,7 @@ func main() {
 
 	var grp sync.WaitGroup
 
-	grp.Add(1)
+	grp.Add(nCpu)
 	for i := int(0); i < nCpu; i++ {
 		go loopfunc(&grp)
 	}
