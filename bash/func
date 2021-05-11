@@ -260,7 +260,7 @@ setPs1 () {
     fi
 
     ## Color path part of prompt, prompt, reset color.
-    PS1='\e[0;'"${green}m""$p"'/\[\e[0m $ '   # 
+    PS1='\e[0;'"${green}m""${HOSTNAME} $p"'/\[\e[0m $ '   # 
 
     UpdateTerminal
     echo -n "]0;$$ - ${USER}@${HOSTNAME} ${PWD}/  "
@@ -321,8 +321,8 @@ PromptCommand () {
     (*) p="$PWD" ;;
     esac
 
-    PS1='\e[0;'"${green}"'m'"$HH"' : '"$p"'/ $ \[\e[0m'   # 
-    xtitle "$USER  ${PWD}"
+    PS1='\e[0;'"${green}"'m'"$HOSTNAME"' : '"$p"'/ $ \[\e[0m'   # 
+    xtitle "$USER@$HOSTNAME  ${PWD}"
 }
 PROMPT_COMMAND="PromptCommand"
 
