@@ -1,0 +1,99 @@
+export h=$HOME H=$HOME home=$HOME
+export u=$USER U=$USER user=$USER
+typeset tab='    '
+typeset nl='
+'
+
+if test -r $h/HOST; then
+    export HOSTNAME=$(cat $h/HOST)
+else
+    export HOSTNAME=$(hostname)
+fi
+export SHORT_HOSTNAME="${HOSTNAME%%.*}"
+export PROMPT_COMMAND='printf "\033]0;[%s] %s@%s:%s\007" "$$" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"'
+
+PS1='\w $ '
+PS1='${PWD##*/}/ $ '
+PS1F='$'
+# colors 1; light   0; dark
+# black=30 red=31 green=32 yellow=33 blue=34 purple=35 cyan=36 white=37
+red=31
+green=32
+
+#color='31'
+let "x=$RANDOM%3"
+case $x in
+(02) color=$red ;;
+(1)  color=$green ;;
+esac
+##echo $color
+
+PS1_db='\[\033[01;'$color'm\]${HOSTNAME%%.*} : ${PWD#${PWD%/*/*/*}/}/ '"$PS1F"'\[\033[0m\] '
+PS1="$PS1_db"
+
+DIRS3='${PWD#${PWD%/*/*/*}/}/ $ '
+
+# Eric:  PS1="\[\033[0;34m\][\$(date +%H%M)][\w]$\[\033[0m\] "
+export PS1_db='\[\033[0;'$color'm\]${PWD#${PWD%/*/*/*}/}/ '"$PS1F"'\[\033[0m\] '
+export PS1_old='${PWD#${PWD%/*/*/*}/}/ '"$PS1F"' '
+##PS1_db='\e[0;'"${green}"'m\h : ${PWD#${PWD%/*/*/*}/}/\[\e[0m $ '   # 
+PS1_db='\e[0;'"${green}"'m${PWD#${PWD%/*/*/*}/}/\[\e[0m $ '   # 
+PS1="$PS1_db"
+
+#export PROMPT_COMMAND='echo -n "]0;$$ - ${USER}@${HOSTNAME} ${PWD}/  "'
+
+unset LS_COLORS
+
+for d in /usr/share/man  /usr/local/man  $HOME/usr/share/man
+do
+  if test -d "$d" && ! isDirInPath "$d" MANPATH; then
+    case "x${MANPATH}y" in
+    (xy) MANPATH="$d" ;;
+    (*)  MANPATH="$MANPATH:$d" ;;
+    esac
+  fi
+done
+export MANPATH
+
+CDPATH=.:..
+
+HISTFILE=$HOME/files/bash/history/$$
+HISTDIR=$HOME/files/bash/history
+test -d $HISTDIR || mkdir $HISTDIR
+export HISTFILE=$HISTDIR/hist.$$
+
+export EDITOR=vim
+export VISUAL=$EDITOR
+export LC_ALL=en_US
+
+
+
+
+Dirs="
+/appl/bin
+/usr/local/clang/clang/bin
+"
+prependPath $Dirs
+
+#####################################################################
+## 10MB core file size
+#ulimit -S -c 10000
+
+#####################################################################
+go env -w GO111MODULE=auto  ## avoids missing main module with go 1.6
+
+####################################################################
+MyGo1="$HOME/repos/github/borkovic/misc/go"
+MyGo2="$HOME/repos/bitbucket/dborkov/go"
+
+export GOROOT=/usr/local/go
+
+export GOPATH
+case "x${GOPATH}y" in
+(xy) GOPATH="$MyGo1:$MyGo2" ;;
+(*)  GOPATH="$MyGo1:$MyGo2:$GOPATH" ;;
+esac
+PATH="$MyGo1/bin:$GOROOT/bin:$PATH"
+
+PATH=/usr/local/bin:$PATH
+

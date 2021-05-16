@@ -1,0 +1,76 @@
+
+unalias ls 2>/dev/null
+unalias vi 2>/dev/null
+
+alias a=alias
+
+alias c=clear
+alias cp='cp -pi'
+alias cw='chmod +w'
+alias cw-='chmod -w'
+alias cx='chmod +x'
+alias cx-='chmod -x'
+alias cdp='cd $(pwd -P)'
+alias cont='kill -SIGCONT'
+#alias cs='checksec --file'
+alias cdsnap="cd $HOME/repos/github/borkovic/misc/go/src/snapshot-test"
+
+alias d=date
+alias dirs='dirs -v'
+alias df='df -h'
+alias du='du -h'
+
+alias edit=vi
+
+alias f=finger
+
+alias gorc='cd $HOME/repos/github/borkovic/rc'
+alias gitk='gitk --all'
+
+alias hd=head
+
+alias j='jobs -l'
+
+alias l='ls -hFC'
+alias ll='l -l'
+alias llc='l --lcontext'
+alias la='l -a'
+alias lr='l -R'
+alias ln-s='ln -s'
+alias lns='ln-s'
+
+alias ln-s='ln -s'
+alias lns='ln-s'
+
+alias m='less --tabs=4'
+alias md='mkdir -p'
+alias mv='mv -i'
+alias mk=mymk
+alias myps='ps -l -u $USER'
+alias mytop='top -H -u $USER'
+
+alias ppid='ps -l -p $PPID'
+alias pu=pushd
+alias po=popd
+alias psvi='myps | egrep vi'
+
+alias rd=rmdir
+alias rm='rm -i'
+
+alias stop='kill -SIGSTOP'
+
+alias tl=tail
+alias tlf='tl -f'
+alias tmuxl='tmux list-sess'
+alias tmux0='tmux attach -t 0'
+alias tmux1='tmux attach -t 1'
+alias tmux2='tmux attach -t 2'
+alias tmux3='tmux attach -t 3'
+
+alias vdiff=tkdiff
+
+alias whatis=type
+
+#####################################################
+#####################################################
+

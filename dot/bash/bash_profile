@@ -1,0 +1,41 @@
+echo begin bash_profile >> $HOME/j
+# .bash_profile
+umask 022
+
+#########################################################################
+##eval $(ssh-agent)
+##ssh-add
+#########################################################################
+
+# Get the aliases and functions
+ if [ -f ~/.bashrc ]; then
+   . ~/.bashrc
+ fi
+
+echo aa >> $HOME/j
+
+# User specific environment and startup programs
+
+#Dirs="
+#/bin
+#/usr/bin
+#$HOME/bin
+#$HOME/usr/bin
+#"
+#prependPath $Dirs
+PATH="$HOME/usr/bin:$HOME/bin:$HOME/exe:/opt/rh/devtoolset-8/root/usr/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
+export PATH
+
+(
+  cd $HOME/files/bash/history
+  /bin/rm -f $(find . -name 'hist.*' -atime +5)
+)
+echo end bash_profile >> $HOME/j
+
+case x$DISPLAY in
+(x) : ;;
+(*) lxpanel & ;;
+esac
+
+export PATH="$HOME/.cargo/bin:$PATH"
+

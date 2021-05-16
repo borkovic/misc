@@ -1,0 +1,113 @@
+umask 022
+
+LOCAL_LIBS="
+/usr/lib
+/usr/lib64
+/usr/local/lib
+/usr/local/lib64
+"
+
+#echo cc >> $HOME/j
+
+for d in $LOCAL_LIBS
+do
+  case "x${LD_LIBRARY_PATH}y" in
+  xy) LD_LIBRARY_PATH="$d" ;;
+  *)  LD_LIBRARY_PATH="$d:$LD_LIBRARY_PATH" ;;
+  esac
+done
+
+export LD_LIBRARY_PATH
+
+inPath () {
+  typeset d="$1"
+  case "x${PATH}y" in
+  x${d}y)     return 0 ;;  # only one
+  x*:${d}:*y) return 0 ;;  # middle
+  x${d}:*y)   return 0 ;;  # beginning
+  x*:${d}y)   return 0 ;;  # end
+  *)          return 1 ;;  # not present
+  esac
+}
+appPrepEndPath () {
+  typeset doApp="$1"; shift
+  typeset d
+  for d
+  do
+    if test -d "$d" && ! inPath "$d"
+  then
+    if $doApp
+    then
+      PATH="$PATH:$d"
+    else
+      PATH="$d:$PATH"
+    fi
+  fi
+  done
+}
+
+appendPath () {
+  appPrepEndPath true "$@"
+}
+
+prependPath () {
+  appPrepEndPath false "$@"
+}
+
+###############################################
+
+files="
+func
+path
+alias
+vars
+git-completion.bash
+"
+
+for f in $files; do
+    ff=$HOME/files/bash/$f
+    if test -r $ff; then
+        . $ff
+        ##echo $f: 'PATH='$PATH
+    fi
+done
+
+########################################################
+set -o vi
+set -o pipefail
+########################################################
+##echo Path before cleaning $PATH
+for d in $HOME/bin $HOME/usr/bin; do
+    if test -d $d; then
+        prependDirToPath  $d
+    fi
+done
+cleanPath PATH
+appendDirToPath /usr/local/go/bin
+########################################################
+##echo Path after cleaning $PATH
+umask 022
+
+# To prevent suspending processes with 'tty output' run
+# the following:
+# $ stty -tostop
+
+unalias ct 2>/dev/null 
+
+alias gcc7='scl enable devtoolset-7 bash'
+
+###############################################
+case "$-" in
+(*i*) eval $(ssh-agent -s)
+keys="
+    github_rsa
+    bitbucket_rsa
+"
+;;
+esac
+
+for k in $keys; do
+    ssh-add ~/.ssh/$k
+done
+###############################################
+

@@ -1,9 +1,0 @@
-
-f=$HOME/.bashrc
-if test -r $f; then
-  . $f
-fi
-unset f
-umask 022
-
-
