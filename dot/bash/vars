@@ -80,7 +80,6 @@ prependPath $Dirs
 #ulimit -S -c 10000
 
 #####################################################################
-go env -w GO111MODULE=auto  ## avoids missing main module with go 1.6
 
 ####################################################################
 MyGo1="$HOME/repos/github/borkovic/misc/go"
@@ -94,6 +93,7 @@ case "x${GOPATH}y" in
 (*)  GOPATH="$MyGo1:$MyGo2:$GOPATH" ;;
 esac
 PATH="$MyGo1/bin:$GOROOT/bin:$PATH"
+go env -w GO111MODULE=auto  ## avoids missing main module with go 1.6
 
 PATH=/usr/local/bin:$PATH
 
