@@ -1,5 +1,8 @@
 umask 022
 
+export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
+
 LOCAL_LIBS="
 /usr/lib
 /usr/lib64

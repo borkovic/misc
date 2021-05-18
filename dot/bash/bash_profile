@@ -1,4 +1,4 @@
-echo begin bash_profile >> $HOME/j
+#echo begin bash_profile >> $HOME/j
 # .bash_profile
 umask 022
 
@@ -12,7 +12,7 @@ umask 022
    . ~/.bashrc
  fi
 
-echo aa >> $HOME/j
+#echo aa >> $HOME/j
 
 # User specific environment and startup programs
 
@@ -30,7 +30,7 @@ export PATH
   cd $HOME/files/bash/history
   /bin/rm -f $(find . -name 'hist.*' -atime +5)
 )
-echo end bash_profile >> $HOME/j
+#echo end bash_profile >> $HOME/j
 
 case x$DISPLAY in
 (x) : ;;
