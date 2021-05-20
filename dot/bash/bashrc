@@ -1,4 +1,14 @@
 umask 022
+#set -x
+function qInteractive {
+    case "$-" in
+    (*i*) return 0 ;;
+    esac
+    return 1
+}
+if qInteractive; then
+	eval "$(ssh-agent -s)"
+fi
 
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
@@ -100,18 +110,16 @@ unalias ct 2>/dev/null
 alias gcc7='scl enable devtoolset-7 bash'
 
 ###############################################
-case "$-" in
-(*i*) eval $(ssh-agent -s)
-keys="
-    github_rsa
-    bitbucket_rsa
-"
-;;
-esac
+if qInteractive; then
+    keys="
+        github_rsa
+        bitbucket_rsa
+    "
 
-for k in $keys; do
-    ssh-add ~/.ssh/$k
-done
+    for k in $keys; do
+        ssh-add ~/.ssh/$k
+    done
+fi
 ###############################################
 
 setPs1
