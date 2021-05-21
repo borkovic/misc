@@ -20,7 +20,6 @@ LOCAL_LIBS="
 /usr/local/lib64
 "
 
-#echo cc >> $HOME/j
 
 for d in $LOCAL_LIBS
 do
@@ -81,7 +80,6 @@ for f in $files; do
     ff=$HOME/files/bash/$f
     if test -r $ff; then
         . $ff
-        ##echo $f: 'PATH='$PATH
     fi
 done
 
@@ -89,7 +87,6 @@ done
 set -o vi
 set -o pipefail
 ########################################################
-##echo Path before cleaning $PATH
 for d in $HOME/bin $HOME/usr/bin; do
     if test -d $d; then
         prependDirToPath  $d
@@ -98,7 +95,6 @@ done
 cleanPath PATH
 appendDirToPath /usr/local/go/bin
 ########################################################
-##echo Path after cleaning $PATH
 umask 022
 
 # To prevent suspending processes with 'tty output' run

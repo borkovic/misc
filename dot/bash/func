@@ -33,7 +33,7 @@ function appPreDirToPath {
       shift 1;;
     (x-force) force=true
       shift 1;;
-    (x-*) echo 1>&2 'Usage: $0 (-pre|-app) dirs ...'
+    (x-*) Error     'Usage: $0 (-pre|-app) dirs ...'
       return 1 ;;
     (*) break ;;
     esac 
@@ -89,7 +89,6 @@ function cleanPath {
   ######################################
   for d in $pathVal2
   do
-    ##echo $p $newPath
     if test -d "$d" && ! isDirInPath "$d" newPath
     then
       case "x${newPath}y" in                       # say p=/bin
@@ -140,7 +139,7 @@ function whatis {
 ##################################################################
 rt_go() {
   case $# in
-  (0) echo 'Need dir param'
+  (0) Error 'Need dir param'
       return 1
       ;;
   (1) typeset d="$1"
@@ -151,13 +150,6 @@ rt_go() {
       shift
       pushd $d
       ;;
-  esac
-}
-##################################################################
-pardir () {
-  case "x${PWD}" in
-  (x/) echo / ;;
-  (*) echo "${PWD%/*}" ;;
   esac
 }
 
@@ -171,7 +163,7 @@ cdup () {
   then
     :
   else
-    echo 1>&2 Failed to change to parent dir
+    Error     Failed to change to parent dir
   fi
   cd .
 }
@@ -186,14 +178,14 @@ nightly_loop() {
 
   if ! test -r $script
   then
-    echo Script $script not readable 1>&2
+    Error Script $script not readable
     return 1
   fi
   if cd $G
   then
     (nohup rc $script > $LOG 2>&1 < /dev/null &)
   else
-    echo Cannot cd to $G 1>&2
+    Error Cannot cd to $G
     return 1
   fi
 }
@@ -265,12 +257,13 @@ setPs1 () {
     PS1='\e[0;'"${green}m""${HOSTNAME} : $p"'/\[\e[0m $ '   # 
 
     UpdateTerminal
-    #echo -n "]0;$$ - ${USER}@${HOSTNAME} ${PWD}/  "
 }
 
 UpdateTerminal () {
     ## Terminal 
-    echo -n "]0;$$ - ${USER}@${HOSTNAME} ${PWD}/  "
+    if qInteractive; then
+        echo -n "]0;$$ - ${USER}@${HOSTNAME} ${PWD}/  "
+    fi
 }
 
 cd () {
@@ -312,7 +305,9 @@ gosrc () {
 
 ##################################################################
 function xtitle {
-    echo -ne "\033]0;$@\007"
+    if qInteractive; then
+        echo -ne "\033]0;$@\007"
+    fi
 }
 export -f xtitle
 

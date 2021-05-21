@@ -26,7 +26,6 @@ case $x in
 (02) color=$red ;;
 (1)  color=$green ;;
 esac
-##echo $color
 
 PS1_db='\[\033[01;'$color'm\]${HOSTNAME%%.*} : ${PWD#${PWD%/*/*/*}/}/ '"$PS1F"'\[\033[0m\] '
 PS1="$PS1_db"
