@@ -1,11 +1,13 @@
 umask 022
 #set -x
 function qInteractive {
+    # can also check 'test -t 0 -o -t 1 -o -t 2'
     case "$-" in
     (*i*) return 0 ;;
     esac
     return 1
 }
+
 if qInteractive; then
 	eval "$(ssh-agent -s)"
 fi
