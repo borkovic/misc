@@ -14,7 +14,7 @@ s=1
 
 while (calc $i' < '$n) {
 	s=$s',+'$t
-    calc i=$i+1
+	calc i=$i+1
 }
 
 cmd = (tabs $s)
