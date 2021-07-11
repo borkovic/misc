@@ -7,8 +7,9 @@ n=32
 s=1
 
 while (calc $i' < '$n) {
-    s=$s'+4'
-    calc i=$i+1
+	s=$s'+4'
+	calc i=$i+1
 }
 
 tabs $s
+
