@@ -10,6 +10,7 @@
 	ci = commit
 	co = checkout
     dif = difftool -y
+    vdif = difftool -y
 	unco = checkout --
 	tree = log --oneline --graph --decorate --all
 	dag = log --oneline --graph --decorate --all --date-order
@@ -29,6 +30,6 @@
 [branch]
 	autosetuprebase = never
 [diff]
-    tool = tkdiff
+    tool = meld
 [merge]
 	conflictStyle = diff3
