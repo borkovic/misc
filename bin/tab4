@@ -9,7 +9,7 @@ if (~ $#* 0) {
 #  1,+4,+4,...
 
 i=0
-n=32
+n=18 # some tabs implementations have limi
 s=1
 
 while (calc $i' < '$n) {

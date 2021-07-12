@@ -13,3 +13,10 @@ Host venus
     Hostname localhost
     User drazen
     IdentityFile ~/.ssh/id_rsa
+
+Host wmac
+    Hostname 192.168.1.76
+    User dborkov
+    IdentityFile ~/.ssh/wmac_rsa
+
+Host wmac
